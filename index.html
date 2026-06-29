@@ -761,8 +761,8 @@ body { top:0 !important; position:static !important; }
 
 <!-- HEADER -->
 <div class="site-header">
-  <div class="header-bismillah">﷽</div>
-  <span class="site-title">علم جعفر</span>
+  <div class="header-bismillah notranslate">﷽</div>
+  <span class="site-title notranslate">علم جعفر</span>
   <div class="site-subtitle">سوال لکھیں — حروف کا تجزیہ — روحانی جواب پائیں</div>
   <div class="header-ornament"><span>✦</span></div>
 </div>
@@ -789,7 +789,7 @@ body { top:0 !important; position:static !important; }
 <!-- COOKIE -->
 <div class="cookie-banner" id="cookieBanner">
   <p>🍪 یہ ویب سائٹ بہتر تجربے کے لیے cookies استعمال کرتی ہے۔
-  <a href="#" onclick="showPage('privacy')">Privacy Policy</a> دیکھیں۔</p>
+  <a href="javascript:void(0)" onclick="showPage('privacy')">Privacy Policy</a> دیکھیں۔</p>
   <button class="cookie-accept" onclick="acceptCookies()">قبول کریں ✓</button>
 </div>
 
@@ -1205,29 +1205,9 @@ function sendContact() {
   btn.textContent = '⏳ بھیجا جا رہا ہے...';
   btn.disabled = true;
 
-  fetch('/.netlify/functions/contact', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: n, email: e, message: m })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    btn.textContent = 'پیغام بھیجیں ←';
-    btn.disabled = false;
-    if (data.success) {
-      document.getElementById('contactSuccess').classList.remove('hidden');
-      document.getElementById('cName').value = '';
-      document.getElementById('cEmail').value = '';
-      document.getElementById('cMsg').value = '';
-    } else {
-      alert('خطا: ' + (data.error || 'دوبارہ کوشش کریں'));
-    }
-  })
-  .catch(function(){
-    btn.textContent = 'پیغام بھیجیں ←';
-    btn.disabled = false;
-    alert('رابطہ نہیں ہو سکا — دوبارہ کوشش کریں');
-  });
+  fetch('https://formspree.io/f/xpwzgvkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:n,email:e,message:m})})
+  .then(function(){btn.textContent='پیغام بھیجیں ←';btn.disabled=false;document.getElementById('contactSuccess').classList.remove('hidden');document.getElementById('cName').value='';document.getElementById('cEmail').value='';document.getElementById('cMsg').value='';})
+  .catch(function(){btn.textContent='پیغام بھیجیں ←';btn.disabled=false;alert('رابطہ نہیں ہو سکا');});
 }
 
 function acceptCookies() {
@@ -1310,12 +1290,12 @@ function runJafar() {
   document.getElementById('resultSection').scrollIntoView({behavior:'smooth', block:'start'});
 
   var prompt = 'آپ علم جعفر کے ماہر عالم ہیں۔\n\nسوال: "' + q + '"\nپہلا نام: "' + words[0] + '"\nجفر حروف: ' + extractedLetters.join(' ، ') + '\n\nچار حصوں میں جواب دیں:\n\n===حروف کے معنی===\nہر حرف کا نام اور اس سوال کے مطابق معنی۔\n\n===جفر کا نتیجہ===\nاس مخصوص سوال کا براہ راست جواب۔\n\n===روحانی حل===\nمخصوص وظیفہ یا عمل۔\n\n===مزاج===\n"' + words[0] + '" سے مزاج:\nپہلی سطر: نام\nدوسری سطر: خصوصیات\nتیسری سطر: مشورہ\n\nاردو میں۔';
-  fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":"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","anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:1500,messages:[{role:"user",content:prompt}]})})
+  fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":"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","anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:1500,messages:[{role:"user",content:prompt}]})})
   .then(function(r){return r.json();})
   .then(function(data){
     if(data.error){document.getElementById('harfRow').innerHTML='<div style="color:red;padding:8px;">⚠️ '+data.error.message+'</div>';return;}
     var text=(data.content&&data.content[0])?data.content[0].text:'';
-    function parse(t,key){var rx=new RegExp('==='+key+'===([\s\S]*?)(?:===|$)');var m=t.match(rx);return m?m[1].trim():'';}
+    function parse(t,key){var rx=new RegExp('==='+key+'===([\\s\\S]*?)(?:===|$)');var m=t.match(rx);return m?m[1].trim():'';}
     handleClaudeResponse({harfMaani:parse(text,'حروف کے معنی'),nateeja:parse(text,'جفر کا نتیجہ'),rohani:parse(text,'روحانی حل'),mazaj:parse(text,'مزاج')});
   })
   .catch(function(err){document.getElementById('harfRow').innerHTML='<div style="color:red;padding:8px;">⚠️ '+err.message+'</div>';});
