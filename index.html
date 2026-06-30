@@ -16,95 +16,660 @@
   gtag('config', 'G-XXXXXXXXXX');
 </script>
 
-<!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --gold:        #c9a84c;
-  --gold-light:  #e8c87a;
-  --gold-dark:   #9a7830;
-  --gold-glow:   rgba(201,168,76,.18);
-  --navy:        #0a1628;
-  --navy-mid:    #122040;
-  --navy-light:  #1a3258;
-  --navy-card:   #0f1e38;
-  --cream:       #faf7f0;
-  --red-dark:    #7a0000;
-  --text-main:   #1a1a2e;
-  --text-soft:   #4a4a6a;
-  --shadow-sm:   0 2px 12px rgba(0,0,0,.18);
-  --shadow-md:   0 8px 32px rgba(0,0,0,.28);
-  --shadow-lg:   0 16px 56px rgba(0,0,0,.45);
-  --shadow-gold: 0 4px 20px rgba(201,168,76,.2);
-  --radius:      14px;
-  --radius-sm:   9px;
-  --transition:  all .25s cubic-bezier(.4,0,.2,1);
+  --gold: #c9a84c; --gold-light: #e8c87a; --gold-dark: #9a7830;
+  --navy: #0a1628; --navy-mid: #122040; --navy-light: #1a3258;
+  --cream: #faf7f0; --red-dark: #7a0000; --text-main: #1a1a2e; --text-soft: #4a4a6a;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,.18); --shadow-md: 0 8px 32px rgba(0,0,0,.28);
+  --shadow-lg: 0 16px 56px rgba(0,0,0,.45); --shadow-gold: 0 4px 20px rgba(201,168,76,.2);
+  --radius: 14px; --radius-sm: 9px; --transition: all .25s cubic-bezier(.4,0,.2,1);
 }
-
 html { scroll-behavior: smooth; }
 body {
   background: #060c18;
-  background-image:
-    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(201,168,76,.06) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 40% at 80% 100%, rgba(26,50,88,.4) 0%, transparent 50%);
+  background-image: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(201,168,76,.06) 0%, transparent 60%), radial-gradient(ellipse 80% 40% at 80% 100%, rgba(26,50,88,.4) 0%, transparent 50%);
   font-family: 'Noto Nastaliq Urdu', serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: var(--cream);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; color: var(--cream);
 }
 
-/* ── TRANSLATE BAR ── */
-#google_translate_element {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 99999;
-  background: rgba(10,22,40,.98);
-  border-bottom: 1px solid rgba(201,168,76,.25);
-  padding: 6px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
+/* ── LANG BAR ── */
+#langBar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: rgba(10,22,40,.98); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,.2);
+  padding: 7px 16px; display: flex; align-items: center; justify-content: flex-end; gap: 10px;
 }
-#google_translate_element::before {
-  content: '🌐 زبان تبدیل کریں:';
-  color: rgba(201,168,76,.7);
-  font-size: 12px;
-  font-family: 'Noto Nastaliq Urdu', serif;
-  margin-left: auto;
+#langBar span { color: rgba(201,168,76,.6); font-size: 12px; margin-right: auto; font-family: 'Noto Nastaliq Urdu', serif; }
+#langSelect {
+  background: rgba(201,168,76,.1); color: var(--gold);
+  border: 1px solid rgba(201,168,76,.3); border-radius: 7px;
+  padding: 6px 12px; font-size: 13px; cursor: pointer; outline: none;
+  font-family: sans-serif; direction: ltr;
 }
-.goog-te-gadget { color: transparent !important; font-size: 0 !important; }
-.goog-te-gadget .goog-te-combo {
-  background: rgba(201,168,76,.12) !important;
-  color: var(--gold) !important;
-  border: 1px solid rgba(201,168,76,.3) !important;
-  border-radius: 6px !important;
-  padding: 5px 10px !important;
-  font-size: 13px !important;
-  cursor: pointer !important;
-  outline: none !important;
+#langSelect:hover { background: rgba(201,168,76,.2); }
+
+/* ── TRANSLATION OVERLAY ── */
+#translateOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 99998; align-items: center; justify-content: center; }
+#translateOverlay.show { display: flex; }
+#translateBox {
+  background: var(--navy-mid); border: 1px solid rgba(201,168,76,.3); border-radius: var(--radius);
+  padding: 30px; text-align: center; box-shadow: var(--shadow-lg);
 }
-.goog-te-gadget .goog-te-combo:hover {
-  background: rgba(201,168,76,.2) !important;
-  border-color: rgba(201,168,76,.5) !important;
-}
-.goog-te-banner-frame { display: none !important; }
-body { top: 0 !important; position: static !important; }
-.goog-text-highlight { background: none !important; box-shadow: none !important; }
+#translateBox p { color: var(--gold); font-size: 15px; margin-bottom: 8px; }
+#translateBox small { color: rgba(201,168,76,.5); font-size: 12px; }
 
 /* ── HEADER ── */
 .site-header {
-  width: 100%;
+  width: 100%; background: linear-gradient(180deg, #0f1e38 0%, #060c18 100%);
+  border-bottom: 1px solid rgba(201,168,76,.2); padding: 52px 20px 28px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.site-header::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(201,168,76,.14), transparent), radial-gradient(ellipse 40% 30% at 20% 80%, rgba(26,50,88,.5), transparent);
+  pointer-events: none;
+}
+.site-header::after {
+  content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,168,76,.4), transparent);
+}
+.header-bismillah { font-family: 'Amiri', serif; font-size: 24px; color: var(--gold); opacity: .75; margin-bottom: 14px; letter-spacing: .08em; animation: fadeDown .8s ease both; }
+.site-title { font-size: clamp(38px, 8vw, 56px); font-weight: 900; background: linear-gradient(135deg, #f0d878 0%, var(--gold) 40%, var(--gold-dark) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block; line-height: 1.1; margin-bottom: 10px; animation: fadeDown .8s .1s ease both; }
+.site-subtitle { font-size: 13px; color: rgba(201,168,76,.6); animation: fadeDown .8s .2s ease both; }
+.header-ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; animation: fadeDown .8s .3s ease both; }
+.header-ornament span { font-family: 'Amiri', serif; color: rgba(201,168,76,.4); font-size: 18px; }
+.header-ornament::before, .header-ornament::after { content: ''; flex: 1; max-width: 80px; height: 1px; background: linear-gradient(to right, transparent, rgba(201,168,76,.35)); }
+.header-ornament::before { background: linear-gradient(to left, transparent, rgba(201,168,76,.35)); }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── NAV ── */
+.site-nav {
+  width: 100%; background: rgba(10,22,40,.96); backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(201,168,76,.12);
+  display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2px;
+  padding: 5px 10px; position: sticky; top: 0; z-index: 100;
+}
+.site-nav a { color: rgba(201,168,76,.65); text-decoration: none; padding: 8px 16px; font-size: 12px; border-radius: 7px; transition: var(--transition); }
+.site-nav a:hover { color: var(--gold); background: rgba(201,168,76,.08); }
+
+/* ── WRAPPERS ── */
+.ad-wrap { width: 100%; max-width: 820px; display: flex; justify-content: center; }
+.ad-wrap:empty { display: none; }
+.main-wrap { width: 100%; max-width: 820px; padding: 24px 16px; display: flex; flex-direction: column; gap: 22px; }
+
+/* ── INPUT CARD ── */
+.input-card { background: #f9f4ea; border-radius: var(--radius); box-shadow: var(--shadow-lg), 0 0 0 1px rgba(201,168,76,.12), var(--shadow-gold); overflow: hidden; }
+.input-card:focus-within { box-shadow: var(--shadow-lg), 0 0 0 2px rgba(201,168,76,.3), var(--shadow-gold); }
+.input-card-header { background: linear-gradient(135deg, #122040 0%, #0a1628 100%); padding: 16px 22px; border-bottom: 2px solid var(--gold); display: flex; align-items: center; gap: 12px; direction: rtl; position: relative; }
+.input-card-header-icon { width: 38px; height: 38px; background: rgba(201,168,76,.15); border: 1px solid rgba(201,168,76,.3); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+.input-card-header-title { font-size: 15px; color: var(--gold); font-weight: 700; }
+.input-card-header-sub { font-size: 11px; color: rgba(201,168,76,.55); margin-top: 3px; }
+.notebook-body { background-image: repeating-linear-gradient(to bottom, transparent, transparent 42px, rgba(180,195,215,.45) 42px, rgba(180,195,215,.45) 43px); background-position: 0 18px; padding: 22px 26px 26px; direction: rtl; position: relative; }
+.notebook-body::before { content: ''; position: absolute; top: 0; right: 64px; width: 1.5px; height: 100%; background: rgba(192,57,43,.18); }
+.q-label { font-size: 15px; color: var(--red-dark); font-weight: 700; display: block; margin-bottom: 14px; }
+.q-input { width: 100%; background: transparent; border: none; border-bottom: 2.5px solid rgba(26,50,88,.4); font-family: 'Noto Nastaliq Urdu', serif; font-size: 19px; color: var(--navy); direction: rtl; padding: 8px 4px; outline: none; margin-bottom: 20px; line-height: 1.9; transition: border-color .3s; }
+.q-input::placeholder { color: rgba(26,50,88,.35); }
+.q-input:focus { border-bottom-color: var(--gold-dark); }
+.q-btn { width: 100%; background: linear-gradient(135deg, #1a3258 0%, #0a1628 100%); color: var(--gold); border: 1.5px solid rgba(201,168,76,.5); padding: 15px; font-family: 'Noto Nastaliq Urdu', serif; font-size: 17px; cursor: pointer; border-radius: var(--radius-sm); font-weight: 700; transition: var(--transition); }
+.q-btn:hover { background: linear-gradient(135deg, #1e3a64 0%, #122040 100%); border-color: rgba(201,168,76,.7); transform: translateY(-1px); }
+
+/* ── RESULT ── */
+.jafar-card { background: linear-gradient(180deg, #122040 0%, #0a1628 100%); border-radius: var(--radius); padding: 24px 20px; box-shadow: var(--shadow-md); border: 1px solid rgba(201,168,76,.1); animation: slideUp .4s ease both; }
+.jafar-title { font-size: 12px; color: rgba(201,168,76,.65); text-align: center; letter-spacing: .12em; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; gap: 12px; }
+.jafar-title::before, .jafar-title::after { content: '✦'; font-size: 8px; color: rgba(201,168,76,.3); }
+.letters-row { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; margin-bottom: 18px; direction: rtl; }
+.letter-box { width: 50px; height: 50px; background: linear-gradient(145deg, var(--gold-light), var(--gold) 60%, var(--gold-dark)); color: var(--navy); display: flex; align-items: center; justify-content: center; font-family: 'Amiri', serif; font-size: 25px; border-radius: 10px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,.35); transition: var(--transition); }
+.letter-box:hover { transform: translateY(-3px); }
+.formed-word { text-align: center; font-family: 'Amiri', serif; font-size: 32px; color: var(--gold); display: block; padding: 12px 0 6px; border-top: 1px solid rgba(201,168,76,.18); letter-spacing: .04em; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── TAFSEER ── */
+.tafseer-card { background: var(--cream); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid rgba(201,168,76,.12); animation: slideUp .4s .1s ease both; }
+.tafseer-card-header { background: linear-gradient(135deg, #122040 0%, #0a1628 100%); padding: 15px 22px; border-bottom: 2px solid var(--gold); direction: rtl; display: flex; align-items: center; gap: 10px; }
+.tafseer-card-header-icon { width: 34px; height: 34px; background: rgba(201,168,76,.15); border: 1px solid rgba(201,168,76,.25); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+.tafseer-card-header-title { font-size: 14px; color: var(--gold); font-weight: 700; }
+.tafseer-card-body { padding: 20px 22px; direction: rtl; }
+.section-label { font-size: 13px; font-weight: 700; color: var(--navy-light); display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.section-label::before { content: ''; width: 4px; height: 20px; background: linear-gradient(180deg, var(--gold), var(--gold-dark)); border-radius: 2px; }
+.harf-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; direction: rtl; }
+.harf-item { background: white; border: 1px solid rgba(201,168,76,.15); border-radius: 11px; padding: 11px 15px; direction: rtl; min-width: 130px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+.harf-item:hover { transform: translateY(-2px); border-color: rgba(201,168,76,.3); }
+.harf { font-family: 'Amiri', serif; font-size: 28px; color: var(--gold-dark); font-weight: 700; display: block; margin-bottom: 5px; }
+.mani { font-size: 12px; color: var(--text-soft); line-height: 2; }
+.divider { height: 1px; background: linear-gradient(to left, transparent, rgba(201,168,76,.25), transparent); margin: 18px 0; }
+.result-text { font-size: 15px; color: var(--text-main); line-height: 2.5; direction: rtl; background: linear-gradient(135deg, #eef5ff, #f5f0ff); border-radius: 11px; padding: 18px; border-right: 4px solid var(--navy-light); }
+.rohani-box { border-radius: 11px; padding: 18px; direction: rtl; margin-top: 14px; }
+.rohani-box.green { background: linear-gradient(135deg, #f0fff5, #e6f9ee); border-right: 4px solid #27ae60; }
+.rohani-box.amber { background: linear-gradient(135deg, #fffcf0, #fff8e0); border-right: 4px solid var(--gold-dark); }
+.rohani-box-label { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.rohani-box.green .rohani-box-label { color: #1a6b38; }
+.rohani-box.amber .rohani-box-label { color: var(--gold-dark); }
+.rohani-box-text { font-size: 14px; color: var(--text-soft); line-height: 2.3; }
+.mazaj-badge { display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px; border-radius: 24px; font-size: 14px; font-weight: 700; margin-bottom: 11px; }
+
+/* ── HIDAYAT ── */
+.hid-card { background: var(--cream); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid rgba(201,168,76,.1); }
+.hid-card-header { background: linear-gradient(135deg, #122040 0%, #0a1628 100%); padding: 17px 22px; border-bottom: 2px solid var(--gold); direction: rtl; display: flex; align-items: center; gap: 10px; }
+.hid-card-header-title { font-size: 15px; color: var(--gold); font-weight: 700; }
+.hid-card-body { padding: 22px; direction: rtl; }
+.hid-list { display: flex; flex-direction: column; gap: 11px; margin-bottom: 22px; }
+.hid-item { display: flex; align-items: flex-start; gap: 13px; direction: rtl; background: white; border-radius: 11px; padding: 13px 15px; border: 1px solid rgba(201,168,76,.1); box-shadow: var(--shadow-sm); transition: var(--transition); }
+.hid-item:hover { transform: translateX(-2px); border-color: rgba(201,168,76,.2); }
+.hid-num { width: 33px; height: 33px; background: linear-gradient(135deg, var(--navy-light), var(--navy)); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.hid-text { font-size: 13px; color: var(--text-soft); line-height: 2.2; }
+.hid-text b { color: var(--red-dark); }
+.hid-section-title { font-size: 14px; font-weight: 700; color: var(--navy); border-right: 4px solid var(--gold); padding-right: 11px; margin-bottom: 15px; }
+.hid-box { background: white; border-radius: 11px; padding: 17px; border: 1px solid rgba(201,168,76,.1); margin-bottom: 16px; }
+.hid-box p { font-size: 13px; color: var(--text-soft); line-height: 2.1; margin-bottom: 9px; }
+.hid-box b { color: var(--navy); }
+.hid-example { background: linear-gradient(135deg, #f0f4ff, #edf1ff); border-right: 3px solid var(--navy-light); padding: 9px 13px; font-family: 'Amiri', serif; font-size: 15px; color: var(--navy); border-radius: 6px; margin: 6px 0; direction: rtl; }
+.hid-note { background: linear-gradient(135deg, #fff8e5, #fff3cc); border: 1px solid rgba(201,168,76,.3); border-radius: 11px; padding: 15px 17px; font-size: 13px; color: #6b4a00; line-height: 2.1; }
+.hid-divider { height: 1px; background: linear-gradient(to left, transparent, rgba(201,168,76,.3), transparent); margin: 22px 0; }
+.topic-group { margin-bottom: 17px; }
+.topic-label { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 7px; }
+
+/* ── PAGES ── */
+.page-section { background: var(--cream); border-radius: var(--radius); padding: 30px 26px; direction: rtl; box-shadow: var(--shadow-md); line-height: 2.5; color: var(--text-main); border: 1px solid rgba(201,168,76,.1); }
+.page-section h2 { font-size: 22px; font-weight: 700; color: var(--red-dark); margin-bottom: 18px; border-right: 4px solid var(--gold); padding-right: 13px; }
+.page-section h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin: 17px 0 7px; }
+.page-section p { font-size: 13px; margin-bottom: 10px; color: var(--text-soft); }
+.page-section a { color: var(--navy); }
+.gmail-link { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #ea4335, #c5221f); color: white !important; text-decoration: none; padding: 12px 22px; border-radius: 9px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 16px rgba(234,67,53,.3); transition: var(--transition); margin-top: 8px; direction: ltr; font-family: sans-serif; }
+.gmail-link:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(234,67,53,.4); }
+.contact-input { width: 100%; background: white; border: 1.5px solid #ddd; border-radius: 9px; padding: 11px 15px; font-size: 14px; font-family: 'Noto Nastaliq Urdu', serif; direction: rtl; color: var(--navy); outline: none; margin-bottom: 11px; display: block; transition: border-color .2s; }
+.contact-input:focus { border-color: var(--navy-light); }
+.contact-btn { width: 100%; background: linear-gradient(135deg, var(--navy-light), var(--navy)); color: var(--gold); border: none; padding: 14px; border-radius: 9px; font-size: 15px; font-family: 'Noto Nastaliq Urdu', serif; cursor: pointer; font-weight: 700; transition: var(--transition); }
+.contact-btn:hover { transform: translateY(-1px); }
+
+/* ── FOOTER ── */
+.site-footer { width: 100%; background: #0a1628; border-top: 1px solid rgba(201,168,76,.12); text-align: center; padding: 22px 16px; color: rgba(201,168,76,.45); font-size: 12px; margin-top: 10px; direction: rtl; }
+.footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 13px; }
+.footer-links a { color: rgba(201,168,76,.55); text-decoration: none; font-size: 12px; transition: color .2s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-sep { color: rgba(201,168,76,.18); }
+.footer-copy { margin-top: 9px; opacity: .45; font-size: 11px; }
+
+/* ── LOADING ── */
+.loading-dots { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 20px; }
+.loading-dots span { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: bounce 1.2s infinite; opacity: .6; }
+.loading-dots span:nth-child(2) { animation-delay: .2s; }
+.loading-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes bounce { 0%,80%,100% { transform: scale(0.6); opacity: .4; } 40% { transform: scale(1); opacity: 1; } }
+
+.hidden { display: none !important; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #060c18; }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE BAR -->
+<div id="langBar">
+  <span>🌐 زبان:</span>
+  <select id="langSelect" onchange="applyTranslation(this.value)">
+    <option value="ur">🇵🇰 اردو</option>
+    <option value="hi">🇮🇳 हिन्दी</option>
+    <option value="ar-ae">🇦🇪 العربية (UAE)</option>
+    <option value="ar-sa">🇸🇦 العربية (KSA)</option>
+    <option value="ar-bh">🇧🇭 العربية (BH)</option>
+    <option value="ar-qa">🇶🇦 العربية (QA)</option>
+    <option value="ar-kw">🇰🇼 العربية (KW)</option>
+    <option value="en">🇺🇸 English</option>
+  </select>
+</div>
+
+<!-- TRANSLATION OVERLAY -->
+<div id="translateOverlay">
+  <div id="translateBox">
+    <p>⏳ ترجمہ ہو رہا ہے...</p>
+    <small>Translating page...</small>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="header-bismillah">﷽</div>
+  <span class="site-title" id="siteTitle">علم جعفر</span>
+  <div class="site-subtitle" id="siteSubtitle">سوال لکھیں — حروف کا تجزیہ — روحانی جواب پائیں</div>
+  <div class="header-ornament"><span>✦</span></div>
+</div>
+
+<!-- NAV -->
+<div class="site-nav">
+  <a href="javascript:void(0)" onclick="showPage('home')">🏠 Home</a>
+  <a href="javascript:void(0)" onclick="showPage('about')">About Us</a>
+  <a href="javascript:void(0)" onclick="showPage('contact')">Contact</a>
+  <a href="javascript:void(0)" onclick="showPage('disclaimer')">Disclaimer</a>
+  <a href="javascript:void(0)" onclick="showPage('privacy')">Privacy Policy</a>
+</div>
+
+<!-- AD TOP -->
+<div class="ad-wrap">
+  <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <div class="input-card">
+    <div class="input-card-header">
+      <div class="input-card-header-icon">📜</div>
+      <div>
+        <div class="input-card-header-title" id="cardTitle">علم جعفر — سوال کریں</div>
+        <div class="input-card-header-sub" id="cardSub">نام بن/بنت والدہ کا نام لکھ کر سوال کریں</div>
+      </div>
+    </div>
+    <div class="notebook-body">
+      <label class="q-label" id="qLabel">یا علیم — اپنا سوال یہاں لکھیں:</label>
+      <input type="text" class="q-input" id="qInput" placeholder="جو دل میں آئے لکھ دیں...">
+      <button class="q-btn" id="analyzeBtn" onclick="runJafar()">← تجزیہ کریں</button>
+    </div>
+  </div>
+
+  <div id="resultSection" class="hidden">
+    <div class="jafar-card">
+      <div class="jafar-title">حروف جفر</div>
+      <div class="letters-row" id="lettersRow"></div>
+      <div class="formed-word" id="formedWord"></div>
+    </div>
+    <div class="ad-wrap" style="margin:4px 0;">
+      <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    <div class="tafseer-card">
+      <div class="tafseer-card-header">
+        <div class="tafseer-card-header-icon">✦</div>
+        <div class="tafseer-card-header-title">تشریح اور روحانی حل</div>
+      </div>
+      <div class="tafseer-card-body">
+        <div class="section-label">ہر حرف کے معنی</div>
+        <div class="harf-row" id="harfRow"></div>
+        <div class="divider"></div>
+        <div class="section-label">جفر کا نتیجہ</div>
+        <div class="result-text" id="resultText"></div>
+        <div class="rohani-box green" id="rohaniBox">
+          <div class="rohani-box-label">🤲 روحانی حل</div>
+          <div class="rohani-box-text" id="rohaniText"></div>
+        </div>
+        <div class="rohani-box amber" id="mazajSection" style="display:none;">
+          <div class="rohani-box-label">🌿 مزاج تجزیہ</div>
+          <div id="mazajText"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ad-wrap" style="margin:4px 0;">
+      <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
+  <div class="hid-card">
+    <div class="hid-card-header">
+      <div class="tafseer-card-header-icon">📿</div>
+      <div class="hid-card-header-title">ضروری ہدایات — علم جعفر سے فائدہ کے لیے</div>
+    </div>
+    <div class="hid-card-body">
+      <div class="hid-list">
+        <div class="hid-item"><div class="hid-num">1</div><div class="hid-text"><b>نماز پنجگانہ کی پابندی کریں</b> — ہر نماز کے بعد کم از کم ۱۱ مرتبہ درود شریف ضرور پڑھیں۔</div></div>
+        <div class="hid-item"><div class="hid-num">2</div><div class="hid-text"><b>جھوٹ سے مکمل پرہیز کریں</b> — سچائی ہی علم اور روحانی طاقت کی کنجی ہے۔</div></div>
+        <div class="hid-item"><div class="hid-num">3</div><div class="hid-text"><b>غیبت، بہتان اور بری زبان سے بچیں</b> — زبان کی پاکیزگی دل کے نور کی علامت ہے۔</div></div>
+        <div class="hid-item"><div class="hid-num">4</div><div class="hid-text"><b>دل بڑا کریں، معاف کرنا سیکھیں</b> — جس نے تکلیف دی ہو اُسے اللہ کے لیے معاف کر دیں۔</div></div>
+        <div class="hid-item"><div class="hid-num">5</div><div class="hid-text"><b>روزانہ کم از کم ۷۰ بار استغفراللہ پڑھیں</b> — یہ دل کی صفائی اور گناہوں کی معافی کا راستہ ہے۔</div></div>
+        <div class="hid-item"><div class="hid-num">6</div><div class="hid-text"><b>والدین کی خدمت اور فرمانبرداری کریں</b> — ماں باپ کی رضا میں اللہ کی رضا ہے۔</div></div>
+        <div class="hid-item"><div class="hid-num">7</div><div class="hid-text"><b>تنہائی کو پاکیزہ بنائیں</b> — خلوت میں اللہ کو یاد کریں اور گناہوں سے بچیں۔</div></div>
+      </div>
+      <div class="hid-divider"></div>
+      <div class="hid-section-title">🔹 سوال کرتے وقت ذہن کی کیفیت</div>
+      <div class="hid-box">
+        <p>سوال لکھنے سے پہلے <b>وضو کریں</b> اور دو رکعت نفل نماز پڑھیں۔</p>
+        <p>پھر درود شریف ۳ مرتبہ پڑھ کر اللہ تعالیٰ سے <b>سچے دل سے رہنمائی مانگیں۔</b></p>
+        <p>سوال <b>صرف ایک ہی بار</b> کریں — بار بار کرنے سے نتیجہ متاثر ہو سکتا ہے۔</p>
+        <p>یقین رکھیں کہ <b>علم صرف اللہ کے پاس ہے</b> — یہ صرف ایک روحانی رہنمائی ہے۔</p>
+      </div>
+      <div class="hid-divider"></div>
+      <div class="hid-section-title">🔹 سوال لکھنے کا طریقہ</div>
+      <div class="hid-box">
+        <p>سوال میں <b>نام بن/بنت والدہ کا نام</b> ضرور لکھیں۔</p>
+        <div class="topic-group"><div class="topic-label">👶 اولاد</div><div class="hid-example">شازیہ بنت سکینہ کے حمل میں بیٹا ہے یا بیٹی</div></div>
+        <div class="topic-group"><div class="topic-label">💼 نوکری</div><div class="hid-example">عمر بن زبیدہ کو اس مہینے نوکری ملے گی یا نہیں</div></div>
+        <div class="topic-group"><div class="topic-label">🏪 کاروبار</div><div class="hid-example">رفیق بن حمیدہ کے کاروبار میں رکاوٹ کی کیا وجہ ہے</div></div>
+        <div class="topic-group"><div class="topic-label">💍 رشتہ و شادی</div><div class="hid-example">ثناء بنت نسیم کا رشتہ اس گھر میں ہوگا یا نہیں</div></div>
+        <div class="topic-group"><div class="topic-label">🌙 روحانی مسائل</div><div class="hid-example">سلمان بن خدیجہ کو جنات کا اثر ہے یا جادو یا بیماری</div></div>
+        <div class="topic-group"><div class="topic-label">✈️ سفر و ویزہ</div><div class="hid-example">کامران بن صغرا کا ویزہ اس بار لگے گا یا نہیں</div></div>
+        <div class="topic-group"><div class="topic-label">❤️ صحت</div><div class="hid-example">اسماء بنت رقیہ کی بیماری جلد ٹھیک ہوگی یا نہیں</div></div>
+        <div class="topic-group"><div class="topic-label">📚 تعلیم</div><div class="hid-example">مریم بنت حمیدہ کو یونیورسٹی میں داخلہ ملے گا یا نہیں</div></div>
+      </div>
+      <div class="hid-note">⚠️ یاد رہے: یہ علم صرف رہنمائی کے لیے ہے — حتمی فیصلہ ہمیشہ اللہ پر توکل کے ساتھ کریں۔</div>
+    </div>
+  </div>
+
+  <div class="ad-wrap">
+    <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4444444444" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- FOOTER -->
+<div class="site-footer">
+  <div class="footer-links">
+    <a href="javascript:void(0)" onclick="showPage('about')">About Us</a>
+    <span class="footer-sep">|</span>
+    <a href="javascript:void(0)" onclick="showPage('privacy')">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="javascript:void(0)" onclick="showPage('disclaimer')">Disclaimer</a>
+    <span class="footer-sep">|</span>
+    <a href="javascript:void(0)" onclick="showPage('contact')">Contact</a>
+    <span class="footer-sep">|</span>
+    <a href="javascript:void(0)" onclick="showPage('terms')">Terms</a>
+  </div>
+  <div class="footer-copy">علم جعفر &mdash; تمام حقوق محفوظ ہیں &copy; 2025 | ilmejafar.com</div>
+</div>
+
+<!-- STATIC PAGES -->
+<div id="page-about" class="main-wrap hidden">
+  <div class="page-section">
+    <h2>📿 About Us</h2>
+    <p><b>ilmejafar.com</b> ایک روحانی رہنمائی کا پلیٹ فارم ہے جو علم جعفر کے روایتی اسلامی علوم کی بنیاد پر بنایا گیا ہے۔</p>
+    <h3>ہمارا مقصد</h3>
+    <p>ہمارا مقصد لوگوں کو روحانی رہنمائی فراہم کرنا ہے۔ علم جعفر صدیوں پرانا اسلامی علم ہے جو حروف اور اعداد کی قوت پر مبنی ہے۔</p>
+    <h3>علم جعفر کیا ہے؟</h3>
+    <p>علم جعفر ایک روایتی اسلامی علم ہے جس میں عربی حروف کی روحانی قوت سے سوالوں کا جواب نکالا جاتا ہے۔ یہ علم حضرت امام جعفر صادق رحمۃ اللہ علیہ سے منسوب ہے۔</p>
+    <h3>ہماری خدمات</h3>
+    <p>✅ مفت آنلائن جفر تجزیہ | ✅ ہر حرف کے روحانی معنی | ✅ روحانی وظائف | ✅ مزاج تجزیہ | ✅ بالکل مفت</p>
+  </div>
+</div>
+
+<div id="page-disclaimer" class="main-wrap hidden">
+  <div class="page-section">
+    <h2>⚠️ Disclaimer</h2>
+    <h3>روحانی رہنمائی</h3>
+    <p>ilmejafar.com پر فراہم کی گئی تمام معلومات صرف روحانی رہنمائی اور تعلیمی مقاصد کے لیے ہیں۔</p>
+    <h3>کوئی ضمانت نہیں</h3>
+    <p>ہم کسی بھی نتیجے کی ضمانت نہیں دیتے۔ علم جعفر ایک روایتی علم ہے اور اس کے نتائج مختلف ہو سکتے ہیں۔</p>
+    <h3>اللہ پر توکل</h3>
+    <p>تمام امور اللہ تعالیٰ کے ہاتھ میں ہیں۔ یہ صرف رہنمائی کا ذریعہ ہے۔</p>
+  </div>
+</div>
+
+<div id="page-privacy" class="main-wrap hidden">
+  <div class="page-section">
+    <h2>🔒 Privacy Policy</h2>
+    <p>ilmejafar.com آپ کی privacy کا مکمل احترام کرتا ہے۔ ہم آپ کا کوئی ذاتی ڈیٹا محفوظ نہیں کرتے۔</p>
+    <h3>Google AdSense</h3>
+    <p>ہم Google AdSense استعمال کرتے ہیں جو cookies استعمال کر سکتا ہے۔ <a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a></p>
+    <h3>تیسرے فریق</h3>
+    <p>ہم آپ کی کوئی معلومات کسی تیسرے فریق کو فروخت یا share نہیں کرتے۔</p>
+  </div>
+</div>
+
+<div id="page-terms" class="main-wrap hidden">
+  <div class="page-section">
+    <h2>📋 Terms of Service</h2>
+    <p>ilmejafar.com استعمال کرنے سے آپ ان شرائط سے متفق ہوتے ہیں۔</p>
+    <h3>استعمال کی شرائط</h3>
+    <p>یہ ویب سائٹ صرف روحانی رہنمائی کے لیے ہے۔ کسی بھی غیر قانونی مقصد کے لیے استعمال ممنوع ہے۔</p>
+    <h3>ملکیت</h3>
+    <p>اس ویب سائٹ کا تمام مواد ilmejafar.com کی ملکیت ہے۔ بغیر اجازت نقل کرنا ممنوع ہے۔</p>
+  </div>
+</div>
+
+<div id="page-contact" class="main-wrap hidden">
+  <div class="page-section">
+    <h2>📬 Contact Us</h2>
+    <p>کوئی سوال، تجویز یا مسئلہ ہو تو ہم سے رابطہ کریں۔</p>
+    <div style="text-align:center;margin:20px 0;">
+      <a href="mailto:sajjadrate@gmail.com" class="gmail-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        sajjadrate@gmail.com
+      </a>
+      <p style="font-size:12px;color:#888;margin-top:10px;">📧 Gmail پر براہ راست میسج بھیجیں</p>
+    </div>
+    <div style="border-top:1px solid rgba(201,168,76,.2);margin:20px 0;padding-top:20px;">
+      <label style="font-size:13px;font-weight:700;color:#7a0000;display:block;margin-bottom:5px;">آپ کا نام</label>
+      <input type="text" class="contact-input" id="cName" placeholder="Enter your name">
+      <label style="font-size:13px;font-weight:700;color:#7a0000;display:block;margin-bottom:5px;">ای میل</label>
+      <input type="email" class="contact-input" id="cEmail" placeholder="your@email.com" style="direction:ltr;">
+      <label style="font-size:13px;font-weight:700;color:#7a0000;display:block;margin-bottom:5px;">پیغام</label>
+      <textarea class="contact-input" id="cMsg" rows="4" placeholder="Write your message"></textarea>
+      <button class="contact-btn" onclick="sendContact()">پیغام بھیجیں ←</button>
+      <div id="contactSuccess" class="hidden" style="margin-top:12px;background:#e8f5e9;padding:12px;border-radius:8px;color:#2e7d32;text-align:center;font-size:13px;">✅ شکریہ! آپ کا پیغام مل گیا۔</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script>
+/* ══ OFFLINE TRANSLATIONS ══ */
+var T = {
+  ur: {
+    siteTitle:'علم جعفر', siteSub:'سوال لکھیں — حروف کا تجزیہ — روحانی جواب پائیں',
+    cardTitle:'علم جعفر — سوال کریں', cardSub:'نام بن/بنت والدہ کا نام لکھ کر سوال کریں',
+    qLabel:'یا علیم — اپنا سوال یہاں لکھیں:', qPlaceholder:'جو دل میں آئے لکھ دیں...',
+    analyzeBtn:'← تجزیہ کریں', lang:'ur', dir:'rtl'
+  },
+  hi: {
+    siteTitle:'इल्म-ए-जफ़र', siteSub:'सवाल लिखें — अक्षर विश्लेषण — आध्यात्मिक उत्तर पाएं',
+    cardTitle:'इल्म-ए-जफ़र — सवाल करें', cardSub:'नाम बिन/बिंत माँ का नाम लिखकर सवाल करें',
+    qLabel:'या अलीम — यहाँ अपना सवाल लिखें:', qPlaceholder:'जो मन में हो लिख दें...',
+    analyzeBtn:'← विश्लेषण करें', lang:'hi', dir:'rtl'
+  },
+  'ar-ae': {
+    siteTitle:'علم جعفر', siteSub:'اكتب سؤالك — تحليل الحروف — احصل على إجابة روحية',
+    cardTitle:'علم جعفر — اطرح سؤالاً', cardSub:'اكتب اسمك بن/بنت اسم الأم ثم اطرح سؤالك',
+    qLabel:'يا عليم — اكتب سؤالك هنا:', qPlaceholder:'اكتب ما في قلبك...',
+    analyzeBtn:'← تحليل', lang:'ar', dir:'rtl'
+  },
+  'ar-sa': {
+    siteTitle:'علم جعفر', siteSub:'اكتب سؤالك — تحليل الحروف — احصل على إجابة روحانية',
+    cardTitle:'علم جعفر — اسأل', cardSub:'اكتب اسمك بن/بنت اسم الأم واطرح سؤالك',
+    qLabel:'يا عليم — اكتب سؤالك هنا:', qPlaceholder:'اكتب ما يخطر ببالك...',
+    analyzeBtn:'← تحليل', lang:'ar', dir:'rtl'
+  },
+  'ar-bh': {
+    siteTitle:'علم جعفر', siteSub:'اكتب سؤالك — تحليل الحروف — إجابة روحانية',
+    cardTitle:'علم جعفر — اسأل', cardSub:'اكتب اسمك بن/بنت اسم الأم',
+    qLabel:'يا عليم — اكتب سؤالك:', qPlaceholder:'اكتب سؤالك...',
+    analyzeBtn:'← تحليل', lang:'ar', dir:'rtl'
+  },
+  'ar-qa': {
+    siteTitle:'علم جعفر', siteSub:'اكتب سؤالك — تحليل الحروف — إجابة روحية',
+    cardTitle:'علم جعفر — اسأل', cardSub:'اكتب اسمك بن/بنت اسم الأم',
+    qLabel:'يا عليم — اكتب سؤالك:', qPlaceholder:'اكتب ما تريد...',
+    analyzeBtn:'← تحليل', lang:'ar', dir:'rtl'
+  },
+  'ar-kw': {
+    siteTitle:'علم جعفر', siteSub:'اكتب سؤالك — تحليل الحروف — إجابة روحية',
+    cardTitle:'علم جعفر — اسأل', cardSub:'اكتب اسمك بن/بنت اسم الأم',
+    qLabel:'يا عليم — اكتب سؤالك:', qPlaceholder:'اكتب ما في قلبك...',
+    analyzeBtn:'← تحليل', lang:'ar', dir:'rtl'
+  },
+  en: {
+    siteTitle:'Ilm-e-Jafar', siteSub:'Write your question — Letter analysis — Get spiritual answer',
+    cardTitle:'Ilm-e-Jafar — Ask a Question', cardSub:'Write your name bin/bint mother\'s name then ask',
+    qLabel:'Ya Aleem — Write your question here:', qPlaceholder:'Write whatever is in your heart...',
+    analyzeBtn:'← Analyze', lang:'en', dir:'ltr'
+  }
+};
+
+function applyTranslation(lang) {
+  var t = T[lang] || T['ur'];
+  localStorage.setItem('ilmLang', lang);
+
+  // Update text content
+  document.getElementById('siteTitle').textContent = t.siteTitle;
+  document.getElementById('siteSubtitle').textContent = t.siteSub;
+  document.getElementById('cardTitle').textContent = t.cardTitle;
+  document.getElementById('cardSub').textContent = t.cardSub;
+  document.getElementById('qLabel').textContent = t.qLabel;
+  document.getElementById('qInput').placeholder = t.qPlaceholder;
+  document.getElementById('analyzeBtn').textContent = t.analyzeBtn;
+
+  // Update page title
+  document.title = t.siteTitle + ' — ' + t.siteSub.split('—')[2].trim();
+
+  // Update html direction
+  document.documentElement.lang = t.lang;
+  document.documentElement.dir = t.dir;
+
+  // Update input direction
+  document.getElementById('qInput').style.direction = t.dir;
+}
+
+// Restore saved language
+window.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('ilmLang') || 'ur';
+  document.getElementById('langSelect').value = saved;
+  applyTranslation(saved);
+});
+
+/* ── Page navigation ── */
+function showPage(page) {
+  document.querySelectorAll('[id^="page-"]').forEach(function(el){ el.classList.add('hidden'); });
+  var mains = document.querySelectorAll('.main-wrap:not([id])');
+  if (page === 'home') {
+    mains.forEach(function(el){ el.classList.remove('hidden'); });
+  } else {
+    mains.forEach(function(el){ el.classList.add('hidden'); });
+    var t = document.getElementById('page-' + page);
+    if (t) t.classList.remove('hidden');
+  }
+  window.scrollTo(0, 0);
+}
+
+function sendContact() {
+  var n = document.getElementById('cName').value.trim();
+  var e = document.getElementById('cEmail').value.trim();
+  var m = document.getElementById('cMsg').value.trim();
+  if (!n||!e||!m) { alert('براہ کرم تمام fields بھریں'); return; }
+  var btn = document.querySelector('.contact-btn');
+  btn.textContent = '⏳ بھیجا جا رہا ہے...'; btn.disabled = true;
+  fetch('https://formspree.io/f/xpwzgvkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:n,email:e,message:m})})
+  .then(function(){ btn.textContent='پیغام بھیجیں ←'; btn.disabled=false; document.getElementById('contactSuccess').classList.remove('hidden'); document.getElementById('cName').value=''; document.getElementById('cEmail').value=''; document.getElementById('cMsg').value=''; })
+  .catch(function(){ btn.textContent='پیغام بھیجیں ←'; btn.disabled=false; alert('رابطہ نہیں ہو سکا'); });
+}
+
+/* ── Ads ── */
+window.addEventListener('load', function() {
+  setTimeout(function(){
+    document.querySelectorAll('.ad-wrap').forEach(function(w){
+      var ins = w.querySelector('ins');
+      if (!ins || ins.innerHTML.trim()==='' || ins.offsetHeight===0) w.style.display='none';
+    });
+  }, 3000);
+});
+
+/* ── Jafar Logic ── */
+function extractLetters(word) {
+  var result = [];
+  for (var i = 0; i < word.length; i++) {
+    var c = word[i]; var cp = c.codePointAt(0);
+    if (cp >= 0x0600 && cp <= 0x06FF) {
+      if (cp >= 0x064B && cp <= 0x065F) continue;
+      if ('؟،؛'.includes(c)) continue;
+      result.push(c);
+    }
+  }
+  return result;
+}
+
+function runJafar() {
+  var q = document.getElementById('qInput').value.trim();
+  if (!q) { alert('براہ کرم سوال لکھیں'); return; }
+  var words = q.split(/\s+/).filter(function(w){ return w.length > 0; });
+  var wordLetters = words.map(function(w){ return extractLetters(w); }).filter(function(a){ return a.length > 0; });
+  if (wordLetters.length === 0) { alert('براہ کرم اردو میں سوال لکھیں'); return; }
+
+  var numRows = wordLetters.length;
+  var totalCols = Math.max.apply(null, wordLetters.map(function(l,i){ return i + l.length; }));
+  var grid = [];
+  for (var r = 0; r < numRows; r++) {
+    var row = [];
+    for (var s = 0; s < r; s++) row.push({type:'spacer'});
+    for (var li = 0; li < wordLetters[r].length; li++) row.push({type:'letter', letter: wordLetters[r][li]});
+    while (row.length < totalCols) row.push({type:'spacer'});
+    grid.push(row);
+  }
+  var countOrder = [];
+  for (var c = 0; c < totalCols; c++)
+    for (var rr = 0; rr < numRows; rr++)
+      if (grid[rr][c].type === 'letter') countOrder.push(grid[rr][c].letter);
+
+  var extractedLetters = [];
+  countOrder.forEach(function(l, idx){ if ((idx+1) % 4 === 0) extractedLetters.push(l); });
+  var lastEnd = Math.floor(countOrder.length / 4) * 4;
+  for (var i = lastEnd; i < countOrder.length; i++) extractedLetters.push(countOrder[i]);
+
+  var lettersRow = document.getElementById('lettersRow');
+  lettersRow.innerHTML = '';
+  extractedLetters.forEach(function(l){
+    var div = document.createElement('div');
+    div.className = 'letter-box';
+    div.textContent = l;
+    lettersRow.appendChild(div);
+  });
+  document.getElementById('formedWord').textContent = extractedLetters.join('');
+
+  document.getElementById('harfRow').innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+  document.getElementById('resultText').textContent = '';
+  document.getElementById('rohaniText').textContent = '';
+  document.getElementById('mazajText').innerHTML = '';
+  document.getElementById('mazajSection').style.display = 'none';
+  document.getElementById('resultSection').classList.remove('hidden');
+  document.getElementById('resultSection').scrollIntoView({behavior:'smooth', block:'start'});
+
+  var prompt = 'آپ علم جعفر کے ماہر عالم ہیں۔\n\nسوال: "' + q + '"\nپہلا نام: "' + words[0] + '"\nجفر حروف: ' + extractedLetters.join(' ، ') + '\n\nچار حصوں میں جواب دیں:\n\n===حروف کے معنی===\nہر حرف کا نام اور اس سوال کے مطابق معنی۔\n\n===جفر کا نتیجہ===\nاس مخصوص سوال کا براہ راست جواب۔\n\n===روحانی حل===\nمخصوص وظیفہ یا عمل۔\n\n===مزاج===\n"' + words[0] + '" سے مزاج:\nپہلی سطر: نام\nدوسری سطر: خصوصیات\nتیسری سطر: مشورہ\n\nاردو میں۔';
+
+  fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":"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","anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:1500,messages:[{role:"user",content:prompt}]})})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(data.error){document.getElementById('harfRow').innerHTML='<div style="color:red;padding:8px;">⚠️ '+data.error.message+'</div>';return;}
+    var text=(data.content&&data.content[0])?data.content[0].text:'';
+    function parse(t,key){var rx=new RegExp('==='+key+'===([\\s\\S]*?)(?:===|$)');var m=t.match(rx);return m?m[1].trim():'';}
+    handleClaudeResponse({harfMaani:parse(text,'حروف کے معنی'),nateeja:parse(text,'جفر کا نتیجہ'),rohani:parse(text,'روحانی حل'),mazaj:parse(text,'مزاج')});
+  })
+  .catch(function(err){document.getElementById('harfRow').innerHTML='<div style="color:red;padding:8px;">⚠️ '+err.message+'</div>';});
+}
+
+function handleClaudeResponse(data) {
+  var harfRow = document.getElementById('harfRow');
+  harfRow.innerHTML = '';
+  var lines = (data.harfMaani || '').split('\n').filter(function(l){ return l.trim(); });
+  lines.forEach(function(line) {
+    var div = document.createElement('div');
+    div.className = 'harf-item';
+    var idx = line.indexOf(':');
+    if (idx > 0) {
+      div.innerHTML = '<span class="harf">' + line.substring(0,idx).trim() + '</span><span class="mani">' + line.substring(idx+1).trim() + '</span>';
+    } else {
+      div.innerHTML = '<span class="mani">' + line + '</span>';
+    }
+    harfRow.appendChild(div);
+  });
+  document.getElementById('resultText').textContent = data.nateeja || '';
+  document.getElementById('rohaniText').textContent = data.rohani || '';
+  if (data.mazaj) {
+    var mLines = data.mazaj.split('\n').filter(function(l){ return l.trim(); });
+    var mn = mLines[0]||''; var sf = mLines[1]||''; var wz = mLines.slice(2).join(' ')||'';
+    var clr = {color:'#9a7830',bg:'#fff8e1',border:'#c9a84c'};
+    var map = {'گرم تر':{color:'#c0392b',bg:'#fff0ee',border:'#e74c3c'},'گرم خشک':{color:'#b7410e',bg:'#fff5ee',border:'#e67e22'},'سرد تر':{color:'#1a5276',bg:'#eef8ff',border:'#2980b9'},'سرد خشک':{color:'#4a4a6a',bg:'#f5f5f8',border:'#7f8c8d'},'تر گرم':{color:'#1e7a45',bg:'#f0fff6',border:'#27ae60'}};
+    for (var k in map){ if(mn.indexOf(k)>=0){clr=map[k];break;} }
+    document.getElementById('mazajText').innerHTML='<div class="mazaj-badge" style="background:'+clr.bg+';color:'+clr.color+';border:1px solid '+clr.border+';">🌿 مزاج: <b>'+mn+'</b></div><div style="font-size:13px;color:#4a4a6a;margin-bottom:8px;line-height:2;"><b style="color:'+clr.color+';">خصوصیات:</b> '+sf+'</div><div style="font-size:13px;color:#555;line-height:2;"><b>مشورہ:</b> '+wz+'</div>';
+    document.getElementById('mazajSection').style.display='block';
+  }
+}
+</script>
+</body>
+</html>
   background: linear-gradient(180deg, #0f1e38 0%, #060c18 100%);
   border-bottom: 1px solid rgba(201,168,76,.2);
   padding: 56px 20px 28px;
