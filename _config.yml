@@ -1,5 +1,0 @@
-# GitHub Pages config
-plugins: []
-exclude:
-  - Gemfile
-  - Gemfile.lock
