@@ -1489,9 +1489,11 @@ function runJafar(){
   aiDiv.innerHTML='<div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جعفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div>';
   tb2.appendChild(aiDiv);
 
-  var gPrompt='آپ علم جعفر کے ماہر ہیں۔ صرف اردو میں جواب دیں۔\n\nاہم ہدایت: کوئی قرآنی آیت خود مت بنائیں۔ صرف وہ آیت لکھیں جو آپ کو یقین سے یاد ہو۔ اگر یاد نہ ہو تو آیت کا حوالہ نہ دیں۔\n\nسوال: "'+q+'"\nجفر حروف: '+ext.join('، ')+'\n\n===جفر کا نتیجہ===\nصرف 3 جملے میں: حروف کا رجحان بتائیں اور سوال کا واضح جواب دیں۔\n\n===روحانی حل===\nصرف یہ format استعمال کریں:\n• سورۃ [نام] — [کتنی بار] — [کتنے دن]\n• [دعا یا ذکر] — [کتنی بار] — [کب]\nزیادہ سے زیادہ 2 وظیفے۔';
+  var gPrompt='آپ علم جعفر کے ماہر روحانی عالم ہیں جو اسلامی روحانی علوم میں مہارت رکھتے ہیں۔ آپ کا کام صرف اردو میں مختصر اور درست جواب دینا ہے۔\n\nسوال: "'+q+'"\nجفر حروف: '+ext.join('، ')+'\n\nہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n===جفر کا نتیجہ===\nحروف '+ext.join('، ')+' کا تجزیہ کریں اور سوال کا براہ راست جواب دیں۔ 3 جملوں میں بتائیں کہ کیا ہوگا اور کیوں۔\n\n===روحانی حل===\nاس مسئلے کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
 
-  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AQ.Ab8RN6IEChdk7wwVKBo1YKVi6qnVuUa8HbplYRf_sI1m485L9g',{
+
+
+  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AQ.Ab8RN6JlRRFyu2y8_hg4-VBAH-5NtlP36kHTEPoNQgKNzqEigA',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
