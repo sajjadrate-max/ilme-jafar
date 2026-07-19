@@ -1,36 +1,24 @@
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method Not Allowed"
-    });
-  }
+.then(function(res){
+    return res.json();
+}).then(function(d){
 
-  try {
-    const { prompt } = req.body;
+    aiDiv.innerHTML = "";
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-5-mini",
-        input: prompt
-      })
-    });
+    var text = "";
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json(data);
+    try {
+        text =
+            d.output_text ||
+            d.output?.[0]?.content?.[0]?.text ||
+            "";
+    } catch (e) {
+        text = "";
     }
 
-    return res.status(200).json(data);
+    if (!text) {
+        console.log("OpenAI Response:", d);
+        showFallback(aiDiv, ext, q);
+        return;
+    }
 
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message
-    });
-  }
-}
+    var parts = text.split("===");
