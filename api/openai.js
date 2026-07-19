@@ -18,8 +18,12 @@ export default async function handler(req, res) {
       })
     });
 
-    const response = await fetch(...);
+    if (!response.ok) {
+  return res.status(response.status).json(await response.json());
+}
 
+const data = await response.json();
+return res.status(200).json(data);
 if (!response.ok) {
   return res.status(response.status).json(await response.json());
 }
