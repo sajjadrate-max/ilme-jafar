@@ -1521,11 +1521,7 @@ function runJafar(){
       'Content-Type':'application/json',
     },
     body: JSON.stringify({
-  prompt:
-    'علم جعفر۔اردو میں۔\n' +
-    'سوال:"' + q + '"\n' +
-    'حروف:' + ext.join('،') +
-    '\n\n===نتیجہ===\n2 جملوں میں جواب\n===وظیفہ===\n1 وظیفہ: نام، تعداد، دن'
+  prompt: gPrompt
 })
   }).then(function(res){return res.json();}).then(function(d){
     aiDiv.innerHTML='';
