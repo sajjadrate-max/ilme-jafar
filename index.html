@@ -1531,7 +1531,10 @@ function runJafar(){
 }catch(e){
   text = "";
     }
-    if(!text){showFallback(aiDiv,ext,q);return;}
+    if(!text){
+      aiDiv.innerHTML = "<pre style='white-space:pre-wrap;direction:ltr;text-align:left;color:#fff;background:#111;padding:10px;font-size:12px;border-radius:8px;'>DEBUG RAW RESPONSE:\n" + JSON.stringify(d, null, 2).replace(/</g,"&lt;") + "</pre>";
+      return;
+    }
     function cleanMd(s){
       return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,'');
     }
