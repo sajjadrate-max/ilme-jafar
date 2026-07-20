@@ -1550,7 +1550,9 @@ function runJafar(){
     var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;aiDiv.appendChild(rt);
     if(rh){var rb=document.createElement('div');rb.className='rohani-box green';rb.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';aiDiv.appendChild(rb);}
     aiDiv.scrollIntoView({behavior:'smooth',block:'start'});
-  }).catch(function(){showFallback(aiDiv,ext,q);});
+  }).catch(function(err){
+    aiDiv.innerHTML = "<pre style='white-space:pre-wrap;direction:ltr;text-align:left;color:#fff;background:#111;padding:10px;font-size:12px;border-radius:8px;'>DEBUG FETCH ERROR:\n" + String(err) + "\n" + (err && err.stack ? err.stack : "") + "</pre>";
+  });
 
   function showFallback(div,letters,question){
     var r=buildHarfResponse(letters,question);
