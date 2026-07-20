@@ -56,7 +56,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "prompt is required" });
     }
 
-    if (prompt.length > 2000) {
+    // Keep prompts short — shorter input also means less spent per request.
+    if (prompt.length > 800) {
       return res.status(400).json({ error: "prompt too long" });
     }
 
@@ -74,7 +75,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "gpt-4o-mini",
         input: prompt,
-        max_output_tokens: 600,
+        max_output_tokens: 300,
       }),
     });
 
@@ -85,10 +86,6 @@ export default async function handler(req, res) {
     }
 
     const data = await openaiRes.json();
-
-    // TEMP DEBUG: log the full response so we can see its shape in Vercel logs
-    console.log("OpenAI raw response:", JSON.stringify(data));
-
     return res.status(200).json(data);
   } catch (err) {
     console.error("Server error:", err);
