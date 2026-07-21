@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.ilmejafar.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://www.ilmejafar.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/abjad-numbers.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/ilm-e-jafar-history.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/jafar-akhbar-method.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/jafar-asar-method.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/ism-e-azam.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/istikhara-guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/surah-fatiha-benefits.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/durood-ibrahimi.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/ayat-ul-kursi.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/nazar-e-bad.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/rizq-barkat.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/shadi-mein-taakhir.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/karobar-mein-kamyabi.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/jinnat-o-sehr.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/khwabon-ki-tabeer.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/sabr-o-tawakkul.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/dua-ki-qubooliyat.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/sadqa-ke-fawaid.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/hasad-aur-nazar.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/fake-aamil-se-bachao.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/quran-se-shifa.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/namaz-ki-ahmiyat.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ilmejafar.com/articles/roohani-amraz-ki-alamaat.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
