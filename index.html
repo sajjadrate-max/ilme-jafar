@@ -7,12 +7,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Ilm-e-Jafar — Spiritual Guidance Center</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0a1628">
 <meta property="og:title" content="Ilm-e-Jafar — Spiritual Guidance Center">
 <meta property="og:description" content="Ilm-e-Jafar — Get spiritual guidance through letters and numbers">
-<meta property="og:image" content="https://www.ilmejafar.com/favicon.svg">
+<meta property="og:image" content="https://www.ilmejafar.com/og-thumbnail.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://www.ilmejafar.com/">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.ilmejafar.com/og-thumbnail.png">
 <meta name="description" content="Ilm-e-Jafar — Get spiritual guidance through letters and numbers">
 <meta name="keywords" content="ilm e jafar, jafar, spiritual guidance, islamic knowledge, علم جعفر">
 <meta name="robots" content="index, follow">
@@ -192,6 +199,18 @@ body{background:#060c18;background-image:radial-gradient(ellipse 120% 60% at 50%
   <a href="javascript:void(0)" onclick="showPg('terms')" id="nav-terms">Terms</a>
 </nav>
 
+<div style="width:100%;max-width:500px;margin:10px auto 0;padding:0 16px;box-sizing:border-box;text-align:center;">
+  <div id="shareLabelText" style="font-size:12px;color:rgba(201,168,76,.7);margin-bottom:8px;">🔗 Share with friends</div>
+  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+    <a href="javascript:void(0)" onclick="shareVia('whatsapp')" title="WhatsApp" style="width:38px;height:38px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:18px;text-decoration:none;">💬</a>
+    <a href="javascript:void(0)" onclick="shareVia('facebook')" title="Facebook" style="width:38px;height:38px;border-radius:50%;background:#1877F2;display:flex;align-items:center;justify-content:center;font-size:18px;text-decoration:none;color:#fff;">f</a>
+    <a href="javascript:void(0)" onclick="shareVia('telegram')" title="Telegram" style="width:38px;height:38px;border-radius:50%;background:#229ED9;display:flex;align-items:center;justify-content:center;font-size:18px;text-decoration:none;">✈️</a>
+    <a href="javascript:void(0)" onclick="shareVia('twitter')" title="X / Twitter" style="width:38px;height:38px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:16px;text-decoration:none;color:#fff;font-weight:700;">𝕏</a>
+    <a href="javascript:void(0)" onclick="shareVia('native')" title="More apps (Instagram, etc.)" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#9a7830);display:flex;align-items:center;justify-content:center;font-size:16px;text-decoration:none;color:#0a1628;">📤</a>
+    <a href="javascript:void(0)" onclick="shareVia('copy')" title="Copy Link" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:16px;text-decoration:none;color:#c9a84c;">🔗</a>
+  </div>
+</div>
+
 <!-- AD - Display - Nav کے بعد -->
 <div class="ad-wrap">
   <ins class="adsbygoogle"
@@ -319,34 +338,65 @@ body{background:#060c18;background-image:radial-gradient(ellipse 120% 60% at 50%
 
 
   <!-- ARTICLES INDEX SECTION -->
+  <div id="articlesIndexSectionEN" style="width:100%;max-width:500px;margin-top:14px;background:linear-gradient(135deg,#0f1e38,#0a1628);border-radius:14px;overflow:hidden;border:1px solid rgba(201,168,76,.15);box-shadow:0 8px 28px rgba(0,0,0,.3);display:none;">
+    <div style="background:linear-gradient(135deg,#122040,#0a1628);padding:14px 18px;border-bottom:2px solid #c9a84c;direction:ltr;">
+      <span style="font-size:14px;color:#c9a84c;font-weight:700;">📚 Read More Articles</span>
+    </div>
+    <div style="padding:10px 18px;direction:ltr;">
+      <a href="/articles/English/abjad-numbers.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 A Complete Introduction to Abjad Numerals</a>
+      <a href="/articles/English/ilm-e-jafar-history.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The History and Background of Ilm-e-Jafar</a>
+      <a href="/articles/English/jafar-akhbar-method.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Method of Ilm-e-Jafar Akhbar</a>
+      <a href="/articles/English/jafar-asar-method.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Method of Ilm-e-Jafar Asar</a>
+      <a href="/articles/English/ism-e-azam.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 What Is Ism-e-Azam (The Greatest Name)?</a>
+      <a href="/articles/English/istikhara-guide.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Method and Importance of Istikhara Prayer</a>
+      <a href="/articles/English/surah-fatiha-benefits.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Spiritual Benefits of Surah Al-Fatiha</a>
+      <a href="/articles/English/durood-ibrahimi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Virtues of Durood Ibrahimi</a>
+      <a href="/articles/English/ayat-ul-kursi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Virtues and Effect of Ayat al-Kursi</a>
+      <a href="/articles/English/nazar-e-bad.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 What Is the Evil Eye and How to Guard Against It</a>
+      <a href="/articles/English/rizq-barkat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Causes of Blessing in One's Provision (Rizq)</a>
+      <a href="/articles/English/shadi-mein-taakhir.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 Delay in Marriage — Causes and Guidance</a>
+      <a href="/articles/English/karobar-mein-kamyabi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 Principles of Blessing in Business</a>
+      <a href="/articles/English/jinnat-o-sehr.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Islamic Perspective on Jinn and Sorcery</a>
+      <a href="/articles/English/khwabon-ki-tabeer.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 An Islamic Introduction to Dream Interpretation</a>
+      <a href="/articles/English/sabr-o-tawakkul.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 Patience and Trust in Allah</a>
+      <a href="/articles/English/dua-ki-qubooliyat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Times and Etiquette of Acceptance of Supplication</a>
+      <a href="/articles/English/sadqa-ke-fawaid.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Spiritual and Social Benefits of Charity</a>
+      <a href="/articles/English/hasad-aur-nazar.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Signs of Envy and Its Spiritual Remedy</a>
+      <a href="/articles/English/fake-aamil-se-bachao.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 Protecting Yourself from Fraudulent Practitioners</a>
+      <a href="/articles/English/quran-se-shifa.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 Principles of Healing Through the Holy Qur'an</a>
+      <a href="/articles/English/namaz-ki-ahmiyat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 The Spiritual and Physical Importance of Prayer</a>
+      <a href="/articles/English/roohani-amraz-ki-alamaat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 General Signs of Spiritual Unease</a>
+    </div>
+  </div>
+
   <div id="articlesIndexSection" style="width:100%;max-width:500px;margin-top:14px;background:linear-gradient(135deg,#0f1e38,#0a1628);border-radius:14px;overflow:hidden;border:1px solid rgba(201,168,76,.15);box-shadow:0 8px 28px rgba(0,0,0,.3);">
     <div style="background:linear-gradient(135deg,#122040,#0a1628);padding:14px 18px;border-bottom:2px solid #c9a84c;direction:rtl;">
       <span style="font-size:14px;color:#c9a84c;font-weight:700;">📚 مزید مضامین پڑھیں</span>
     </div>
     <div style="padding:10px 18px;direction:rtl;">
-      <a href="/articles/abjad-numbers.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 ابجد اعداد کا مکمل تعارف</a>
-      <a href="/articles/ilm-e-jafar-history.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 علم جعفر کی تاریخ اور پس منظر</a>
-      <a href="/articles/jafar-akhbar-method.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 علم جعفر اخبار کا طریقہ کار</a>
-      <a href="/articles/jafar-asar-method.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 علم جعفر آثار کا طریقہ کار</a>
-      <a href="/articles/ism-e-azam.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 اسم اعظم کیا ہے؟</a>
-      <a href="/articles/istikhara-guide.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 نماز استخارہ کا طریقہ اور اہمیت</a>
-      <a href="/articles/surah-fatiha-benefits.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 سورۃ الفاتحہ کے روحانی فوائد</a>
-      <a href="/articles/durood-ibrahimi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 درود ابراہیمی کے فضائل</a>
-      <a href="/articles/ayat-ul-kursi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 آیت الکرسی کے فضائل اور تاثیر</a>
-      <a href="/articles/nazar-e-bad.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 نظر بد کیا ہے اور اس سے بچاؤ</a>
-      <a href="/articles/rizq-barkat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 رزق میں برکت کے اسباب</a>
-      <a href="/articles/shadi-mein-taakhir.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 شادی میں تاخیر — اسباب اور رہنمائی</a>
-      <a href="/articles/karobar-mein-kamyabi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 کاروبار میں برکت کے اصول</a>
-      <a href="/articles/jinnat-o-sehr.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 جنات اور سحر کا اسلامی نقطہ نظر</a>
-      <a href="/articles/khwabon-ki-tabeer.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 خوابوں کی تعبیر کا اسلامی تعارف</a>
-      <a href="/articles/sabr-o-tawakkul.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 صبر اور توکل علی اللہ</a>
-      <a href="/articles/dua-ki-qubooliyat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 دعا کی قبولیت کے اوقات اور آداب</a>
-      <a href="/articles/sadqa-ke-fawaid.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 صدقہ کے روحانی اور معاشرتی فوائد</a>
-      <a href="/articles/hasad-aur-nazar.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 حسد کی علامات اور اس کا روحانی علاج</a>
-      <a href="/articles/fake-aamil-se-bachao.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 جعلی عاملوں اور فراڈ سے بچاؤ</a>
-      <a href="/articles/quran-se-shifa.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 قرآن کریم سے شفا کے اصول</a>
-      <a href="/articles/namaz-ki-ahmiyat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 نماز کی روحانی اور جسمانی اہمیت</a>
-      <a href="/articles/roohani-amraz-ki-alamaat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 روحانی امراض کی عمومی علامات</a>
+      <a href="/articles/Urdu/abjad-numbers.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 ابجد اعداد کا مکمل تعارف</a>
+      <a href="/articles/Urdu/ilm-e-jafar-history.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 علم جعفر کی تاریخ اور پس منظر</a>
+      <a href="/articles/Urdu/jafar-akhbar-method.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 علم جعفر اخبار کا طریقہ کار</a>
+      <a href="/articles/Urdu/jafar-asar-method.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 علم جعفر آثار کا طریقہ کار</a>
+      <a href="/articles/Urdu/ism-e-azam.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 اسم اعظم کیا ہے؟</a>
+      <a href="/articles/Urdu/istikhara-guide.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 نماز استخارہ کا طریقہ اور اہمیت</a>
+      <a href="/articles/Urdu/surah-fatiha-benefits.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 سورۃ الفاتحہ کے روحانی فوائد</a>
+      <a href="/articles/Urdu/durood-ibrahimi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 درود ابراہیمی کے فضائل</a>
+      <a href="/articles/Urdu/ayat-ul-kursi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 آیت الکرسی کے فضائل اور تاثیر</a>
+      <a href="/articles/Urdu/nazar-e-bad.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 نظر بد کیا ہے اور اس سے بچاؤ</a>
+      <a href="/articles/Urdu/rizq-barkat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 رزق میں برکت کے اسباب</a>
+      <a href="/articles/Urdu/shadi-mein-taakhir.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 شادی میں تاخیر — اسباب اور رہنمائی</a>
+      <a href="/articles/Urdu/karobar-mein-kamyabi.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 کاروبار میں برکت کے اصول</a>
+      <a href="/articles/Urdu/jinnat-o-sehr.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 جنات اور سحر کا اسلامی نقطہ نظر</a>
+      <a href="/articles/Urdu/khwabon-ki-tabeer.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 خوابوں کی تعبیر کا اسلامی تعارف</a>
+      <a href="/articles/Urdu/sabr-o-tawakkul.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 صبر اور توکل علی اللہ</a>
+      <a href="/articles/Urdu/dua-ki-qubooliyat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 دعا کی قبولیت کے اوقات اور آداب</a>
+      <a href="/articles/Urdu/sadqa-ke-fawaid.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 صدقہ کے روحانی اور معاشرتی فوائد</a>
+      <a href="/articles/Urdu/hasad-aur-nazar.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 حسد کی علامات اور اس کا روحانی علاج</a>
+      <a href="/articles/Urdu/fake-aamil-se-bachao.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 جعلی عاملوں اور فراڈ سے بچاؤ</a>
+      <a href="/articles/Urdu/quran-se-shifa.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 قرآن کریم سے شفا کے اصول</a>
+      <a href="/articles/Urdu/namaz-ki-ahmiyat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 نماز کی روحانی اور جسمانی اہمیت</a>
+      <a href="/articles/Urdu/roohani-amraz-ki-alamaat.html" style="display:block;color:rgba(250,247,240,.85);text-decoration:none;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.1);">📄 روحانی امراض کی عمومی علامات</a>
     </div>
   </div>
 
@@ -1067,13 +1117,23 @@ function applyLang(code) {
   document.documentElement.lang = L.lang;
   // Note: dir stays rtl always to prevent layout shift
 
-  // The educational article + articles index sections are Urdu-only content.
-  // Hide them for other languages so mismatched-language text is never shown.
+  // The educational article + articles index sections are language-specific content.
+  // Show only the section matching the currently selected language; hide all others.
   var eduSec = document.getElementById('eduArticleSection');
-  var artSec = document.getElementById('articlesIndexSection');
-  var showUrduExtras = (code === 'ur');
-  if (eduSec) eduSec.style.display = showUrduExtras ? '' : 'none';
-  if (artSec) artSec.style.display = showUrduExtras ? '' : 'none';
+  var artSecUr = document.getElementById('articlesIndexSection');
+  var artSecEn = document.getElementById('articlesIndexSectionEN');
+  if (eduSec) eduSec.style.display = (code === 'ur') ? '' : 'none';
+  if (artSecUr) artSecUr.style.display = (code === 'ur') ? '' : 'none';
+  if (artSecEn) artSecEn.style.display = (code === 'en') ? '' : 'none';
+
+  var shareTexts = {
+    ur: '🔗 دوستوں کے ساتھ شیئر کریں',
+    en: '🔗 Share with friends',
+    hi: '🔗 दोस्तों के साथ साझा करें',
+    ar: '🔗 شارك مع الأصدقاء'
+  };
+  var shareLbl = document.getElementById('shareLabelText');
+  if (shareLbl) shareLbl.textContent = shareTexts[code] || shareTexts.en;
 
   // Lang bar
   var lb = document.getElementById('langLabel'); if(lb) lb.textContent = L.langLabel;
@@ -1805,6 +1865,41 @@ function speakIsm(){
   } else {
     speakNext();
   }
+}
+
+function shareVia(platform){
+  var url = 'https://www.ilmejafar.com/';
+  var text = 'Ilm-e-Jafar — Spiritual Guidance Center';
+  var encodedUrl = encodeURIComponent(url);
+  var encodedText = encodeURIComponent(text);
+  var link = '';
+  if(platform === 'whatsapp'){
+    link = 'https://wa.me/?text=' + encodedText + '%20' + encodedUrl;
+  } else if(platform === 'facebook'){
+    link = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedUrl;
+  } else if(platform === 'telegram'){
+    link = 'https://t.me/share/url?url=' + encodedUrl + '&text=' + encodedText;
+  } else if(platform === 'twitter'){
+    link = 'https://twitter.com/intent/tweet?url=' + encodedUrl + '&text=' + encodedText;
+  } else if(platform === 'native'){
+    if(navigator.share){
+      navigator.share({title:text, url:url}).catch(function(){});
+      return;
+    } else {
+      alert('یہ فیچر اس براؤزر میں دستیاب نہیں، براہ کرم "Copy Link" استعمال کریں۔');
+      return;
+    }
+  } else if(platform === 'copy'){
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(url).then(function(){
+        alert('لنک کاپی ہو گیا ہے!');
+      });
+    } else {
+      prompt('لنک کاپی کریں:', url);
+    }
+    return;
+  }
+  if(link) window.open(link, '_blank', 'noopener');
 }
 
 function openGmail(){
