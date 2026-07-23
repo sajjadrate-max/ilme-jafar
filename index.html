@@ -202,12 +202,12 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 <div style="width:100%;max-width:500px;margin:10px auto 0;padding:0 16px;box-sizing:border-box;text-align:center;">
   <div id="shareLabelText" style="font-size:12px;color:rgba(201,168,76,.7);margin-bottom:8px;">🔗 Share with friends</div>
   <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
-    <a href="javascript:void(0)" onclick="shareVia('whatsapp')" title="WhatsApp" style="width:42px;height:42px;border-radius:12px;overflow:hidden;display:block;"><img src="/whatsapp.png" alt="WhatsApp" style="width:100%;height:100%;display:block;"></a>
-    <a href="javascript:void(0)" onclick="shareVia('facebook')" title="Facebook" style="width:42px;height:42px;border-radius:12px;overflow:hidden;display:block;"><img src="/facebook.png" alt="Facebook" style="width:100%;height:100%;display:block;"></a>
-    <a href="javascript:void(0)" onclick="shareVia('telegram')" title="Telegram" style="width:42px;height:42px;border-radius:12px;overflow:hidden;display:block;"><img src="/telegram.png" alt="Telegram" style="width:100%;height:100%;display:block;"></a>
-    <a href="javascript:void(0)" onclick="shareVia('twitter')" title="X / Twitter" style="width:42px;height:42px;border-radius:12px;overflow:hidden;display:block;"><img src="/x-twitter.png" alt="X" style="width:100%;height:100%;display:block;"></a>
-    <a href="javascript:void(0)" onclick="shareVia('native')" title="More apps (Instagram, etc.)" style="width:42px;height:42px;border-radius:12px;overflow:hidden;display:block;"><img src="/share.png" alt="Share" style="width:100%;height:100%;display:block;"></a>
-    <a href="javascript:void(0)" onclick="shareVia('copy')" title="Copy Link" style="width:42px;height:42px;border-radius:12px;overflow:hidden;display:block;"><img src="/link.png" alt="Copy Link" style="width:100%;height:100%;display:block;"></a>
+    <a href="javascript:void(0)" onclick="shareVia('whatsapp')" title="WhatsApp" style="width:42px;height:42px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 2px 8px rgba(0,0,0,.35);"><img src="/whatsapp.png" alt="WhatsApp" style="width:100%;height:100%;display:block;"></a>
+    <a href="javascript:void(0)" onclick="shareVia('facebook')" title="Facebook" style="width:42px;height:42px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 2px 8px rgba(0,0,0,.35);"><img src="/facebook.png" alt="Facebook" style="width:100%;height:100%;display:block;"></a>
+    <a href="javascript:void(0)" onclick="shareVia('telegram')" title="Telegram" style="width:42px;height:42px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 2px 8px rgba(0,0,0,.35);"><img src="/telegram.png" alt="Telegram" style="width:100%;height:100%;display:block;"></a>
+    <a href="javascript:void(0)" onclick="shareVia('twitter')" title="X / Twitter" style="width:42px;height:42px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 2px 8px rgba(0,0,0,.35);"><img src="/x-twitter.png" alt="X" style="width:100%;height:100%;display:block;"></a>
+    <a href="javascript:void(0)" onclick="shareVia('native')" title="More apps (Instagram, etc.)" style="width:42px;height:42px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 2px 8px rgba(0,0,0,.35);"><img src="/share.png" alt="Share" style="width:100%;height:100%;display:block;"></a>
+    <a href="javascript:void(0)" onclick="shareVia('copy')" title="Copy Link" style="width:42px;height:42px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 2px 8px rgba(0,0,0,.35);"><img src="/link.png" alt="Copy Link" style="width:100%;height:100%;display:block;"></a>
   </div>
 </div>
 
@@ -431,8 +431,8 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 <div id="pg-akhbar" class="main-wrap hidden">
   <button class="back-btn" onclick="showPg('home')" id="backBtn1">← واپس</button>
   <div style="background:linear-gradient(135deg,#1a0a00,#2d1500);border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:16px 18px;margin-bottom:14px;direction:rtl;">
-    <div style="font-size:14px;font-weight:700;color:#f0d878;margin-bottom:8px;">⚠️ سوال کرتے وقت ذہن کی کیفیت</div>
-    <div style="font-size:12px;color:rgba(250,247,240,.8);line-height:2.2;">
+    <div style="font-size:14px;font-weight:700;color:#f0d878;margin-bottom:8px;" id="miniWarnTitle1">⚠️ سوال کرتے وقت ذہن کی کیفیت</div>
+    <div style="font-size:12px;color:rgba(250,247,240,.8);line-height:2.2;" id="miniWarnBody1">
       🤲 سوال کرنے سے پہلے <b>وضو</b> کریں<br>
       🕌 <b>درود شریف</b> ۳ بار پڑھیں<br>
       💚 دل میں <b>اللہ پر مکمل یقین</b> رکھیں<br>
@@ -542,8 +542,8 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 <div id="pg-asar" class="main-wrap hidden">
   <button class="back-btn" onclick="showPg('home')" id="backBtn2">← واپس</button>
   <div style="background:linear-gradient(135deg,#1a0a00,#2d1500);border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:16px 18px;margin-bottom:14px;direction:rtl;">
-    <div style="font-size:14px;font-weight:700;color:#f0d878;margin-bottom:8px;">⚠️ سوال کرتے وقت ذہن کی کیفیت</div>
-    <div style="font-size:12px;color:rgba(250,247,240,.8);line-height:2.2;">
+    <div style="font-size:14px;font-weight:700;color:#f0d878;margin-bottom:8px;" id="miniWarnTitle2">⚠️ سوال کرتے وقت ذہن کی کیفیت</div>
+    <div style="font-size:12px;color:rgba(250,247,240,.8);line-height:2.2;" id="miniWarnBody2">
       🤲 سوال کرنے سے پہلے <b>وضو</b> کریں<br>
       🕌 <b>درود شریف</b> ۳ بار پڑھیں<br>
       💚 دل میں <b>اللہ پر مکمل یقین</b> رکھیں<br>
@@ -1134,6 +1134,31 @@ function applyLang(code) {
   };
   var shareLbl = document.getElementById('shareLabelText');
   if (shareLbl) shareLbl.textContent = shareTexts[code] || shareTexts.en;
+
+  // Mini "mental state before asking" warning boxes on Akhbar & Asar tool pages
+  var miniWarn = {
+    ur: {
+      title: '⚠️ سوال کرتے وقت ذہن کی کیفیت',
+      body: '🤲 سوال کرنے سے پہلے <b>وضو</b> کریں<br>🕌 <b>درود شریف</b> ۳ بار پڑھیں<br>💚 دل میں <b>اللہ پر مکمل یقین</b> رکھیں<br>📿 <b>بسم اللہ</b> پڑھ کر سوال لکھیں<br>🚫 غیر اسلامی یا گناہ والے سوال نہ کریں<br>🌙 <b>خالص نیت</b> سے صرف اللہ کی رضا کے لیے پوچھیں'
+    },
+    en: {
+      title: '⚠️ State of Mind Before Asking',
+      body: '🤲 Perform <b>ablution (wudu)</b> before asking<br>🕌 Recite <b>Durood Shareef</b> 3 times<br>💚 Keep <b>complete faith in Allah</b> in your heart<br>📿 Write your question after reciting <b>Bismillah</b><br>🚫 Do not ask un-Islamic or sinful questions<br>🌙 Ask with <b>sincere intention</b>, only for Allah\'s pleasure'
+    },
+    hi: {
+      title: '⚠️ सवाल पूछते समय मानसिक स्थिति',
+      body: '🤲 सवाल पूछने से पहले <b>वुज़ू</b> करें<br>🕌 <b>दरूद शरीफ़</b> 3 बार पढ़ें<br>💚 दिल में <b>अल्लाह पर पूरा यक़ीन</b> रखें<br>📿 <b>बिस्मिल्लाह</b> पढ़कर सवाल लिखें<br>🚫 ग़ैर-इस्लामी या गुनाह वाले सवाल न करें<br>🌙 <b>खालिस नीयत</b> से सिर्फ़ अल्लाह की रज़ा के लिए पूछें'
+    },
+    ar: {
+      title: '⚠️ حالة الذهن عند طرح السؤال',
+      body: '🤲 توضأ قبل طرح السؤال<br>🕌 اقرأ <b>الصلاة الإبراهيمية</b> 3 مرات<br>💚 احفظ <b>يقيناً كاملاً بالله</b> في قلبك<br>📿 اكتب سؤالك بعد قول <b>بسم الله</b><br>🚫 لا تطرح أسئلة غير إسلامية أو محرمة<br>🌙 اسأل <b>بنية خالصة</b> لوجه الله فقط'
+    }
+  };
+  var mw = miniWarn[code] || miniWarn.en;
+  var mwt1=document.getElementById('miniWarnTitle1'); if(mwt1) mwt1.innerHTML=mw.title;
+  var mwb1=document.getElementById('miniWarnBody1'); if(mwb1) mwb1.innerHTML=mw.body;
+  var mwt2=document.getElementById('miniWarnTitle2'); if(mwt2) mwt2.innerHTML=mw.title;
+  var mwb2=document.getElementById('miniWarnBody2'); if(mwb2) mwb2.innerHTML=mw.body;
 
   // Lang bar
   var lb = document.getElementById('langLabel'); if(lb) lb.textContent = L.langLabel;
