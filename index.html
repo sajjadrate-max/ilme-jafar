@@ -1930,11 +1930,18 @@ function openGmail(){
   var msg=document.getElementById('cMsg').value.trim();
   if(!msg){alert('براہ کرم پیغام لکھیں');return;}
   var to='sajjadrate@gmail.com';
-  var gmailWebLink='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(to)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
-  var win=window.open(gmailWebLink,'_blank');
-  if(!win){
-    // popup blocked — fall back to mailto
-    window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
+  var isMobile = /Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent);
+  var mailtoLink='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
+  if(isMobile){
+    // On mobile, mailto reliably hands off to the phone's mail app (Gmail app, etc.)
+    window.location.href=mailtoLink;
+  }else{
+    // On desktop, open Gmail's web compose window directly
+    var gmailWebLink='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='+encodeURIComponent(to)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
+    var win=window.open(gmailWebLink,'_blank');
+    if(!win){
+      window.location.href=mailtoLink;
+    }
   }
 }
 </script>
