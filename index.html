@@ -1190,6 +1190,13 @@ window.addEventListener('DOMContentLoaded',function(){
     localStorage.setItem('ilmLang','en');
     localStorage.setItem('ilmLangSet','1');
   }
+  // If the link was shared with a ?lang= parameter, use that language instead
+  var urlParams = new URLSearchParams(window.location.search);
+  var sharedLang = urlParams.get('lang');
+  if(sharedLang && ['ur','en','hi','ar'].indexOf(sharedLang) !== -1){
+    localStorage.setItem('ilmLang', sharedLang);
+    localStorage.setItem('ilmLangSet','1');
+  }
   var s=localStorage.getItem('ilmLang')||'en';
   var sel=document.getElementById('langSelect');
   if(sel) sel.value=s;
@@ -1738,8 +1745,15 @@ function speakIsm(){
 }
 
 function shareVia(platform){
-  var url = 'https://www.ilmejafar.com/';
-  var text = 'Ilm-e-Jafar — Spiritual Guidance Center';
+  var curLang = localStorage.getItem('ilmLang') || 'en';
+  var url = 'https://www.ilmejafar.com/?lang=' + curLang;
+  var shareMsgs = {
+    ur: 'علم جعفر — روحانی رہنمائی کا مرکز۔ حروف اور اعداد کے ذریعے مفت روحانی تجزیہ حاصل کریں۔',
+    en: 'Ilm-e-Jafar — Spiritual Guidance Center. Get free spiritual guidance through letters and numbers.',
+    hi: 'इल्म-ए-जफ़र — आध्यात्मिक मार्गदर्शन केंद्र। अक्षरों और अंकों के ज़रिए मुफ्त आध्यात्मिक विश्लेषण पाएं।',
+    ar: 'علم جعفر — مركز الإرشاد الروحاني. احصل على تحليل روحاني مجاني من خلال الحروف والأرقام.'
+  };
+  var text = shareMsgs[curLang] || shareMsgs.en;
   var encodedUrl = encodeURIComponent(url);
   var encodedText = encodeURIComponent(text);
   var link = '';
