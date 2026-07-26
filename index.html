@@ -6,6 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Ilm-e-Jafar — Spiritual Guidance Center</title>
+<link rel="canonical" href="https://www.ilmejafar.com/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
@@ -168,6 +169,26 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:3px;}
 
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Ilm-e-Jafar",
+  "alternateName": "علم جعفر",
+  "url": "https://www.ilmejafar.com/",
+  "description": "Ilm-e-Jafar — Get spiritual guidance through letters and numbers, based on traditional Islamic knowledge.",
+  "inLanguage": ["ur", "en", "hi", "ar"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Ilm-e-Jafar",
+  "url": "https://www.ilmejafar.com/",
+  "logo": "https://www.ilmejafar.com/favicon-512.png"
+}
+</script>
 </head>
 <body>
 
@@ -1809,8 +1830,11 @@ function submitContactForm(){
 
   btn.disabled = true;
   statusEl.style.display = 'block';
+  statusEl.style.background = 'rgba(201,168,76,.12)';
+  statusEl.style.border = '1px solid rgba(201,168,76,.4)';
   statusEl.style.color = '#c9a84c';
   statusEl.textContent = t.sending;
+  statusEl.scrollIntoView({behavior:'smooth', block:'center'});
 
   fetch('https://formspree.io/f/xgogpgea', {
     method: 'POST',
@@ -1818,16 +1842,23 @@ function submitContactForm(){
     body: JSON.stringify({ subject: subject, message: msg, _subject: 'ilmejafar.com: ' + subject })
   }).then(function(res){
     if(res.ok){
+      statusEl.style.background = 'rgba(76,175,80,.15)';
+      statusEl.style.border = '2px solid #4caf50';
       statusEl.style.color = '#4caf50';
       statusEl.textContent = t.ok;
+      statusEl.scrollIntoView({behavior:'smooth', block:'center'});
       document.getElementById('cMsg').value = '';
       document.getElementById('cSubject').value = '';
     } else {
+      statusEl.style.background = 'rgba(229,57,53,.15)';
+      statusEl.style.border = '2px solid #e53935';
       statusEl.style.color = '#e53935';
       statusEl.textContent = t.fail;
     }
     btn.disabled = false;
   }).catch(function(){
+    statusEl.style.background = 'rgba(229,57,53,.15)';
+    statusEl.style.border = '2px solid #e53935';
     statusEl.style.color = '#e53935';
     statusEl.textContent = t.fail;
     btn.disabled = false;

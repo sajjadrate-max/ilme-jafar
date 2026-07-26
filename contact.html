@@ -7,6 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Contact Us | Ilm-e-Jafar</title>
+<link rel="canonical" href="https://www.ilmejafar.com/contact.html">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
@@ -17,11 +18,11 @@
 <meta property="og:image" content="https://www.ilmejafar.com/og-thumbnail.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://www.ilmejafar.com/">
+<meta property="og:url" content="https://www.ilmejafar.com/contact.html">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.ilmejafar.com/og-thumbnail.png">
-<meta name="description" content="Ilm-e-Jafar — Get spiritual guidance through letters and numbers">
+<meta name="description" content="Contact ilmejafar.com — send us your questions, suggestions or feedback about Ilm-e-Jafar spiritual guidance.">
 <meta name="keywords" content="ilm e jafar, jafar, spiritual guidance, islamic knowledge, علم جعفر">
 <meta name="robots" content="index, follow">
 <!-- Google tag (gtag.js) -->
@@ -43,7 +44,7 @@
 html{scroll-behavior:smooth;overflow-x:hidden;}
 body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50% 0%,rgba(201,168,76,.10) 0%,transparent 60%),radial-gradient(ellipse 90% 50% at 85% 15%,rgba(42,70,120,.35) 0%,transparent 55%),radial-gradient(ellipse 90% 60% at 10% 100%,rgba(26,50,88,.45) 0%,transparent 55%),linear-gradient(180deg,#16294f 0%,#0d1c38 45%,#0a1628 100%);font-family:'Noto Nastaliq Urdu',serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;color:var(--cream);overflow-x:hidden;width:100%;}
 .hidden{display:none!important;}
-#langBar{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(10,22,40,.98);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.2);padding:6px 14px;display:flex;align-items:center;justify-content:flex-end;width:100%;}
+#langBar{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(10,22,40,.98);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.2);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;width:100%;}
 #langBar span{color:rgba(201,168,76,.6);font-size:12px;margin-right:auto;}
 #langSelect{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:7px;padding:6px 12px;font-size:13px;cursor:pointer;outline:none;direction:ltr;}
 .site-header{width:100%;background:linear-gradient(180deg,#0f1e38 0%,#060c18 100%);border-bottom:1px solid rgba(201,168,76,.2);padding:52px 16px 24px;text-align:center;position:relative;overflow:visible;}
@@ -174,14 +175,17 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 <body>
 
 
-<div id="langBar">
-  <span id="langLabel">🌐 زبان:</span>
-  <select id="langSelect" onchange="applyLang(this.value)">
-    <option value="ur">🇵🇰 اردو</option>
-    <option value="hi">🇮🇳 हिन्दी</option>
-    <option value="ar">🇦🇪 العربية</option>
-    <option value="en">🇺🇸 English</option>
-  </select>
+<div id="langBar" dir="ltr">
+  <a href="/" id="nav-home" style="color:#c9a84c;text-decoration:none;font-weight:700;font-size:13px;white-space:nowrap;">🏠 Home</a>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <span id="langLabel">🌐 Language:</span>
+    <select id="langSelect" onchange="applyLang(this.value)">
+      <option value="ur">🇵🇰 اردو</option>
+      <option value="hi">🇮🇳 हिन्दी</option>
+      <option value="ar">🇦🇪 العربية</option>
+      <option value="en">🇺🇸 English</option>
+    </select>
+  </div>
 </div>
 
 <div class="site-header">
@@ -195,14 +199,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
   <div class="header-ornament"><span>✦</span></div>
 </div>
 
-<nav class="site-nav" id="siteNav">
-  <a href="/" id="nav-home">🏠 Home</a>
-  <a href="/about.html" id="nav-about">About Us</a>
-  <a href="/contact.html" id="nav-contact">Contact</a>
-  <a href="/disclaimer.html" id="nav-disclaimer">Disclaimer</a>
-  <a href="/privacy.html" id="nav-privacy">Privacy Policy</a>
-  <a href="/terms.html" id="nav-terms">Terms</a>
-</nav>
+
 
 <div style="width:100%;max-width:500px;margin:14px auto 0;padding:0 16px;box-sizing:border-box;text-align:center;">
   <a href="javascript:void(0)" onclick="shareVia('native')" id="shareBtn" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f0d878,#c9a84c);color:#1a2b4a;font-weight:700;font-size:15px;padding:11px 30px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(201,168,76,.35);">🔗 <span id="shareLabelText">Share</span></a>
@@ -226,8 +223,10 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
   <div class="page-section">
     <h2>📬 Contact Us</h2>
     <p id="contactIntro">کوئی سوال، تجویز یا مسئلہ ہو تو ہم سے رابطہ کریں۔</p>
+    <div id="contactExtra">
     <p>ہم آپ کی رائے کو اہمیت دیتے ہیں۔ چاہے آپ کو ویب سائٹ کے استعمال میں کوئی دقت پیش آ رہی ہو، کسی نتیجے کے بارے میں سوال ہو، کوئی نیا فیچر تجویز کرنا چاہتے ہوں، یا محض اپنا تجربہ ہمارے ساتھ شیئر کرنا چاہتے ہوں — نیچے دیا گیا فارم استعمال کریں۔</p>
     <p style="font-size:13px;color:rgba(250,247,240,.7);">📌 عام طور پر ہم چند دنوں کے اندر جواب دینے کی کوشش کرتے ہیں۔ براہ کرم پیغام میں واضح طور پر اپنا سوال یا مسئلہ لکھیں تاکہ ہم بہتر رہنمائی کر سکیں۔</p>
+    </div>
 
     <div style="margin-top:22px;display:flex;flex-direction:column;gap:14px;">
 
@@ -250,7 +249,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       </button>
 
       <p style="font-size:11px;color:#aaa;text-align:center;line-height:1.8;" id="gmailNote">بٹن دبائیں — آپ کا پیغام خودکار طور پر بھیج دیا جائے گا</p>
-      <p style="font-size:13px;text-align:center;font-weight:700;display:none;" id="contactStatus"></p>
+      <div style="text-align:center;font-weight:700;font-size:15px;display:none;padding:14px 18px;border-radius:11px;margin-top:6px;" id="contactStatus"></div>
     </div>
 
     <p style="font-size:11px;color:#aaa;margin-top:16px;border-top:1px solid rgba(201,168,76,.15);padding-top:12px;">🌐 ilmejafar.com</p>
@@ -274,6 +273,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 </div>
 
 <script>
+
 
 /* == ABJAD == */
 var ABJAD={'ا':1,'آ':1,'أ':1,'إ':1,'ب':2,'پ':2,'ج':3,'چ':3,'د':4,'ذ':700,'ر':200,'ز':7,'ژ':7,'س':60,'ش':300,'ص':90,'ض':800,'ط':9,'ظ':900,'ع':70,'غ':1000,'ف':80,'ق':100,'ک':20,'گ':20,'ل':30,'م':40,'ن':50,'ں':50,'و':6,'ہ':5,'ه':5,'ة':5,'ح':8,'خ':600,'ی':10,'ي':10,'ے':10,'ئ':10,'ث':500,'ت':400};
@@ -399,11 +399,12 @@ var LNG = {
     ismPersonalText:" का इस्म-ए-आज़म ",
     ismPersonalEnd:" है",
     ismPersonalFawaaid:" के इस्म-ए-आज़म के फ़ायदे",
-    aboutHTML:"<h2>📿 About Us</h2><p><b>ilmejafar.com</b> इल्म-ए-जफ़र के पारंपरिक इस्लामी ज्ञान पर आधारित एक आध्यात्मिक मार्गदर्शन मंच है।</p><h3>हमारा उद्देश्य</h3><p>हमारा उद्देश्य लोगों को आध्यात्मिक मार्गदर्शन प्रदान करना है। इल्म-ए-जफ़र एक सदियों पुराना इस्लामी ज्ञान है जो हुरूफ़ और अंकों की शक्ति पर आधारित है।</p><h3>इल्म-ए-जफ़र क्या है?</h3><p>इल्म-ए-जफ़र एक पारंपरिक इस्लामी ज्ञान है जिसमें अरबी अक्षरों की आध्यात्मिक शक्ति से सवालों का जवाब निकाला जाता है। यह ज्ञान इमाम जाफ़र सादिक़ (रह.) से संबंधित माना जाता है।</p><h3>इल्म-ए-जफ़र अख़बार</h3><p>इस विधि में सवाल के अक्षरों को सीढ़ीनुमा क्रम में लिखा जाता है और हर चौथा अक्षर निकाला जाता है — ये अक्षर मिलकर सवाल का जवाब देते हैं।</p><h3>इल्म-ए-जफ़र आसार</h3><p>इस विधि में सवाल करने वाले का नाम, माँ का नाम, दिन और सवाल के अबजद अंकों को जोड़कर 4 से भाग दिया जाता है — बचा हुआ अंक जवाब दर्शाता है।</p><h3>हमारी सेवाएं</h3><p>✅ मुफ्त ऑनलाइन जफ़र विश्लेषण | ✅ हर अक्षर के आध्यात्मिक अर्थ | ✅ अबजद अंकों से समस्या का निर्धारण | ✅ बिल्कुल मुफ्त — कोई पंजीकरण नहीं</p>",
-    disclaimerHTML:"<h2>⚠️ Disclaimer</h2><h3>केवल आध्यात्मिक मार्गदर्शन</h3><p>ilmejafar.com पर दी गई सभी जानकारी केवल आध्यात्मिक मार्गदर्शन और शैक्षिक उद्देश्यों के लिए है।</p><h3>कोई गारंटी नहीं</h3><p>हम किसी भी परिणाम की गारंटी नहीं देते। इल्म-ए-जफ़र एक पारंपरिक ज्ञान है और इसके परिणाम अलग-अलग हो सकते हैं।</p><h3>चिकित्सीय सलाह नहीं</h3><p>यह वेबसाइट किसी भी चिकित्सीय, कानूनी या वित्तीय सलाह का विकल्प नहीं है। गंभीर मामलों में संबंधित विशेषज्ञों से सलाह लें।</p><h3>अल्लाह पर भरोसा</h3><p>सभी मामले अल्लाह के हाथ में हैं। यह ज्ञान केवल मार्गदर्शन का माध्यम है।</p>",
-    privacyHTML:"<h2>🔒 Privacy Policy</h2><p>ilmejafar.com आपकी privacy का पूरा सम्मान करता है।</p><h3>क्या जानकारी एकत्र की जाती है?</h3><p>हम आपसे अकाउंट बनाने या व्यक्तिगत जानकारी माँगते नहीं। आपका सवाल विश्लेषण तैयार करने के लिए सुरक्षित तरीके से हमारे सर्वर पर भेजा जाता है, इसे स्थायी रूप से सहेजा नहीं जाता।</p><h3>Cookies</h3><p>यह वेबसाइट केवल भाषा की प्राथमिकता याद रखने के लिए localStorage का उपयोग करती है।</p><h3>AI विश्लेषण सेवा</h3><p>आपका विश्लेषण तैयार करने के लिए आपका सवाल OpenAI की API के माध्यम से process होता है। OpenAI की अपनी Privacy Policy है: <a href='https://openai.com/privacy' target='_blank'>openai.com/privacy</a></p><h3>Google AdSense</h3><p>वेबसाइट को मुफ्त रखने के लिए Google AdSense के विज्ञापन दिखाए जाते हैं, जो cookies का उपयोग कर सकते हैं।</p><h3>तीसरे पक्ष</h3><p>हम आपकी कोई भी जानकारी किसी तीसरे पक्ष को नहीं बेचते या share नहीं करते।</p><h3>बच्चों की privacy</h3><p>यह वेबसाइट 13 वर्ष से कम उम्र के बच्चों के लिए नहीं है। हम जानबूझकर बच्चों की कोई जानकारी एकत्र नहीं करते।</p>",
-    termsHTML:"<h2>📋 Terms of Service</h2><p>ilmejafar.com का उपयोग करके आप इन शर्तों से सहमत होते हैं।</p><h3>उपयोग की शर्तें</h3><p>यह वेबसाइट केवल आध्यात्मिक मार्गदर्शन के लिए है। किसी भी गैरकानूनी उद्देश्य के लिए उपयोग निषिद्ध है।</p><h3>स्वामित्व</h3><p>इस वेबसाइट की सभी सामग्री ilmejafar.com की संपत्ति है। बिना अनुमति के नकल करना निषिद्ध है।</p><h3>कानून</h3><p>ये शर्तें पाकिस्तानी कानून के तहत हैं।</p>",
+    aboutHTML:"<h2>📿 About Us</h2><p><b>ilmejafar.com</b> इल्म-ए-जफ़र के पारंपरिक इस्लामी ज्ञान पर आधारित एक आध्यात्मिक मार्गदर्शन मंच है।</p><h3>हमारा उद्देश्य</h3><p>हमारा उद्देश्य लोगों को आध्यात्मिक मार्गदर्शन प्रदान करना है। इल्म-ए-जफ़र एक सदियों पुराना इस्लामी ज्ञान है जो हुरूफ़ और अंकों की शक्ति पर आधारित है।</p><h3>इल्म-ए-जफ़र क्या है?</h3><p>इल्म-ए-जफ़र एक पारंपरिक इस्लामी ज्ञान है जिसमें अरबी अक्षरों की आध्यात्मिक शक्ति से सवालों का जवाब निकाला जाता है। यह ज्ञान इमाम जाफ़र सादिक़ (रह.) से संबंधित माना जाता है।</p><h3>📜 इल्म-ए-जफ़र अख़बार</h3><p>इस विधि में सवाल के अक्षरों को सीढ़ीनुमा क्रम में लिखा जाता है और हर चौथा अक्षर निकाला जाता है — ये अक्षर मिलकर सवाल का पूरा आध्यात्मिक विश्लेषण देते हैं, जिसमें कुरआनी आयतें और वज़ीफ़े भी शामिल हैं।</p><h3>🔢 इल्म-ए-जफ़र आसार</h3><p>इस विधि में सवाल करने वाले का नाम, माँ का नाम, दिन और सवाल के अबजद अंकों को जोड़कर 4 से भाग दिया जाता है — बचा हुआ अंक बताता है कि मसला शारीरिक बीमारी है, आध्यात्मिक बाधा है या जादू का असर है।</p><h3>✨ इस्म-ए-आज़म Finder</h3><p>अपने नाम के अबजद अंकों से अल्लाह का वह ख़ास नाम जानें जो आपके लिए मुक़र्रर है। इस नाम के वज़ीफ़े से जादू, दुश्मन, जिन्नात और आसमानी असरात से मुकम्मल हिफ़ाज़त होती है और दुआएं क़बूल होती हैं।</p><h3>हमारी सेवाएं</h3><p>✅ मुफ्त ऑनलाइन जफ़र विश्लेषण | ✅ हर अक्षर के आध्यात्मिक अर्थ | ✅ अबजद अंकों से समस्या का निर्धारण | ✅ इस्म-ए-आज़म Finder | ✅ कुरआनी आयतें और वज़ीफ़े | ✅ 4 भाषाओं में उपलब्ध | ✅ बिल्कुल मुफ्त — कोई पंजीकरण नहीं</p><h3>हमारा इतिहास</h3><p>ilmejafar.com की शुरुआत इस सोच से हुई कि इल्म-ए-जफ़र जैसा सदियों पुराना पारंपरिक इस्लामी ज्ञान, जो पहले सिर्फ़ ख़ास आध्यात्मिक गुरुओं या दुर्लभ पुरानी किताबों तक सीमित था, अब आधुनिक तकनीक के ज़रिए हर आम इंसान तक आसानी से पहुंचाया जा सकता है। हमने इस ज्ञान को डिजिटल रूप देकर एक ऐसा मंच बनाया जहां कोई भी व्यक्ति, कहीं से भी, बिना किसी फीस के अपने सवालों का आध्यात्मिक विश्लेषण पा सकता है।</p><h3>हमारा विज़न</h3><p>हमारा विज़न यह है कि आध्यात्मिक मार्गदर्शन कभी भी किसी आर्थिक बाधा या भौगोलिक दूरी की वजह से किसी से दूर न हो। हम चाहते हैं कि उर्दू, अंग्रेज़ी, हिंदी और अरबी बोलने वाले लाखों लोग अपनी भाषा में, अपने फ़ोन पर, तुरंत और मुफ्त मार्गदर्शन पा सकें।</p><h3>अक्सर पूछे जाने वाले सवाल</h3><p><b>सवाल: क्या इस साइट पर रजिस्ट्रेशन ज़रूरी है?</b><br>जवाब: नहीं, कोई रजिस्ट्रेशन या अकाउंट बनाने की ज़रूरत नहीं — सीधा सवाल लिखें और नतीजा पाएं।</p><p><b>सवाल: क्या नतीजा हर बार एक जैसा आएगा?</b><br>जवाब: जी हां, चूंकि हिसाब अक्षरों और अंकों पर आधारित है, एक ही सवाल और नाम पर नतीजा स्थिर रहता है।</p><p><b>सवाल: क्या यह सेवा हमेशा मुफ्त रहेगी?</b><br>जवाब: जी हां, हमारा इरादा है कि बुनियादी सेवा हमेशा मुफ्त रहे।</p>",
+    disclaimerHTML:"<h2>⚠️ Disclaimer</h2><h3>केवल आध्यात्मिक मार्गदर्शन</h3><p>ilmejafar.com पर दी गई सभी जानकारी केवल आध्यात्मिक मार्गदर्शन और शैक्षिक उद्देश्यों के लिए है।</p><h3>कोई गारंटी नहीं</h3><p>हम किसी भी परिणाम की गारंटी नहीं देते। इल्म-ए-जफ़र एक पारंपरिक ज्ञान है और इसके परिणाम अलग-अलग हो सकते हैं।</p><h3>चिकित्सीय सलाह नहीं</h3><p>यह वेबसाइट किसी भी चिकित्सीय, कानूनी या वित्तीय सलाह का विकल्प नहीं है। गंभीर मामलों में संबंधित विशेषज्ञों से सलाह लें।</p><h3>वित्तीय या कानूनी सलाह नहीं</h3><p>इस वेबसाइट की कोई भी जानकारी वित्तीय, कानूनी या व्यावसायिक सलाह के रूप में न लें। ऐसे फैसलों के लिए हमेशा संबंधित विशेषज्ञों (वकील, वित्तीय सलाहकार आदि) से सलाह लें।</p><h3>परिणामों की कोई गारंटी नहीं</h3><p>हम इस बात की कोई गारंटी नहीं देते कि दिया गया विश्लेषण या वज़ीफ़ा आपके ख़ास मामले में ज़रूर कारगर होगा। यह एक पारंपरिक मार्गदर्शन का ज़रिया है, वैज्ञानिक रूप से साबित समाधान नहीं।</p><h3>बाहरी लिंक</h3><p>अगर वेबसाइट पर कहीं किसी बाहरी वेबसाइट का लिंक मौजूद हो तो हम उस बाहरी साइट की सामग्री या नीतियों के ज़िम्मेदार नहीं हैं।</p><h3>अल्लाह पर भरोसा</h3><p>सभी मामले अल्लाह के हाथ में हैं। यह ज्ञान केवल मार्गदर्शन का माध्यम है।</p><h3>बदलाव</h3><p>हम इस Disclaimer को कभी भी बदल सकते हैं। वेबसाइट का लगातार उपयोग नई शर्तों से सहमति माना जाएगा।</p>",
+    privacyHTML:"<h2>🔒 Privacy Policy</h2><p>ilmejafar.com आपकी privacy का पूरा सम्मान करता है।</p><h3>क्या जानकारी एकत्र की जाती है?</h3><p>हम आपसे अकाउंट बनाने या व्यक्तिगत जानकारी माँगते नहीं। आपका सवाल विश्लेषण तैयार करने के लिए सुरक्षित तरीके से हमारे सर्वर पर भेजा जाता है, इसे स्थायी रूप से सहेजा नहीं जाता।</p><h3>Cookies</h3><p>यह वेबसाइट केवल भाषा की प्राथमिकता याद रखने के लिए localStorage का उपयोग करती है।</p><h3>AI विश्लेषण सेवा</h3><p>आपका विश्लेषण तैयार करने के लिए आपका सवाल OpenAI की API के माध्यम से process होता है। OpenAI की अपनी Privacy Policy है: <a href='https://openai.com/privacy' target='_blank'>openai.com/privacy</a></p><h3>Google AdSense</h3><p>वेबसाइट को मुफ्त रखने के लिए Google AdSense के विज्ञापन दिखाए जाते हैं, जो cookies का उपयोग कर सकते हैं।</p><h3>Contact Form</h3><p>Contact फॉर्म से भेजा गया संदेश Formspree की सुरक्षित सेवा के ज़रिए हमारी ईमेल पर स्वचालित रूप से पहुंचता है। आपका संदेश केवल जवाब देने के लिए इस्तेमाल होता है और किसी के साथ share नहीं किया जाता।</p><h3>तीसरे पक्ष</h3><p>हम आपकी कोई भी जानकारी किसी तीसरे पक्ष को नहीं बेचते या share नहीं करते।</p><h3>बच्चों की privacy</h3><p>यह वेबसाइट 13 वर्ष से कम उम्र के बच्चों के लिए नहीं है। हम जानबूझकर बच्चों की कोई जानकारी एकत्र नहीं करते।</p><h3>डेटा कब तक सुरक्षित रहता है</h3><p>AI विश्लेषण के तुरंत बाद आपके सवाल हमारे सर्वर पर स्थायी रूप से सहेजे नहीं जाते। Contact फॉर्म के संदेश केवल तब तक रखे जाते हैं जब तक जवाब देने में समय लगे।</p>",
+    termsHTML:"<h2>📋 Terms of Service</h2><p>ilmejafar.com का उपयोग करके आप इन शर्तों से सहमत होते हैं।</p><h3>उपयोग की शर्तें</h3><p>यह वेबसाइट केवल आध्यात्मिक मार्गदर्शन के लिए है। किसी भी गैरकानूनी उद्देश्य के लिए उपयोग निषिद्ध है।</p><h3>निषिद्ध उपयोग</h3><p>उपयोगकर्ता इस वेबसाइट का उपयोग किसी भी गैरकानूनी, धोखाधड़ी या नुकसानदेह उद्देश्य के लिए नहीं कर सकता। साइट के किसी हिस्से को हैक करने, स्वचालित स्क्रिप्ट्स से ओवरलोड करने या किसी और को नुकसान पहुंचाने की नीयत से इस्तेमाल करने की इजाज़त नहीं।</p><h3>स्वामित्व</h3><p>इस वेबसाइट की सभी सामग्री ilmejafar.com की संपत्ति है। बिना अनुमति के नकल करना निषिद्ध है। पारंपरिक इस्लामी शिक्षाओं पर आधारित सामान्य जानकारी किसी की निजी संपत्ति नहीं, मगर वेबसाइट के ख़ास शब्द, ढांचा और डिज़ाइन कॉपीराइट के तहत सुरक्षित हैं।</p><h3>कानून</h3><p>ये शर्तें पाकिस्तानी कानून के तहत हैं।</p>",
     contactIntroHTML:"<p>कोई सवाल, सुझाव या समस्या हो तो हमसे संपर्क करें। हम जल्द जवाब देंगे।</p>",
+    contactExtraHTML:"<p>हम आपकी राय को अहमियत देते हैं। चाहे आपको वेबसाइट के इस्तेमाल में कोई दिक्कत हो, किसी नतीजे के बारे में सवाल हो, कोई नया फीचर सुझाना चाहते हों, या बस अपना अनुभव हमारे साथ शेयर करना चाहते हों — नीचे दिया गया फॉर्म इस्तेमाल करें।</p><p style='font-size:13px;color:rgba(250,247,240,.7);'>📌 आम तौर पर हम कुछ दिनों के अंदर जवाब देने की कोशिश करते हैं। कृपया संदेश में साफ़ तौर पर अपना सवाल या समस्या लिखें ताकि हम बेहतर मदद कर सकें।</p>",
     topicGroupsHTML:'<div class="topic-group"><div class="topic-label">👶 संतान</div><div class="hid-example">शाज़िया बिन्त सकीना के हमल में बेटा है या बेटी</div></div><div class="topic-group"><div class="topic-label">💼 नौकरी</div><div class="hid-example">उमर बिन ज़ुबैदा को इस महीने नौकरी मिलेगी या नहीं</div></div><div class="topic-group"><div class="topic-label">🏪 कारोबार</div><div class="hid-example">रफ़ीक़ बिन हमीदा के कारोबार में रुकावट की क्या वजह है</div></div><div class="topic-group"><div class="topic-label">💍 रिश्ता और शादी</div><div class="hid-example">सना बिन्त नसीम का रिश्ता इस घर में होगा या नहीं</div></div><div class="topic-group"><div class="topic-label">🌙 आध्यात्मिक समस्याएं</div><div class="hid-example">सलमान बिन ख़दीजा पर जिन्नात का असर है या जादू या बीमारी</div></div><div class="topic-group"><div class="topic-label">✈️ सफर और वीज़ा</div><div class="hid-example">कामरान बिन सुग़रा का वीज़ा इस बार लगेगा या नहीं</div></div><div class="topic-group"><div class="topic-label">❤️ सेहत</div><div class="hid-example">असमा बिन्त रुक़य्या की बीमारी जल्द ठीक होगी या नहीं</div></div><div class="topic-group"><div class="topic-label">📚 तालीम</div><div class="hid-example">मरयम बिन्त हमीदा को यूनिवर्सिटी में दाख़िला मिलेगा या नहीं</div></div>'
   },
   ar: {
@@ -461,11 +462,12 @@ var LNG = {
     ismPersonalText:" اسمه الأعظم هو ",
     ismPersonalEnd:"",
     ismPersonalFawaaid:" فوائد الاسم الأعظم لـ",
-    aboutHTML:"<h2>📿 About Us</h2><p><b>ilmejafar.com</b> منصة للإرشاد الروحاني مبنية على علم جعفر التقليدي الإسلامي.</p><h3>هدفنا</h3><p>هدفنا تقديم الإرشاد الروحاني للناس. علم جعفر علم إسلامي عريق يعتمد على قوة الحروف والأرقام.</p><h3>ما هو علم جعفر؟</h3><p>علم جعفر علم إسلامي تقليدي يُستخرج فيه الجواب من القوة الروحانية للحروف العربية، وهو منسوب إلى الإمام جعفر الصادق رحمه الله.</p><h3>علم جعفر الأخبار</h3><p>في هذه الطريقة، تُكتب حروف السؤال بترتيب متدرج ويُستخرج كل حرف رابع — هذه الحروف مجتمعة تعطي جواب السؤال.</p><h3>علم جعفر الآثار</h3><p>في هذه الطريقة، تُجمع الأعداد الأبجدية لاسم السائل واسم الأم ويوم السؤال ونص السؤال، ثم تُقسم على 4 — الباقي يشير إلى طبيعة المشكلة.</p><h3>خدماتنا</h3><p>✅ تحليل جعفر مجاني | ✅ معاني روحانية لكل حرف | ✅ تحديد المشكلة بالأبجد | ✅ مجاني تماماً — بدون تسجيل</p>",
-    disclaimerHTML:"<h2>⚠️ Disclaimer</h2><h3>إرشاد روحاني فقط</h3><p>جميع المعلومات على ilmejafar.com للإرشاد الروحاني والتعليم فقط، وليست قراراً نهائياً.</p><h3>لا ضمان</h3><p>لا نضمن أي نتيجة. علم جعفر علم تقليدي وقد تختلف نتائجه.</p><h3>ليس مشورة طبية</h3><p>هذا الموقع ليس بديلاً عن المشورة الطبية أو القانونية. في الحالات الجدية، راجع المختصين.</p><h3>التوكل على الله</h3><p>كل الأمور بيد الله. هذا العلم وسيلة للإرشاد فحسب.</p>",
-    privacyHTML:"<h2>🔒 Privacy Policy</h2><p>ilmejafar.com يحترم خصوصيتك تماماً.</p><h3>ما المعلومات التي تُجمع؟</h3><p>لا نطلب منك إنشاء حساب أو تقديم معلومات شخصية. يُرسل سؤالك بشكل آمن إلى خادمنا لإعداد التحليل، ولا يُحفظ بشكل دائم.</p><h3>Cookies</h3><p>يستخدم الموقع localStorage فقط لتذكر تفضيل اللغة.</p><h3>خدمة تحليل AI</h3><p>لإعداد تحليلك، تتم معالجة سؤالك عبر API الخاص بـ OpenAI. لدى OpenAI سياسة خصوصية خاصة بها: <a href='https://openai.com/privacy' target='_blank'>openai.com/privacy</a></p><h3>Google AdSense</h3><p>لإبقاء الموقع مجانياً، يتم عرض إعلانات Google AdSense التي قد تستخدم ملفات تعريف الارتباط.</p><h3>أطراف ثالثة</h3><p>لا نبيع أو نشارك معلوماتك مع أي طرف ثالث.</p><h3>خصوصية الأطفال</h3><p>هذا الموقع غير مخصص للأطفال دون سن 13 عاماً. لا نجمع عمداً أي معلومات من الأطفال.</p>",
-    termsHTML:"<h2>📋 Terms of Service</h2><p>باستخدام ilmejafar.com فأنت توافق على هذه الشروط.</p><h3>شروط الاستخدام</h3><p>هذا الموقع للإرشاد الروحاني فقط. يُحظر أي استخدام غير قانوني.</p><h3>الملكية</h3><p>جميع محتوى الموقع ملك لـ ilmejafar.com. النسخ بدون إذن محظور.</p><h3>القانون</h3><p>تخضع هذه الشروط للقانون الباكستاني.</p>",
+    aboutHTML:"<h2>📿 About Us</h2><p><b>ilmejafar.com</b> منصة للإرشاد الروحاني مبنية على علم جعفر التقليدي الإسلامي.</p><h3>هدفنا</h3><p>هدفنا تقديم الإرشاد الروحاني للناس. علم جعفر علم إسلامي عريق يعتمد على قوة الحروف والأرقام.</p><h3>ما هو علم جعفر؟</h3><p>علم جعفر علم إسلامي تقليدي يُستخرج فيه الجواب من القوة الروحانية للحروف العربية، وهو منسوب إلى الإمام جعفر الصادق رحمه الله.</p><h3>📜 علم جعفر الأخبار</h3><p>في هذه الطريقة، تُكتب حروف السؤال بترتيب متدرج ويُستخرج كل حرف رابع — هذه الحروف مجتمعة تعطي تحليلاً روحانياً كاملاً يشمل آيات قرآنية وأدعية.</p><h3>🔢 علم جعفر الآثار</h3><p>في هذه الطريقة، تُجمع الأعداد الأبجدية لاسم السائل واسم الأم ويوم السؤال ونص السؤال، ثم تُقسم على 4 — الباقي يشير إلى ما إذا كانت المشكلة مرضاً جسدياً أو خللاً روحانياً أو أثر سحر.</p><h3>✨ اسم أعظم Finder</h3><p>اكتشف اسم الله الخاص المخصص لك من خلال الأعداد الأبجدية لاسمك. يُعتقد أن قراءة هذا الاسم تحمي من السحر والأعداء والجن والتأثيرات الفلكية، وتساعد على قبول الدعاء.</p><h3>خدماتنا</h3><p>✅ تحليل جعفر مجاني | ✅ معاني روحانية لكل حرف | ✅ تحديد المشكلة بالأبجد | ✅ اسم أعظم Finder | ✅ آيات قرآنية وأدعية روحانية | ✅ متوفر بـ 4 لغات | ✅ مجاني تماماً — بدون تسجيل</p><h3>تاريخنا</h3><p>بدأ ilmejafar.com من فكرة أن علماً إسلامياً تقليدياً عريقاً كعلم جعفر، كان في السابق مقتصراً على مرشدين روحانيين معينين أو كتب قديمة نادرة، يمكن الآن إيصاله لكل شخص عادي عبر التكنولوجيا الحديثة. حوّلنا هذا العلم إلى منصة رقمية يستطيع فيها أي شخص، من أي مكان، الحصول على تحليل روحاني لأسئلته مجاناً تماماً.</p><h3>رؤيتنا</h3><p>رؤيتنا هي ألا يكون الإرشاد الروحاني بعيداً عن أحد بسبب عائق مالي أو مسافة جغرافية. نريد أن يحصل ملايين المتحدثين بالأردية والإنجليزية والهندية والعربية على إرشاد فوري ومجاني بلغتهم، على هواتفهم.</p><h3>الأسئلة الشائعة</h3><p><b>سؤال: هل التسجيل مطلوب في هذا الموقع؟</b><br>الجواب: لا، لا حاجة لأي تسجيل أو حساب — فقط اكتب سؤالك واحصل على النتيجة.</p><p><b>سؤال: هل ستكون النتيجة نفسها في كل مرة؟</b><br>الجواب: نعم، بما أن الحساب مبني على الحروف والأرقام، تبقى النتيجة ثابتة لنفس السؤال والاسم.</p><p><b>سؤال: هل ستبقى هذه الخدمة مجانية دائماً؟</b><br>الجواب: نعم، نيتنا أن تبقى الخدمة الأساسية مجانية دائماً.</p>",
+    disclaimerHTML:"<h2>⚠️ Disclaimer</h2><h3>إرشاد روحاني فقط</h3><p>جميع المعلومات على ilmejafar.com للإرشاد الروحاني والتعليم فقط، وليست قراراً نهائياً.</p><h3>لا ضمان</h3><p>لا نضمن أي نتيجة. علم جعفر علم تقليدي وقد تختلف نتائجه.</p><h3>ليس مشورة طبية</h3><p>هذا الموقع ليس بديلاً عن المشورة الطبية أو القانونية. في الحالات الجدية، راجع المختصين.</p><h3>ليس مشورة مالية أو قانونية</h3><p>لا تُعتبر أي معلومة في هذا الموقع مشورة مالية أو قانونية أو تجارية. لمثل هذه القرارات، استشر دائماً المختصين المعنيين (محامٍ، مستشار مالي، إلخ).</p><h3>لا ضمان للنتائج</h3><p>لا نضمن أن التحليل أو الوصفات المقدمة ستنجح بالتأكيد في حالتك الخاصة. هذه وسيلة إرشاد تقليدية، وليست حلاً مثبتاً علمياً.</p><h3>روابط خارجية</h3><p>إذا ظهر رابط لموقع خارجي في أي مكان على هذا الموقع، فنحن غير مسؤولين عن محتوى أو سياسات ذلك الموقع الخارجي.</p><h3>التوكل على الله</h3><p>كل الأمور بيد الله. هذا العلم وسيلة للإرشاد فحسب.</p><h3>التغييرات</h3><p>يمكننا تغيير هذا الإخلاء في أي وقت. استمرار استخدام الموقع يُعتبر موافقة على الشروط الجديدة.</p>",
+    privacyHTML:"<h2>🔒 Privacy Policy</h2><p>ilmejafar.com يحترم خصوصيتك تماماً.</p><h3>ما المعلومات التي تُجمع؟</h3><p>لا نطلب منك إنشاء حساب أو تقديم معلومات شخصية. يُرسل سؤالك بشكل آمن إلى خادمنا لإعداد التحليل، ولا يُحفظ بشكل دائم.</p><h3>Cookies</h3><p>يستخدم الموقع localStorage فقط لتذكر تفضيل اللغة.</p><h3>خدمة تحليل AI</h3><p>لإعداد تحليلك، تتم معالجة سؤالك عبر API الخاص بـ OpenAI. لدى OpenAI سياسة خصوصية خاصة بها: <a href='https://openai.com/privacy' target='_blank'>openai.com/privacy</a></p><h3>Google AdSense</h3><p>لإبقاء الموقع مجانياً، يتم عرض إعلانات Google AdSense التي قد تستخدم ملفات تعريف الارتباط.</p><h3>نموذج الاتصال</h3><p>تُرسل الرسائل عبر نموذج Contact تلقائياً إلى بريدنا الإلكتروني عبر خدمة Formspree الآمنة. تُستخدم رسالتك فقط للرد عليك ولا تُشارك مع أي أحد.</p><h3>أطراف ثالثة</h3><p>لا نبيع أو نشارك معلوماتك مع أي طرف ثالث.</p><h3>خصوصية الأطفال</h3><p>هذا الموقع غير مخصص للأطفال دون سن 13 عاماً. لا نجمع عمداً أي معلومات من الأطفال.</p><h3>مدة الاحتفاظ بالبيانات</h3><p>لا تُحفظ أسئلتك بشكل دائم على خادمنا بعد إنشاء تحليل AI مباشرة. تُحفظ رسائل نموذج الاتصال فقط للمدة اللازمة للرد عليك.</p>",
+    termsHTML:"<h2>📋 Terms of Service</h2><p>باستخدام ilmejafar.com فأنت توافق على هذه الشروط.</p><h3>شروط الاستخدام</h3><p>هذا الموقع للإرشاد الروحاني فقط. يُحظر أي استخدام غير قانوني.</p><h3>الاستخدام المحظور</h3><p>لا يجوز استخدام هذا الموقع لأي غرض غير قانوني أو احتيالي أو ضار. يُمنع اختراق أي جزء من الموقع، أو تحميله بشكل زائد عبر نصوص آلية، أو استخدامه بنية الإضرار بأي شخص آخر.</p><h3>الملكية</h3><p>جميع محتوى الموقع ملك لـ ilmejafar.com. النسخ بدون إذن محظور. المعلومات العامة المبنية على التعاليم الإسلامية التقليدية ليست ملكاً خاصاً لأحد، لكن صياغة الموقع الخاصة وتصميمه محميان بحقوق النشر.</p><h3>القانون</h3><p>تخضع هذه الشروط للقانون الباكستاني.</p>",
     contactIntroHTML:"<p>إذا كان لديك سؤال أو اقتراح أو مشكلة، تواصل معنا. سنرد في أقرب وقت.</p>",
+    contactExtraHTML:"<p>نقدّر رأيك. سواء كنت تواجه مشكلة في استخدام الموقع، أو لديك سؤال حول نتيجة ما، أو تريد اقتراح ميزة جديدة، أو ببساطة تريد مشاركة تجربتك معنا — استخدم النموذج أدناه.</p><p style='font-size:13px;color:rgba(250,247,240,.7);'>📌 نحاول عادةً الرد خلال أيام قليلة. يرجى كتابة سؤالك أو مشكلتك بوضوح في الرسالة حتى نتمكن من مساعدتك بشكل أفضل.</p>",
     topicGroupsHTML:'<div class="topic-group"><div class="topic-label">👶 الأطفال</div><div class="hid-example">هل في حمل شازية بنت سكينة ولد أم بنت</div></div><div class="topic-group"><div class="topic-label">💼 العمل</div><div class="hid-example">هل سيجد عمر بن زبيدة عملاً هذا الشهر أم لا</div></div><div class="topic-group"><div class="topic-label">🏪 التجارة</div><div class="hid-example">ما سبب العائق في تجارة رفيق بن حميدة</div></div><div class="topic-group"><div class="topic-label">💍 الخطوبة والزواج</div><div class="hid-example">هل ستتم خطوبة ثناء بنت نسيم في هذا البيت أم لا</div></div><div class="topic-group"><div class="topic-label">🌙 المشاكل الروحانية</div><div class="hid-example">هل على سلمان بن خديجة أثر جن أم سحر أم مرض</div></div><div class="topic-group"><div class="topic-label">✈️ السفر والتأشيرة</div><div class="hid-example">هل ستُمنح لكامران بن صغرى التأشيرة هذه المرة أم لا</div></div><div class="topic-group"><div class="topic-label">❤️ الصحة</div><div class="hid-example">هل ستشفى أسماء بنت رقية من مرضها قريباً أم لا</div></div><div class="topic-group"><div class="topic-label">📚 التعليم</div><div class="hid-example">هل ستُقبل مريم بنت حميدة في الجامعة أم لا</div></div>'
   },
   en: {
@@ -523,11 +525,12 @@ var LNG = {
     ismPersonalText:" Ism-e-Azam is ",
     ismPersonalEnd:"",
     ismPersonalFawaaid:" Benefits of Ism-e-Azam for ",
-    aboutHTML:"<h2>📿 About Us</h2><p><b>ilmejafar.com</b> is a spiritual guidance platform based on the traditional Islamic knowledge of Ilm-e-Jafar.</p><h3>Our Purpose</h3><p>Our purpose is to provide spiritual guidance to people. Ilm-e-Jafar is a centuries-old Islamic knowledge based on the power of letters and numbers.</p><h3>What is Ilm-e-Jafar?</h3><p>Ilm-e-Jafar is a traditional Islamic knowledge in which answers to questions are derived from the spiritual power of Arabic letters. This knowledge is attributed to Imam Jafar al-Sadiq (RA).</p><h3>Ilm-e-Jafar Akhbar</h3><p>In this method, the letters of the question are arranged in a staircase pattern and every fourth letter is extracted — these letters provide the answer to the question.</p><h3>Ilm-e-Jafar Asar</h3><p>In this method, the Abjad numbers of the questioner's name, mother's name, day of visit and question are added and divided by 4 — the remainder indicates the answer.</p><h3>Our Services</h3><p>✅ Free online Jafar analysis | ✅ Spiritual meaning of each letter | ✅ Abjad numerology diagnosis | ✅ Completely free — no registration</p>",
-    disclaimerHTML:"<h2>⚠️ Disclaimer</h2><h3>Spiritual Guidance Only</h3><p>All information, analyses and answers provided on ilmejafar.com are for spiritual guidance and educational purposes only. This is not any kind of definitive decision. Allah's will is supreme in all matters.</p><h3>No Guarantee</h3><p>We do not guarantee any result. Ilm-e-Jafar is a traditional knowledge and its results may vary. Every person's circumstances and destiny are different.</p><h3>Not Medical Advice</h3><p>This website is not a substitute for any medical, legal or financial advice. In serious matters, consult relevant experts. In case of illness, consult a doctor.</p><h3>Spiritual Treatment</h3><p>The spiritual treatments and practices mentioned here are based on traditional Islamic knowledge. Whether to follow them or not is entirely your personal decision.</p><h3>Trust in Allah</h3><p>All matters are in Allah's hands. This knowledge is only a means of guidance — only Allah is the ultimate decision maker. Trust in Allah in all circumstances.</p><h3>Liability</h3><p>ilmejafar.com is not responsible for any direct or indirect loss resulting from the use of this website. You are using this service at your own will and responsibility.</p>",
-    privacyHTML:"<h2>🔒 Privacy Policy</h2><p>ilmejafar.com fully respects your privacy. Your information is a trust for us.</p><h3>What Information is Collected?</h3><p>We do not ask you to create an account or provide personal details. Your question is sent securely to our server to generate a spiritual analysis, and is not stored permanently or linked to your identity.</p><h3>Cookies and Local Storage</h3><p>This website only uses browser localStorage to remember your language preference. This information is stored on your device only and does not come to us. You can delete this data anytime by clearing your browser cache.</p><h3>AI Analysis Service</h3><p>To generate your spiritual analysis, your question is processed through OpenAI's API. OpenAI has its own Privacy Policy which you can read on their website: <a href='https://openai.com/privacy' target='_blank'>openai.com/privacy</a></p><h3>Advertising</h3><p>This website displays advertisements through Google AdSense to keep it free. Google may use cookies to serve ads based on your prior visits to this or other websites. You can learn more and opt out at <a href='https://www.google.com/settings/ads' target='_blank'>Google Ads Settings</a>.</p><h3>Third Parties</h3><p>We do not sell, rent or share your personal information with any third party except as described above.</p><h3>Children's Privacy</h3><p>This website is not intended for children under the age of 13. We do not knowingly collect personal information from children.</p><h3>Your Rights</h3><p>Since we do not store personal accounts, you can delete all local data at any time by clearing your browser cache. For any privacy concerns, contact us using the details on our Contact page.</p>",
-    termsHTML:"<h2>📋 Terms of Service</h2><p>By using ilmejafar.com, you fully agree to these terms. If you do not agree, please stop using this website.</p><h3>Acceptance</h3><p>By using the website, you confirm that you are over 13 years of age and you understand and accept these terms.</p><h3>Terms of Use</h3><p>This website is for spiritual guidance only. Use for any illegal or harmful purpose is completely prohibited. Providing misleading or false information is not allowed.</p><h3>Ownership and Rights</h3><p>All content of this website — text, design, code, graphics — is the property of ilmejafar.com. Copying, plagiarism or commercial use of any content without written permission is completely prohibited.</p><h3>Service Availability</h3><p>We do not guarantee continuous availability of the website. We may shut down or change the service without prior notice.</p><h3>Changes</h3><p>We may change these terms at any time. Continued use of the website will be considered your agreement to the new terms.</p><h3>Governing Law</h3><p>These terms are governed by Pakistani law. In case of any dispute, Pakistani courts shall have jurisdiction.</p>",
+    aboutHTML:"<h2>📿 About Us</h2><p><b>ilmejafar.com</b> is a spiritual guidance platform based on the traditional Islamic knowledge of Ilm-e-Jafar.</p><h3>Our Purpose</h3><p>Our purpose is to provide spiritual guidance to people. Ilm-e-Jafar is a centuries-old Islamic knowledge based on the power of letters and numbers.</p><h3>What is Ilm-e-Jafar?</h3><p>Ilm-e-Jafar is a traditional Islamic knowledge in which answers to questions are derived from the spiritual power of Arabic letters. This knowledge is attributed to Imam Jafar al-Sadiq (RA).</p><h3>📜 Ilm-e-Jafar Akhbar</h3><p>In this method, the letters of the question are arranged in a staircase pattern and every fourth letter is extracted — these letters provide the answer to the question, along with a complete spiritual analysis including Quranic verses and supplications.</p><h3>🔢 Ilm-e-Jafar Asar</h3><p>In this method, the Abjad numbers of the questioner's name, mother's name, day of visit and question are added and divided by 4 — the remainder indicates whether the issue is a physical illness, spiritual disturbance, or the effect of magic.</p><h3>✨ Ism-e-Azam Finder</h3><p>Discover Allah's special Name assigned to you through the Abjad numbers of your name. Reciting this Name is believed to protect against magic, enemies, jinn and celestial effects, and to help supplications be accepted.</p><h3>Our Services</h3><p>✅ Free online Jafar analysis | ✅ Spiritual meaning of each letter | ✅ Abjad numerology diagnosis | ✅ Ism-e-Azam Finder | ✅ Quranic verses and spiritual supplications | ✅ Available in 4 languages | ✅ Completely free — no registration</p><h3>Our History</h3><p>ilmejafar.com began with the idea that a centuries-old traditional Islamic science like Ilm-e-Jafar, once accessible only to specific spiritual guides or rare old books, could now be brought to every ordinary person through modern technology. We digitized this knowledge to create a platform where anyone, anywhere, can get a spiritual analysis of their questions completely free of charge.</p><h3>Our Vision</h3><p>Our vision is that spiritual guidance should never be out of reach due to financial barriers or geographic distance. We want millions of Urdu, English, Hindi and Arabic speakers to receive instant, free guidance in their own language, on their own phone.</p><h3>Frequently Asked Questions</h3><p><b>Q: Is registration required on this site?</b><br>A: No, no registration or account is required — just write your question and get the result.</p><p><b>Q: Will the result always be the same?</b><br>A: Yes, since the calculation is based on letters and numbers, the result stays consistent for the same question and name.</p><p><b>Q: Will this service always remain free?</b><br>A: Yes, our intention is that the basic service will always remain free.</p>",
+    disclaimerHTML:"<h2>⚠️ Disclaimer</h2><h3>Spiritual Guidance Only</h3><p>All information, analyses and answers provided on ilmejafar.com are for spiritual guidance and educational purposes only. This is not any kind of definitive decision. Allah's will is supreme in all matters.</p><h3>No Guarantee</h3><p>We do not guarantee any result. Ilm-e-Jafar is a traditional knowledge and its results may vary. Every person's circumstances and destiny are different.</p><h3>Not Medical Advice</h3><p>This website is not a substitute for any medical, legal or financial advice. In serious matters, consult relevant experts. In case of illness, consult a doctor.</p><h3>No Financial or Legal Advice</h3><p>Nothing on this website should be taken as financial, legal or business advice. For such decisions, always consult the relevant professionals (lawyer, financial advisor, etc.).</p><h3>No Guarantee of Results</h3><p>We do not guarantee that the analysis or remedies provided will definitely work for your specific situation. This is a traditional means of guidance, not a scientifically proven solution.</p><h3>External Links</h3><p>If any external website link appears anywhere on this site, we are not responsible for the content or policies of that external site.</p><h3>Spiritual Treatment</h3><p>The spiritual treatments and practices mentioned here are based on traditional Islamic knowledge. Whether to follow them or not is entirely your personal decision.</p><h3>Trust in Allah</h3><p>All matters are in Allah's hands. This knowledge is only a means of guidance — only Allah is the ultimate decision maker. Trust in Allah in all circumstances.</p><h3>Liability</h3><p>ilmejafar.com is not responsible for any direct or indirect loss resulting from the use of this website. You are using this service at your own will and responsibility.</p><h3>Changes</h3><p>We may change this Disclaimer at any time. Continued use of the website will be considered agreement with the new terms.</p>",
+    privacyHTML:"<h2>🔒 Privacy Policy</h2><p>ilmejafar.com fully respects your privacy. Your information is a trust for us.</p><h3>What Information is Collected?</h3><p>We do not ask you to create an account or provide personal details. Your question is sent securely to our server to generate a spiritual analysis, and is not stored permanently or linked to your identity.</p><h3>Cookies and Local Storage</h3><p>This website only uses browser localStorage to remember your language preference. This information is stored on your device only and does not come to us. You can delete this data anytime by clearing your browser cache.</p><h3>AI Analysis Service</h3><p>To generate your spiritual analysis, your question is processed through OpenAI's API. OpenAI has its own Privacy Policy which you can read on their website: <a href='https://openai.com/privacy' target='_blank'>openai.com/privacy</a></p><h3>Advertising</h3><p>This website displays advertisements through Google AdSense to keep it free. Google may use cookies to serve ads based on your prior visits to this or other websites. You can learn more and opt out at <a href='https://www.google.com/settings/ads' target='_blank'>Google Ads Settings</a>.</p><h3>Contact Form</h3><p>Messages sent through the Contact form are delivered automatically to our email via the secure Formspree service. Your message is used only to respond to you and is not shared with anyone.</p><h3>Third Parties</h3><p>We do not sell, rent or share your personal information with any third party except as described above.</p><h3>Children's Privacy</h3><p>This website is not intended for children under the age of 13. We do not knowingly collect personal information from children.</p><h3>Your Rights</h3><p>Since we do not store personal accounts, you can delete all local data at any time by clearing your browser cache. For any privacy concerns, contact us using the details on our Contact page.</p><h3>How Long Data is Kept</h3><p>Your questions are not permanently stored on our server after the AI analysis is generated. Contact form messages are kept only as long as needed to respond to you.</p>",
+    termsHTML:"<h2>📋 Terms of Service</h2><p>By using ilmejafar.com, you fully agree to these terms. If you do not agree, please stop using this website.</p><h3>Acceptance</h3><p>By using the website, you confirm that you are over 13 years of age and you understand and accept these terms.</p><h3>Terms of Use</h3><p>This website is for spiritual guidance only. Use for any illegal or harmful purpose is completely prohibited. Providing misleading or false information is not allowed.</p><h3>Prohibited Use</h3><p>You may not use this website for any illegal, fraudulent, or harmful purpose. Hacking any part of the site, overloading it with automated scripts, or using it with intent to harm anyone else is not permitted.</p><h3>Ownership and Rights</h3><p>All content of this website — text, design, code, graphics — is the property of ilmejafar.com. Copying, plagiarism or commercial use of any content without written permission is completely prohibited. General information based on traditional Islamic teachings is not anyone's personal property, but the site's specific wording, layout and design are protected by copyright.</p><h3>Service Availability</h3><p>We do not guarantee continuous availability of the website. We may shut down or change the service without prior notice.</p><h3>Changes</h3><p>We may change these terms at any time. Continued use of the website will be considered your agreement to the new terms.</p><h3>Governing Law</h3><p>These terms are governed by Pakistani law. In case of any dispute, Pakistani courts shall have jurisdiction.</p>",
     contactIntroHTML:"<p>If you have any question, suggestion or problem, feel free to contact us. We will reply as soon as possible.</p>",
+    contactExtraHTML:"<p>We value your feedback. Whether you're facing an issue using the website, have a question about a result, want to suggest a new feature, or simply want to share your experience — use the form below.</p><p style='font-size:13px;color:rgba(250,247,240,.7);'>📌 We generally try to reply within a few days. Please clearly write your question or issue in the message so we can assist you better.</p>",
     topicGroupsHTML:"<div class='topic-group'><div class='topic-label'>👶 Children</div><div class='hid-example'>Is the baby in Shazia bint Sakeena womb a boy or girl</div></div><div class='topic-group'><div class='topic-label'>💼 Job</div><div class='hid-example'>Will Umar bin Zubayda get a job this month or not</div></div><div class='topic-group'><div class='topic-label'>🏪 Business</div><div class='hid-example'>What is the reason for obstacle in Rafiq bin Hamida business</div></div><div class='topic-group'><div class='topic-label'>💍 Marriage</div><div class='hid-example'>Will Sana bint Naseem proposal be accepted in this house or not</div></div><div class='topic-group'><div class='topic-label'>🌙 Spiritual Issues</div><div class='hid-example'>Is Salman bin Khadija affected by jinn magic or illness</div></div><div class='topic-group'><div class='topic-label'>✈️ Travel and Visa</div><div class='hid-example'>Will Kamran bin Sughra visa be approved this time or not</div></div><div class='topic-group'><div class='topic-label'>❤️ Health</div><div class='hid-example'>Will Asma bint Ruqayya recover from illness soon or not</div></div><div class='topic-group'><div class='topic-label'>📚 Education</div><div class='hid-example'>Will Maryam bint Hamida get admission to university or not</div></div>"
   }
 };
@@ -686,8 +689,8 @@ function applyLang(code) {
   var hBtn=document.querySelector('.home-btn-title[data-ism]');
   // Update input direction
   var ii2=document.getElementById('ismInput'); if(ii2) ii2.style.direction=L.dir;
-  var pageIds=['aboutContent','disclaimerContent','privacyContent','termsContent'];
-  var pageKeys=['aboutHTML','disclaimerHTML','privacyHTML','termsHTML'];
+  var pageIds=['aboutContent','disclaimerContent','privacyContent','termsContent','contactExtra'];
+  var pageKeys=['aboutHTML','disclaimerHTML','privacyHTML','termsHTML','contactExtraHTML'];
   pageIds.forEach(function(id,i){
     var el=document.getElementById(id);
     if(!el) return;
@@ -751,7 +754,7 @@ window.addEventListener('DOMContentLoaded',function(){
   }catch(e){}
 
   // Save original Urdu HTML for all pages
-  var pageIds=['aboutContent','disclaimerContent','privacyContent','termsContent'];
+  var pageIds=['aboutContent','disclaimerContent','privacyContent','termsContent','contactExtra'];
   pageIds.forEach(function(id){
     var el=document.getElementById(id);
     if(el) el.setAttribute('data-ur',el.innerHTML);
@@ -764,6 +767,13 @@ window.addEventListener('DOMContentLoaded',function(){
   // Force English default - override any saved language
   if(!localStorage.getItem('ilmLangSet')){
     localStorage.setItem('ilmLang','en');
+    localStorage.setItem('ilmLangSet','1');
+  }
+  // If the link was shared with a ?lang= parameter, use that language instead
+  var urlParams = new URLSearchParams(window.location.search);
+  var sharedLang = urlParams.get('lang');
+  if(sharedLang && ['ur','en','hi','ar'].indexOf(sharedLang) !== -1){
+    localStorage.setItem('ilmLang', sharedLang);
     localStorage.setItem('ilmLangSet','1');
   }
   var s=localStorage.getItem('ilmLang')||'en';
@@ -1314,8 +1324,15 @@ function speakIsm(){
 }
 
 function shareVia(platform){
-  var url = 'https://www.ilmejafar.com/';
-  var text = 'Ilm-e-Jafar — Spiritual Guidance Center';
+  var curLang = localStorage.getItem('ilmLang') || 'en';
+  var url = 'https://www.ilmejafar.com/?lang=' + curLang;
+  var shareMsgs = {
+    ur: 'علم جعفر — روحانی رہنمائی کا مرکز۔ حروف اور اعداد کے ذریعے مفت روحانی تجزیہ حاصل کریں۔',
+    en: 'Ilm-e-Jafar — Spiritual Guidance Center. Get free spiritual guidance through letters and numbers.',
+    hi: 'इल्म-ए-जफ़र — आध्यात्मिक मार्गदर्शन केंद्र। अक्षरों और अंकों के ज़रिए मुफ्त आध्यात्मिक विश्लेषण पाएं।',
+    ar: 'علم جعفر — مركز الإرشاد الروحاني. احصل على تحليل روحاني مجاني من خلال الحروف والأرقام.'
+  };
+  var text = shareMsgs[curLang] || shareMsgs.en;
   var encodedUrl = encodeURIComponent(url);
   var encodedText = encodeURIComponent(text);
   var link = '';
@@ -1371,8 +1388,11 @@ function submitContactForm(){
 
   btn.disabled = true;
   statusEl.style.display = 'block';
+  statusEl.style.background = 'rgba(201,168,76,.12)';
+  statusEl.style.border = '1px solid rgba(201,168,76,.4)';
   statusEl.style.color = '#c9a84c';
   statusEl.textContent = t.sending;
+  statusEl.scrollIntoView({behavior:'smooth', block:'center'});
 
   fetch('https://formspree.io/f/xgogpgea', {
     method: 'POST',
@@ -1380,21 +1400,29 @@ function submitContactForm(){
     body: JSON.stringify({ subject: subject, message: msg, _subject: 'ilmejafar.com: ' + subject })
   }).then(function(res){
     if(res.ok){
+      statusEl.style.background = 'rgba(76,175,80,.15)';
+      statusEl.style.border = '2px solid #4caf50';
       statusEl.style.color = '#4caf50';
       statusEl.textContent = t.ok;
+      statusEl.scrollIntoView({behavior:'smooth', block:'center'});
       document.getElementById('cMsg').value = '';
       document.getElementById('cSubject').value = '';
     } else {
+      statusEl.style.background = 'rgba(229,57,53,.15)';
+      statusEl.style.border = '2px solid #e53935';
       statusEl.style.color = '#e53935';
       statusEl.textContent = t.fail;
     }
     btn.disabled = false;
   }).catch(function(){
+    statusEl.style.background = 'rgba(229,57,53,.15)';
+    statusEl.style.border = '2px solid #e53935';
     statusEl.style.color = '#e53935';
     statusEl.textContent = t.fail;
     btn.disabled = false;
   });
 }
+
 
 </script>
 </body>
