@@ -66,11 +66,15 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 .home-wrap.hidden{display:none!important;}
 .home-intro{text-align:center;color:rgba(201,168,76,.7);font-size:14px;line-height:2.3;max-width:500px;}
 .home-btns{display:flex;flex-direction:column;gap:18px;width:100%;max-width:500px;}
+.btn-unit{display:flex;flex-direction:column;}
+.btn-unit .home-btn-desc{margin-top:2px;}
 .home-btn{display:flex;flex-direction:column;align-items:center;gap:10px;background:linear-gradient(135deg,#122040 0%,#0a1628 100%);border:2px solid rgba(201,168,76,.3);border-radius:var(--radius);padding:28px 24px;cursor:pointer;transition:var(--transition);width:100%;font-family:inherit;}
 .home-btn:hover{border-color:rgba(201,168,76,.6);transform:translateY(-3px);box-shadow:var(--shadow-gold);}
 .home-btn-icon{font-size:40px;}
 .home-btn-title{font-size:22px;font-weight:700;color:var(--gold);}
 .home-btn-sub{font-size:12px;color:rgba(201,168,76,.55);text-align:center;line-height:2;}
+.home-btn-desc{font-size:12.5px;color:rgba(250,247,240,.55);text-align:center;line-height:1.9;padding:10px 22px 4px;margin-top:-4px;}
+.home-btn-desc b{color:rgba(201,168,76,.85);font-weight:600;}
 .main-wrap{width:100%;max-width:820px;padding:24px 16px;display:flex;flex-direction:column;gap:22px;}
 .card{background:var(--cream);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md);border:1px solid rgba(201,168,76,.12);}
 .card-header{background:linear-gradient(135deg,#122040 0%,#0a1628 100%);padding:14px 20px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:12px;direction:rtl;overflow:hidden;min-height:56px;}
@@ -312,7 +316,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 
 <!-- HOME -->
 <div id="pg-home" class="home-wrap">
-  <div class="home-intro" id="homeIntro">بسم اللہ الرحمن الرحیم<br>علم جعفر کے دو طریقوں سے روحانی رہنمائی حاصل کریں</div>
+  <div class="home-intro" id="homeIntro">بسم اللہ الرحمن الرحیم<br>علم جعفر کے مختلف طریقوں سے روحانی رہنمائی حاصل کریں</div>
 
   <!-- MASTER SUMMARY OF ALL TOOLS -->
   <div style="width:100%;max-width:500px;background:linear-gradient(135deg,#1a2f52,#0a1628);border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:18px 20px;margin-bottom:16px;direction:rtl;" data-i18n-html="masterSummary">
@@ -337,11 +341,14 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 
   <!-- ISM-E-AZAM BUTTON -->
   <div class="home-btns">
-    <button class="home-btn" onclick="showPg('ismAzam')">
-      <span class="home-btn-icon">✨</span>
-      <span class="home-btn-title" id="btn3Title">اسم اعظم تلاش کریں</span>
-      <span class="home-btn-sub" id="btn3Sub"><b style="color:#c9a84c;">🔹 اسم اعظم کیا ہے؟</b><br>اپنا نام لکھ کر اپنے لیے ایک خاص اسم اعظم اور اس کا وظیفہ حاصل کریں — یہ جادو، جنات، دشمنی وغیرہ سے حفاظت یا کسی بھی مشکل کے حل کے لیے استعمال ہوتا ہے۔</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('ismAzam')">
+        <span class="home-btn-icon">✨</span>
+        <span class="home-btn-title" id="btn3Title">اسم اعظم تلاش کریں</span>
+        <span class="home-btn-sub" id="btn3Sub">اپنے نام سے خاص اسم اعظم اور وظیفہ پائیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="btn3Desc"><b>🔹 اسم اعظم کیا ہے؟</b> اپنا نام لکھ کر اپنے لیے ایک خاص اسم اعظم اور اس کا وظیفہ حاصل کریں — یہ جادو، جنات، دشمنی وغیرہ سے حفاظت یا کسی بھی مشکل کے حل کے لیے استعمال ہوتا ہے۔</p>
+    </div>
   </div>
 
   <!-- TAQSEEM (DIVISION) BUTTONS -->
@@ -354,91 +361,133 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
   </div>
 
   <div class="home-btns">
-    <button class="home-btn" onclick="showPg('taq3')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq3Title">علم جعفر آثار — 3 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq3BtnSub"><b style="color:#c9a84c;">🔹 3 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 3 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کا معاملہ ابھی کس مرحلے میں ہے</b> — ابتدا میں ہے، درمیان میں ہے، یا انجام کے قریب ہے۔ آسان لفظوں میں: "معاملہ ابھی کس مرحلے پر ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq3')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq3Title">علم جعفر آثار — 3 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq3BtnTag">معاملہ ابھی کس مرحلے میں ہے؟</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq3BtnSub"><b style="color:#c9a84c;">🔹 3 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 3 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کا معاملہ ابھی کس مرحلے میں ہے</b> — ابتدا میں ہے، درمیان میں ہے، یا انجام کے قریب ہے۔ آسان لفظوں میں: "معاملہ ابھی کس مرحلے پر ہے؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('asar')">
-      <span class="home-btn-icon">🔢</span>
-      <span class="home-btn-title" data-i18n="asarBtnTitle">علم جعفر آثار — 4 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="asarBtnSub"><b style="color:#c9a84c;">🔹 4 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 4 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کا مسئلہ اصل میں ہے کیا</b> — یعنی یہ جسمانی بیماری ہے، کسی روحانی چیز کا اثر ہے، یا کوئی اور پوشیدہ وجہ ہے۔ آسان لفظوں میں: "میرا مسئلہ کس قسم کا ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('asar')">
+        <span class="home-btn-icon">🔢</span>
+        <span class="home-btn-title" data-i18n="asarBtnTitle">علم جعفر آثار — 4 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="asarBtnTag">مسئلہ اصل میں کیا ہے — جسمانی یا روحانی؟</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="asarBtnSub"><b>🔹 4 پر تقسیم کرنے کا مطلب:</b> جب مجموعہ 4 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کا مسئلہ اصل میں ہے کیا</b> — یعنی یہ جسمانی بیماری ہے، کسی روحانی چیز کا اثر ہے، یا کوئی اور پوشیدہ وجہ ہے۔</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq5')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq5Title">علم جعفر آثار — 5 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq5BtnSub"><b style="color:#c9a84c;">🔹 5 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 5 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کے معاملے کی شدت کتنی ہے</b> — ہلکا مسئلہ ہے، درمیانہ ہے، یا زیادہ سنگین ہے۔ آسان لفظوں میں: "معاملہ کتنا شدید ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq5')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq5Title">علم جعفر آثار — 5 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq5BtnTag">معاملے کی شدت معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq5BtnSub"><b style="color:#c9a84c;">🔹 5 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 5 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کے معاملے کی شدت کتنی ہے</b> — ہلکا مسئلہ ہے، درمیانہ ہے، یا زیادہ سنگین ہے۔ آسان لفظوں میں: "معاملہ کتنا شدید ہے؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq6')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq6Title">علم جعفر آثار — 6 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq6BtnSub"><b style="color:#c9a84c;">🔹 6 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 6 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کو دوسروں سے تعاون اور مدد ملنے کا امکان کتنا ہے</b> — کیا لوگ ساتھ دیں گے یا اکیلے کوشش کرنی پڑے گی۔ آسان لفظوں میں: "مدد ملے گی یا نہیں؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq6')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq6Title">علم جعفر آثار — 6 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq6BtnTag">مدد ملنے کا امکان جانیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq6BtnSub"><b style="color:#c9a84c;">🔹 6 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 6 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کو دوسروں سے تعاون اور مدد ملنے کا امکان کتنا ہے</b> — کیا لوگ ساتھ دیں گے یا اکیلے کوشش کرنی پڑے گی۔ آسان لفظوں میں: "مدد ملے گی یا نہیں؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq7')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq7Title">علم جعفر آثار — 7 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq7BtnSub"><b style="color:#c9a84c;">🔹 7 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 7 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>ہفتے کا کون سا دن آپ کے معاملے پر اثرانداز ہے</b> اور کون سا وقت آپ کے لیے بہتر یا مشکل ہو سکتا ہے۔ آسان لفظوں میں: "کون سا دن یا وقت اہم ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq7')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq7Title">علم جعفر آثار — 7 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq7BtnTag">اہم دن یا وقت معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq7BtnSub"><b style="color:#c9a84c;">🔹 7 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 7 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>ہفتے کا کون سا دن آپ کے معاملے پر اثرانداز ہے</b> اور کون سا وقت آپ کے لیے بہتر یا مشکل ہو سکتا ہے۔ آسان لفظوں میں: "کون سا دن یا وقت اہم ہے؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq8')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq8Title">علم جعفر آثار — 8 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq8BtnSub"><b style="color:#c9a84c;">🔹 8 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 8 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کی قسمت کا رخ کس طرف ہے</b> — حالات سازگار ہیں، یا ابھی محنت اور صبر کی ضرورت ہے۔ آسان لفظوں میں: "قسمت کا رخ کیا ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq8')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq8Title">علم جعفر آثار — 8 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq8BtnTag">قسمت کا رخ جانیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq8BtnSub"><b style="color:#c9a84c;">🔹 8 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 8 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کی قسمت کا رخ کس طرف ہے</b> — حالات سازگار ہیں، یا ابھی محنت اور صبر کی ضرورت ہے۔ آسان لفظوں میں: "قسمت کا رخ کیا ہے؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq9')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq9Title">علم جعفر آثار — 9 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq9BtnSub"><b style="color:#c9a84c;">🔹 9 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 9 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کا معاملہ اس وقت کس حالت میں ہے</b> — بہتری کی طرف جا رہا ہے، ابھی مشکل میں ہے، یا کوئی نیا موڑ آنے والا ہے۔ آسان لفظوں میں: "معاملہ ابھی کس حالت میں ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq9')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq9Title">علم جعفر آثار — 9 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq9BtnTag">روحانی حالت معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq9BtnSub"><b style="color:#c9a84c;">🔹 9 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 9 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کا معاملہ اس وقت کس حالت میں ہے</b> — بہتری کی طرف جا رہا ہے، ابھی مشکل میں ہے، یا کوئی نیا موڑ آنے والا ہے۔ آسان لفظوں میں: "معاملہ ابھی کس حالت میں ہے؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq10')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq10Title">علم جعفر آثار — 10 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq10BtnSub"><b style="color:#c9a84c;">🔹 10 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 10 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کی کوشش کا نتیجہ کیا نکلے گا</b> — کامیابی کا امکان کتنا ہے۔ آسان لفظوں میں: "کوشش کا پھل ملے گا یا نہیں؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq10')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq10Title">علم جعفر آثار — 10 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq10BtnTag">کوشش کا نتیجہ اور کامیابی کا امکان</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq10BtnSub"><b style="color:#c9a84c;">🔹 10 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 10 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کی کوشش کا نتیجہ کیا نکلے گا</b> — کامیابی کا امکان کتنا ہے۔ آسان لفظوں میں: "کوشش کا پھل ملے گا یا نہیں؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq12')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq12Title">علم جعفر آثار — 12 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq12BtnSub"><b style="color:#c9a84c;">🔹 12 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 12 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کے معاملے کا عمومی مزاج کیا ہے</b> — یہ مضبوط اور مستحکم ہے، بدل رہا ہے، یا کسی رشتے/تعلق سے جڑا ہوا ہے۔ آسان لفظوں میں: "میرے معاملے کا رنگ کیسا ہے؟"</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq12')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq12Title">علم جعفر آثار — 12 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq12BtnTag">معاملے کا عمومی مزاج جانیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq12BtnSub"><b style="color:#c9a84c;">🔹 12 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 12 پر تقسیم کیا جاتا ہے تو اس سے یہ پتا چلتا ہے کہ <b>آپ کے معاملے کا عمومی مزاج کیا ہے</b> — یہ مضبوط اور مستحکم ہے، بدل رہا ہے، یا کسی رشتے/تعلق سے جڑا ہوا ہے۔ آسان لفظوں میں: "میرے معاملے کا رنگ کیسا ہے؟"</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('taq28')">
-      <span class="home-btn-icon">➗</span>
-      <span class="home-btn-title" data-i18n="taq28Title">علم جعفر آثار — 28 پر تقسیم</span>
-      <span class="home-btn-sub" data-i18n-html="taq28BtnSub"><b style="color:#c9a84c;">🔹 28 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 28 پر تقسیم کیا جاتا ہے تو اس سے عربی کے 28 حروف میں سے ایک خاص حرف نکلتا ہے، اور اسی حرف کے معنی کے مطابق جواب ملتا ہے — اس لیے یہ سب سے زیادہ تفصیلی اور باریک جواب دیتا ہے۔ آسان لفظوں میں: "سب سے مکمل اور گہرا جواب"۔</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('taq28')">
+        <span class="home-btn-icon">➗</span>
+        <span class="home-btn-title" data-i18n="taq28Title">علم جعفر آثار — 28 پر تقسیم</span>
+        <span class="home-btn-sub" data-i18n="taq28BtnTag">سب سے تفصیلی اور مکمل جواب</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="taq28BtnSub"><b style="color:#c9a84c;">🔹 28 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 28 پر تقسیم کیا جاتا ہے تو اس سے عربی کے 28 حروف میں سے ایک خاص حرف نکلتا ہے، اور اسی حرف کے معنی کے مطابق جواب ملتا ہے — اس لیے یہ سب سے زیادہ تفصیلی اور باریک جواب دیتا ہے۔ آسان لفظوں میں: "سب سے مکمل اور گہرا جواب"۔</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('akhbar')">
-      <span class="home-btn-icon">📜</span>
-      <span class="home-btn-title" id="btn1Title">علم جعفر اخبار</span>
-      <span class="home-btn-sub" id="btn1Sub"><b style="color:#c9a84c;">🔹 علم جعفر اخبار کیا ہے؟</b><br>یہ علم جعفر کا سب سے پرانا اور روایتی طریقہ ہے۔ اس میں آپ اپنا نام، والدہ کا نام اور اپنا سوال لکھتے ہیں — پھر سوال کے حروف کو ایک خاص ترتیب میں "جعفر گرڈ" (سیڑھی نما جدول) میں سجایا جاتا ہے اور اس میں سے ایک مخصوص حرف (چوتھا حرف) نکالا جاتا ہے۔ اسی حرف کی روحانی مناسبت اور معنی کی روشنی میں <b>آپ کے سوال کا براہ راست اور تفصیلی جواب</b> دیا جاتا ہے۔ یہ طریقہ خاص طور پر ایسے سوالوں کے لیے موزوں ہے جن کا واضح یا مخصوص جواب درکار ہو۔</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('akhbar')">
+        <span class="home-btn-icon">📜</span>
+        <span class="home-btn-title" id="btn1Title">علم جعفر اخبار</span>
+        <span class="home-btn-sub" id="btn1Sub">اپنا نام اور سوال لکھیں، فوری جواب پائیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="akhbarExplain"><b>🔹 علم جعفر اخبار کیا ہے؟</b> یہ علم جعفر کا سب سے پرانا اور روایتی طریقہ ہے۔ سوال کے حروف کو "جعفر گرڈ" میں سجا کر ایک مخصوص حرف نکالا جاتا ہے، اور اسی کی روشنی میں <b>آپ کے سوال کا براہ راست جواب</b> دیا جاتا ہے۔</p>
+    </div>
 
-    <button class="home-btn" onclick="showPg('matching')">
-      <span class="home-btn-icon">💑</span>
-      <span class="home-btn-title" data-i18n="matchCardTitle">علم جعفر آثار — شادی/رشتہ کی نام مناسبت</span>
-      <span class="home-btn-sub" data-i18n-html="matchBtnSub"><b style="color:#c9a84c;">🔹 نام مناسبت کیا ہے؟</b><br>یہ طریقہ دونوں ناموں کے ابجد اعداد جمع اور تقسیم کر کے <b>ان کے درمیان ہم آہنگی کا تجزیہ</b> پیش کرتا ہے — خواہ یہ رشتہ ازدواجی ہو یا کاروباری شراکت داری۔ بالفاظِ دیگر: یہ رشتہ کس حد تک موزوں ثابت ہوگا۔</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('matching')">
+        <span class="home-btn-icon">💑</span>
+        <span class="home-btn-title" data-i18n="matchCardTitle">علم جعفر آثار — شادی/رشتہ کی نام مناسبت</span>
+        <span class="home-btn-sub" data-i18n="matchBtnTag">دو ناموں سے رشتے کی مناسبت جانیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="matchBtnSub"><b>🔹 نام مناسبت کیا ہے؟</b> یہ طریقہ دونوں ناموں کے ابجد اعداد جمع اور تقسیم کر کے <b>ان کے درمیان ہم آہنگی کا تجزیہ</b> پیش کرتا ہے — خواہ یہ رشتہ ازدواجی ہو یا کاروباری شراکت داری۔</p>
+    </div>
   </div>
 
   <!-- BABY NAME BUTTONS -->
   <div class="home-btns" style="margin-top:6px;">
-    <button class="home-btn" onclick="showPg('babycheck')">
-      <span class="home-btn-icon">👶</span>
-      <span class="home-btn-title" data-i18n="bcCardTitle">بچے کے نام کی جانچ</span>
-      <span class="home-btn-sub" data-i18n="bcCardSub">بچے کی پیدائش پر نام رکھنا ہو تو اپنا پسند کردہ نام لکھیں — معنی اور مناسبت جانچ کر بہترین نام منتخب کریں</span>
-    </button>
-    <button class="home-btn" onclick="showPg('babysuggest')">
-      <span class="home-btn-icon">👨‍👩‍👧</span>
-      <span class="home-btn-title" data-i18n="bsCardTitle">بچے کے لیے نام تجویز کریں</span>
-      <span class="home-btn-sub" data-i18n="bsCardSub">بچے کی پیدائش پر والد یا والدہ کا نام لکھیں — اس سے ملتے جلتے، بامعنی اور مناسب نام تجویز پائیں</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('babycheck')">
+        <span class="home-btn-icon">👶</span>
+        <span class="home-btn-title" data-i18n="bcCardTitle">بچے کے نام کی جانچ</span>
+        <span class="home-btn-sub" data-i18n="bcBtnTag">اپنا پسند کردہ نام چیک کریں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n="bcCardSub">بچے کی پیدائش پر نام رکھنا ہو تو اپنا پسند کردہ نام لکھیں — معنی اور مناسبت جانچ کر بہترین نام منتخب کریں</p>
+    </div>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('babysuggest')">
+        <span class="home-btn-icon">👨‍👩‍👧</span>
+        <span class="home-btn-title" data-i18n="bsCardTitle">بچے کے لیے نام تجویز کریں</span>
+        <span class="home-btn-sub" data-i18n="bsBtnTag">والدین کے نام سے ملتے جلتے نام پائیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n="bsCardSub">بچے کی پیدائش پر والد یا والدہ کا نام لکھیں — اس سے ملتے جلتے، بامعنی اور مناسب نام تجویز پائیں</p>
+    </div>
   </div>
 
 
@@ -1668,14 +1717,14 @@ var ABJAD={'ا':1,'آ':1,'أ':1,'إ':1,'ب':2,'پ':2,'ج':3,'چ':3,'د':4,'ذ':7
 var LNG = {
   ur: {
     dir:'rtl', lang:'ur',
-    langLabel:'🌐 زبان:', usageLimitTitle:'آج کی حد مکمل ہو گئی', usageLimitBody:'اس سہولت کو آج مزید استعمال نہیں کیا جا سکتا۔ براہ کرم کل دوبارہ کوشش کریں۔',
+    langLabel:'🌐 زبان:', btn3Desc:'<b>🔹 اسم اعظم کیا ہے؟</b> اپنا نام لکھ کر اپنے لیے ایک خاص اسم اعظم اور اس کا وظیفہ حاصل کریں — یہ جادو، جنات، دشمنی وغیرہ سے حفاظت یا کسی بھی مشکل کے حل کے لیے استعمال ہوتا ہے۔', taq3BtnTag:'معاملہ ابھی کس مرحلے میں ہے؟', asarBtnTag:'مسئلہ اصل میں کیا ہے — جسمانی یا روحانی؟', taq5BtnTag:'معاملے کی شدت معلوم کریں', taq6BtnTag:'مدد ملنے کا امکان جانیں', taq7BtnTag:'اہم دن یا وقت معلوم کریں', taq8BtnTag:'قسمت کا رخ جانیں', taq9BtnTag:'روحانی حالت معلوم کریں', taq10BtnTag:'کوشش کا نتیجہ اور کامیابی کا امکان', taq12BtnTag:'معاملے کا عمومی مزاج جانیں', taq28BtnTag:'سب سے تفصیلی اور مکمل جواب', matchBtnTag:'دو ناموں سے رشتے کی مناسبت جانیں', bcBtnTag:'اپنا پسند کردہ نام چیک کریں', bsBtnTag:'والدین کے نام سے ملتے جلتے نام پائیں', btn1SubShort:'اپنا نام اور سوال لکھیں، فوری جواب پائیں', btn3SubShort:'اپنے نام سے خاص اسم اعظم اور وظیفہ پائیں', usageLimitTitle:'آج کی حد مکمل ہو گئی', usageLimitBody:'اس سہولت کو آج مزید استعمال نہیں کیا جا سکتا۔ براہ کرم کل دوبارہ کوشش کریں۔',
     siteTitle:'علم جعفر',
     subtitle:'روحانی رہنمائی کا مرکز',
     navHome:'🏠 Home', navAbout:'About Us', navContact:'Contact', navDisclaimer:'Disclaimer', navPrivacy:'Privacy Policy', navTerms:'Terms',
-    homeIntro:'بسم اللہ الرحمن الرحیم<br>علم جعفر کے دو طریقوں سے روحانی رہنمائی حاصل کریں',
-    btn1Title:'علم جعفر اخبار', btn1Sub:'<b style="color:#c9a84c;">🔹 علم جعفر اخبار کیا ہے؟</b><br>یہ علم جعفر کا سب سے پرانا اور روایتی طریقہ ہے۔ اس میں آپ اپنا نام، والدہ کا نام اور اپنا سوال لکھتے ہیں — پھر سوال کے حروف کو ایک خاص ترتیب میں "جعفر گرڈ" (سیڑھی نما جدول) میں سجایا جاتا ہے اور اس میں سے ایک مخصوص حرف (چوتھا حرف) نکالا جاتا ہے۔ اسی حرف کی روحانی مناسبت اور معنی کی روشنی میں <b>آپ کے سوال کا براہ راست اور تفصیلی جواب</b> دیا جاتا ہے۔ یہ طریقہ خاص طور پر ایسے سوالوں کے لیے موزوں ہے جن کا واضح یا مخصوص جواب درکار ہو۔',
+    homeIntro:'بسم اللہ الرحمن الرحیم<br>علم جعفر کے مختلف طریقوں سے روحانی رہنمائی حاصل کریں',
+    btn1Title:'علم جعفر اخبار', btn1Sub:'اپنا نام اور سوال لکھیں، فوری جواب پائیں',
     btn2Title:'علم جعفر آثار', btn2Sub:'ابجد اعداد کے ذریعے سوال کا جواب — نام، والدہ، دن، سوال',
-    btn3Title:'اسم اعظم تلاش کریں', btn3Sub:'<b style="color:#c9a84c;">🔹 اسم اعظم کیا ہے؟</b><br>اپنا نام لکھ کر اپنے لیے ایک خاص اسم اعظم اور اس کا وظیفہ حاصل کریں — یہ جادو، جنات، دشمنی وغیرہ سے حفاظت یا کسی بھی مشکل کے حل کے لیے استعمال ہوتا ہے۔',
+    btn3Title:'اسم اعظم تلاش کریں', btn3Sub:'اپنے نام سے خاص اسم اعظم اور وظیفہ پائیں',
     backBtn:'← واپس',
     akhbarTitle:'علم جعفر اخبار', akhbarSub:'اپنا نام اور والدہ کا نام لکھ کر سوال کریں',
     qLabel:'یا علیم — اپنا سوال یہاں لکھیں:', qPlaceholder:'جو دل میں آئے لکھ دیں...', analyzeBtn:'← تجزیہ کریں',
@@ -1745,14 +1794,14 @@ var LNG = {
 
   hi: {
     dir:"rtl", lang:"hi",
-    langLabel:"🌐 भाषा:", usageLimitTitle:"आज की हद मुकम्मल हो गई", usageLimitBody:"इस सहूलत को आज और इस्तेमाल नहीं किया जा सकता। बराहे करम कल दोबारा कोशिश करें।",
+    langLabel:"🌐 भाषा:", btn3Desc:"<b>🔹 इस्म-ए-आज़म क्या है?</b> अपना नाम लिखकर अपने लिए एक ख़ास इस्म-ए-आज़म और उसका वज़ीफ़ा हासिल करें — यह जादू, जिन्नात, दुश्मनी वग़ैरा से हिफ़ाज़त या किसी भी मुश्किल के हल के लिए इस्तेमाल होता है।", taq3BtnTag:"मामला अभी किस मरहले में है؟", asarBtnTag:"मसला असल में क्या है — जिस्मानी या रूहानी؟", taq5BtnTag:"मामले की शिद्दत मालूम करें", taq6BtnTag:"मदद मिलने का इमकान जानें", taq7BtnTag:"अहम दिन या वक़्त मालूम करें", taq8BtnTag:"क़िस्मत का रुख़ जानें", taq9BtnTag:"रूहानी हालत मालूम करें", taq10BtnTag:"कोशिश का नतीजा और कामयाबी का इमकान", taq12BtnTag:"मामले का उमूमी मिज़ाज जानें", taq28BtnTag:"सबसे तफ़्सीली और मुकम्मल जवाब", matchBtnTag:"दो नामों से रिश्ते की मुनासबत जानें", bcBtnTag:"अपना पसंदीदा नाम चेक करें", bsBtnTag:"वालिदैन के नाम से मिलते-जुलते नाम पाएं", btn1SubShort:"अपना नाम और सवाल लिखें, फ़ौरी जवाब पाएं", btn3SubShort:"अपने नाम से ख़ास इस्म-ए-आज़म और वज़ीफ़ा पाएं", usageLimitTitle:"आज की हद मुकम्मल हो गई", usageLimitBody:"इस सहूलत को आज और इस्तेमाल नहीं किया जा सकता। बराहे करम कल दोबारा कोशिश करें।",
     siteTitle:"इल्म-ए-जफ़र",
     subtitle:"आध्यात्मिक मार्गदर्शन केंद्र",
     navHome:"🏠 Home", navAbout:"About Us", navContact:"Contact", navDisclaimer:"Disclaimer", navPrivacy:"Privacy Policy", navTerms:"Terms",
-    homeIntro:"बिस्मिल्लाह अर-रहमान अर-रहीम<br>इल्म-ए-जफ़र के दो तरीकों से आध्यात्मिक मार्गदर्शन",
-    btn1Title:"इल्म-ए-जफ़र अख़बार", btn1Sub:"<b style=\"color:#c9a84c;\">🔹 इल्म-ए-जफ़र अख़बार क्या है؟</b><br>यह इल्म-ए-जफ़र का सबसे पुराना और रिवायती तरीक़ा है। इसमें आप अपना नाम, माँ का नाम और अपना सवाल लिखते हैं — फिर सवाल के हुरूफ़ को एक ख़ास तरतीब में \"जफ़र ग्रिड\" (सीढ़ीनुमा जदवल) में सजाया जाता है और उसमें से एक ख़ास हर्फ़ (चौथा हर्फ़) निकाला जाता है। उसी हर्फ़ की रूहानी मुनासबत और मानी की रोशनी में <b>आपके सवाल का सीधा और तफ़्सीली जवाब</b> दिया जाता है। यह तरीक़ा ख़ासतौर पर उन सवालों के लिए मुनासिब है जिनका साफ़ या ख़ास जवाब दरकार हो।",
+    homeIntro:"बिस्मिल्लाह अर-रहमान अर-रहीम<br>इल्म-ए-जफ़र के विभिन्न तरीक़ों से आध्यात्मिक मार्गदर्शन",
+    btn1Title:"इल्म-ए-जफ़र अख़बार", btn1Sub:"अपना नाम और सवाल लिखें, फ़ौरी जवाब पाएं",
     btn2Title:"इल्म-ए-जफ़र आसार", btn2Sub:"अबजद अंकों से सवाल का जवाब — नाम, माँ, वार, सवाल",
-    btn3Title:"इस्म-ए-आज़म खोजें", btn3Sub:"<b style=\"color:#c9a84c;\">🔹 इस्म-ए-आज़म क्या है؟</b><br>अपना नाम लिखकर अपने लिए एक ख़ास इस्म-ए-आज़म और उसका वज़ीफ़ा हासिल करें — यह जादू, जिन्नात, दुश्मनी वग़ैरा से हिफ़ाज़त या किसी भी मुश्किल के हल के लिए इस्तेमाल होता है।",
+    btn3Title:"इस्म-ए-आज़म खोजें", btn3Sub:"अपने नाम से ख़ास इस्म-ए-आज़म और वज़ीफ़ा पाएं",
     backBtn:"← वापस",
     akhbarTitle:"इल्म-ए-जफ़र अख़बार", akhbarSub:"नाम बिन/बिन्त माँ का नाम लिखकर सवाल करें",
     qLabel:"या अलीम — अपना सवाल यहाँ लिखें:", qPlaceholder:"जो मन में आए लिख दें...", analyzeBtn:"← विश्लेषण करें",
@@ -1826,14 +1875,14 @@ var LNG = {
   },
   ar: {
     dir:'rtl', lang:'ar',
-    langLabel:'🌐 اللغة:', usageLimitTitle:'اكتمل الحد اليومي', usageLimitBody:'لا يمكن استخدام هذه الميزة أكثر اليوم. يرجى المحاولة مرة أخرى غداً.',
+    langLabel:'🌐 اللغة:', btn3Desc:'<b>🔹 ما هو الاسم الأعظم؟</b> اكتب اسمك واحصل على اسم أعظم ووظيفة خاصة بك — تُستخدم للحماية من السحر والجن والعداء وغيرها أو لحل أي مشكلة.', taq3BtnTag:'في أي مرحلة أمرك الآن؟', asarBtnTag:'ما هي مشكلتك فعلياً — جسدية أم روحانية؟', taq5BtnTag:'اعرف مدى شدة أمرك', taq6BtnTag:'اعرف احتمال الحصول على مساعدة', taq7BtnTag:'اعرف اليوم أو الوقت المهم', taq8BtnTag:'اعرف اتجاه حظك', taq9BtnTag:'اعرف حالتك الروحية', taq10BtnTag:'نتيجة المحاولة واحتمال النجاح', taq12BtnTag:'اعرف الطبيعة العامة لأمرك', taq28BtnTag:'أكثر إجابة تفصيلاً واكتمالاً', matchBtnTag:'اعرف مدى توافق الاسمين', bcBtnTag:'افحص الاسم الذي تفضله', bsBtnTag:'احصل على أسماء تناسب اسم الوالدين', btn1SubShort:'اكتب اسمك وسؤالك، واحصل على إجابة فورية', btn3SubShort:'احصل على اسم أعظم ووظيفة خاصة باسمك', usageLimitTitle:'اكتمل الحد اليومي', usageLimitBody:'لا يمكن استخدام هذه الميزة أكثر اليوم. يرجى المحاولة مرة أخرى غداً.',
     siteTitle:'علم جعفر',
     subtitle:'مركز الإرشاد الروحاني',
     navHome:'🏠 Home', navAbout:'About Us', navContact:'Contact', navDisclaimer:'Disclaimer', navPrivacy:'Privacy Policy', navTerms:'Terms',
-    homeIntro:'بسم الله الرحمن الرحيم<br>احصل على الإرشاد الروحاني بطريقتين من علم جعفر',
-    btn1Title:'علم جعفر الأخبار', btn1Sub:'<b style="color:#c9a84c;">🔹 ما هو علم الجفر الأخبار؟</b><br>هذه أقدم وأكثر الطرق تقليدية في علم الجفر. هنا تكتب اسمك، اسم أمك، وسؤالك — ثم تُرتَّب حروف السؤال بترتيب معين في "شبكة جفر" (جدول متدرج) ويُستخرج منها حرف معين (الحرف الرابع). وفي ضوء دلالة هذا الحرف ومعناه الروحاني، تُعطى <b>إجابة مباشرة ومفصلة لسؤالك</b>. هذه الطريقة مناسبة بشكل خاص للأسئلة التي تحتاج إجابة واضحة أو محددة.',
+    homeIntro:'بسم الله الرحمن الرحيم<br>احصل على الإرشاد الروحاني من خلال طرق متعددة من علم جعفر',
+    btn1Title:'علم جعفر الأخبار', btn1Sub:'اكتب اسمك وسؤالك، واحصل على إجابة فورية',
     btn2Title:'علم جعفر الآثار', btn2Sub:'إجابة السؤال عبر الحساب الأبجدي — الاسم، الأم، اليوم، السؤال',
-    btn3Title:'البحث عن الاسم الأعظم', btn3Sub:'<b style="color:#c9a84c;">🔹 ما هو الاسم الأعظم؟</b><br>اكتب اسمك واحصل على اسم أعظم ووظيفة خاصة بك — تُستخدم للحماية من السحر والجن والعداء وغيرها أو لحل أي مشكلة.',
+    btn3Title:'البحث عن الاسم الأعظم', btn3Sub:'احصل على اسم أعظم ووظيفة خاصة باسمك',
     backBtn:'← رجوع',
     akhbarTitle:'علم جعفر الأخبار', akhbarSub:'اكتب اسمك واسم الأم ثم اطرح سؤالك',
     qLabel:'يا عليم — اكتب سؤالك هنا:', qPlaceholder:'اكتب ما يخطر ببالك...', analyzeBtn:'← تحليل',
@@ -1907,14 +1956,14 @@ var LNG = {
   },
   en: {
     dir:"ltr", lang:"en",
-    langLabel:"🌐 Language:", usageLimitTitle:"Today's limit reached", usageLimitBody:"This feature cannot be used any more today. Please try again tomorrow.",
+    langLabel:"🌐 Language:", btn3Desc:"<b>🔹 What is Ism-e-Azam?</b> Write your name to get a specific Ism-e-Azam and its wazifa for yourself — used for protection from magic, jinn, enmity and the like, or to solve any problem.", taq3BtnTag:"What stage is your matter at?", asarBtnTag:"What is your issue — physical or spiritual?", taq5BtnTag:"Find the severity of your matter", taq6BtnTag:"Find your chance of getting help", taq7BtnTag:"Find the important day or time", taq8BtnTag:"Find the direction of your fortune", taq9BtnTag:"Find your spiritual state", taq10BtnTag:"Outcome of effort and chance of success", taq12BtnTag:"Find the general nature of your matter", taq28BtnTag:"The most detailed, complete answer", matchBtnTag:"Check compatibility between two names", bcBtnTag:"Check your preferred name", bsBtnTag:"Get names matching a parent's name", btn1SubShort:"Write your name and question, get an instant answer", btn3SubShort:"Get a specific Ism-e-Azam and wazifa for your name", usageLimitTitle:"Today's limit reached", usageLimitBody:"This feature cannot be used any more today. Please try again tomorrow.",
     siteTitle:"Ilm-e-Jafar",
     subtitle:"Spiritual Guidance Center",
     navHome:"🏠 Home", navAbout:"About Us", navContact:"Contact", navDisclaimer:"Disclaimer", navPrivacy:"Privacy Policy", navTerms:"Terms",
-    homeIntro:"Bismillah Ar-Rahman Ar-Raheem<br>Get spiritual guidance through two methods of Ilm-e-Jafar",
-    btn1Title:"Ilm-e-Jafar Akhbar", btn1Sub:"<b style=\"color:#c9a84c;\">🔹 What is Ilm-e-Jafar Akhbar?</b><br>This is the oldest and most traditional method of Ilm-e-Jafar. Here you write your name, your mother's name, and your question — the letters of your question are then arranged in a specific order into a \"Jafar grid\" (a ladder-like table), from which one specific letter (the fourth letter) is extracted. In light of that letter's spiritual meaning, <b>a direct and detailed answer to your question</b> is given. This method is especially suited to questions that need a clear or specific answer.",
+    homeIntro:"Bismillah Ar-Rahman Ar-Raheem<br>Get spiritual guidance through the many methods of Ilm-e-Jafar",
+    btn1Title:"Ilm-e-Jafar Akhbar", btn1Sub:"Write your name and question, get an instant answer",
     btn2Title:"Ilm-e-Jafar Asar", btn2Sub:"Answer through Abjad numerology — name, mother, day, question",
-    btn3Title:"Find Your Ism-e-Azam", btn3Sub:"<b style=\"color:#c9a84c;\">🔹 What is Ism-e-Azam?</b><br>Write your name to get a specific Ism-e-Azam and its wazifa for yourself — used for protection from magic, jinn, enmity and the like, or to solve any problem.",
+    btn3Title:"Find Your Ism-e-Azam", btn3Sub:"Get a specific Ism-e-Azam and wazifa for your name",
     backBtn:"← Back",
     akhbarTitle:"Ilm-e-Jafar Akhbar", akhbarSub:"Write your name bin/bint mothers name then ask",
     qLabel:"Ya Aleem — Write your question here:", qPlaceholder:"Write whatever is in your heart...", analyzeBtn:"Analyze →",
@@ -2027,10 +2076,10 @@ function applyLang(code) {
   if (artSecEn) artSecEn.style.display = (code === 'en') ? '' : 'none';
 
   var shareTexts = {
-    ur: 'شیئر کریں',
-    en: 'Share',
-    hi: 'शेयर करें',
-    ar: 'مشاركة'
+    ur: '📤 دوستوں کے ساتھ شیئر کریں',
+    en: '📤 Share with Friends',
+    hi: '📤 दोस्तों के साथ शेयर करें',
+    ar: '📤 شارك مع أصدقائك'
   };
   var shareLbl = document.getElementById('shareLabelText');
   if (shareLbl) shareLbl.textContent = shareTexts[code] || shareTexts.en;
@@ -2975,10 +3024,10 @@ function shareVia(platform){
   var curLang = localStorage.getItem('ilmLang') || 'en';
   var url = 'https://www.ilmejafar.com/?lang=' + curLang;
   var shareMsgs = {
-    ur: 'علم جعفر — روحانی رہنمائی کا مرکز۔ حروف اور اعداد کے ذریعے مفت روحانی تجزیہ حاصل کریں۔',
-    en: 'Ilm-e-Jafar — Spiritual Guidance Center. Get free spiritual guidance through letters and numbers.',
-    hi: 'इल्म-ए-जफ़र — आध्यात्मिक मार्गदर्शन केंद्र। अक्षरों और अंकों के ज़रिए मुफ्त आध्यात्मिक विश्लेषण पाएं।',
-    ar: 'علم جعفر — مركز الإرشاد الروحاني. احصل على تحليل روحاني مجاني من خلال الحروف والأرقام.'
+    ur: 'علم جعفر — اپنے دوستوں کو بھی بتائیں! 📜 علم جعفر اخبار، 🔢 آثار، ✨ اسم اعظم، 💑 نام مناسبت اور 👶 بچے کے نام کی جانچ — سب کچھ مکمل مفت۔ ابھی آزمائیں:',
+    en: 'Ilm-e-Jafar — Share this with your friends! Free Ilm-e-Jafar Akhbar, Aasar, Ism-e-Azam finder, name compatibility, and baby name guidance — all completely free. Try it now:',
+    hi: 'इल्म-ए-जफ़र — अपने दोस्तों को भी बताएं! इल्म-ए-जफ़र अख़बार, आसार, इस्म-ए-आज़म, नाम मुनासबत और बच्चे के नाम की जांच — सब बिल्कुल मुफ्त। अभी आज़माएं:',
+    ar: 'علم جعفر — شارك هذا مع أصدقائك! علم جعفر الأخبار، الآثار، الاسم الأعظم، توافق الأسماء، وإرشادات أسماء الأطفال — كل ذلك مجاناً تماماً. جربه الآن:'
   };
   var text = shareMsgs[curLang] || shareMsgs.en;
   var encodedUrl = encodeURIComponent(url);
