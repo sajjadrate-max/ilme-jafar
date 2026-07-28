@@ -4,113 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Us — Ilm-e-Jafar | ilmejafar.com</title>
-<meta name="description" content="Learn about ilmejafar.com — a free spiritual guidance platform offering Ilm-e-Jafar Akhbar, Ilm-e-Jafar Aasar, Ism-e-Azam, name compatibility, and baby name guidance in Urdu, English, Hindi, and Arabic.">
+<meta name="description" content="Learn about ilmejafar.com — a free spiritual guidance platform offering Ilm-e-Jafar Akhbar, Ilm-e-Jafar Aasar, Ism-e-Azam, name compatibility, and baby name guidance.">
 <link rel="canonical" href="https://www.ilmejafar.com/about.html">
 <style>
 :root{--gold:#c9a84c;--gold-light:#e8c87a;--gold-dark:#9a7830;--navy:#0a1628;--navy-mid:#122040;--navy-light:#1a3258;--cream:#faf7f0;}
 *{box-sizing:border-box;}
 body{margin:0;background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50% 0%,rgba(201,168,76,.10) 0%,transparent 60%),linear-gradient(180deg,#16294f 0%,#0d1c38 45%,#0a1628 100%);font-family:Georgia,'Times New Roman',serif;color:var(--cream);min-height:100vh;line-height:1.75;}
 .wrap{max-width:760px;margin:0 auto;padding:28px 20px 60px;}
-.topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:10px;}
+.topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
 .topnav a{color:var(--gold);text-decoration:none;font-weight:700;font-size:14px;}
 .topnav a:hover{color:var(--gold-light);}
+#langSelectPage{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:7px;padding:6px 12px;font-size:13px;cursor:pointer;outline:none;}
 h1{font-size:clamp(26px,5vw,38px);background:linear-gradient(135deg,#f0d878 0%,var(--gold) 40%,var(--gold-dark) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
-.subtitle{color:rgba(250,247,240,.6);font-size:14px;margin-bottom:32px;}
-h2{color:var(--gold-light);font-size:22px;margin-top:36px;margin-bottom:12px;border-bottom:1px solid rgba(201,168,76,.25);padding-bottom:8px;}
-h3{color:var(--gold);font-size:17px;margin-top:24px;margin-bottom:8px;}
-p{color:rgba(250,247,240,.88);font-size:16px;margin-bottom:14px;}
-ul{color:rgba(250,247,240,.88);font-size:16px;padding-right:0;padding-left:20px;}
-li{margin-bottom:8px;}
+.subtitle{color:rgba(250,247,240,.6);font-size:14px;margin-bottom:28px;}
+#pageContent h2{color:var(--gold-light);font-size:22px;margin-top:36px;margin-bottom:12px;border-bottom:1px solid rgba(201,168,76,.25);padding-bottom:8px;}
+#pageContent h3{color:var(--gold);font-size:17px;margin-top:24px;margin-bottom:8px;}
+#pageContent p{color:rgba(250,247,240,.88);font-size:16px;margin-bottom:14px;}
+#pageContent ul{color:rgba(250,247,240,.88);font-size:16px;padding-left:20px;}
+#pageContent li{margin-bottom:8px;}
+#pageContent a{color:var(--gold);}
+.warn{background:rgba(122,0,0,.25);border:1px solid rgba(240,80,80,.35);border-radius:10px;padding:16px 18px;margin:20px 0;}
 .footer-links{margin-top:50px;padding-top:20px;border-top:1px solid rgba(201,168,76,.2);text-align:center;font-size:13px;}
 .footer-links a{color:var(--gold);text-decoration:none;margin:0 6px;}
 .footer-links a:hover{color:var(--gold-light);}
-.ur-section{margin-top:44px;padding-top:24px;border-top:2px solid rgba(201,168,76,.25);direction:rtl;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq',serif;}
-.ur-section h2, .ur-section h3{direction:rtl;text-align:right;}
-.ur-section p{direction:rtl;text-align:right;font-size:17px;}
+.updated{font-size:13px;color:rgba(250,247,240,.5);margin-bottom:20px;}
+[dir="rtl"] #pageContent{direction:rtl;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq',serif;}
+[dir="rtl"] #pageContent h2, [dir="rtl"] #pageContent h3{text-align:right;}
+[dir="rtl"] #pageContent p, [dir="rtl"] #pageContent li{text-align:right;font-size:17px;}
+[dir="rtl"] #pageContent ul{padding-left:0;padding-right:20px;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="topnav">
-    <a href="/">🏠 Home — علم جعفر</a>
-    <a href="/">← Back to ilmejafar.com</a>
+    <a href="/">🏠 Home</a>
+    <select id="langSelectPage" onchange="switchPageLang(this.value)">
+      <option value="en">🇺🇸 English</option>
+      <option value="ur">🇵🇰 اردو</option>
+      <option value="hi">🇮🇳 हिन्दी</option>
+      <option value="ar">🇦🇪 العربية</option>
+    </select>
   </div>
 
-  <h1>About Ilm-e-Jafar</h1>
-  <div class="subtitle">ilmejafar.com — Traditional Islamic Spiritual Guidance, Made Accessible</div>
+  <h1>About Us</h1>
+  <div class="subtitle">ilmejafar.com</div>
+  <div class="updated">Last updated: 2026</div>
 
-  <p>ilmejafar.com is a free, online spiritual guidance platform built around the traditional Islamic discipline of Ilm-e-Jafar — a centuries-old practice that uses the numerical values of Arabic letters (abjad) to reflect on questions, names, and life circumstances. Our goal is simple: to take a body of knowledge that has historically been passed down through spiritual teachers, handwritten manuscripts, and rare books, and make it easily accessible to anyone with a smartphone, in their own language, at no cost.</p>
-
-  <h2>What Is Ilm-e-Jafar?</h2>
-  <p>Ilm-e-Jafar is a traditional Islamic spiritual science in which the letters of the Arabic alphabet — and the words formed from them — are analyzed through a numerical system known as abjad. Each letter carries a fixed numeric value, and by adding, arranging, or dividing these values in specific traditional ways, practitioners derive spiritual insight into a question or situation. The practice is traditionally associated with Imam Jafar as-Sadiq, from whom it takes its name, though the historical details of this association are a matter of ongoing discussion among scholars of Islamic spiritual history.</p>
-
-  <h3>Ilm-e-Jafar Akhbar</h3>
-  <p>This is the oldest method offered on our platform. A user's question is arranged into a staircase-shaped table known as a "Jafar grid." Specific letters are then extracted from this grid according to a fixed traditional pattern, and these letters — along with their accumulated abjad value — form the basis of a direct, detailed answer to the question asked, along with a suggested wazifa (devotional recitation) where appropriate.</p>
-
-  <h3>Ilm-e-Jafar Aasar</h3>
-  <p>This method takes the abjad values of the questioner's name, their mother's name, the day of the question, and the question itself, and adds them together. The resulting total is then divided by a specific number — we currently offer division by 3, 4, 5, 6, 7, 8, 9, 10, 12, and 28 — with each divisor traditionally associated with a different kind of insight: the nature of a problem, its severity, its current stage, the likelihood of receiving help, a relevant day or time, the direction of one's fortune, one's spiritual state, the outcome of an effort, the general character of a matter, or — in the case of division by 28, corresponding to the 28 letters of the Arabic alphabet — the most detailed analysis we offer.</p>
-
-  <h3>Ism-e-Azam Finder</h3>
-  <p>Our Ism-e-Azam tool uses the abjad value of a person's name to identify which of Allah's beautiful names (Asma-ul-Husna) holds the closest traditional correspondence to that individual, along with guidance on reciting its associated wazifa — commonly sought for protection from black magic, jinn, enmity, and general life difficulties.</p>
-
-  <h3>Name Compatibility (Rishta/Marriage Matching)</h3>
-  <p>This tool compares the abjad values of two names — for example, a prospective bride and groom, or business partners — to offer a traditional analysis of how compatible a relationship or partnership may be.</p>
-
-  <h3>Baby Name Guidance</h3>
-  <p>We also offer two simple tools for new parents: one to check the meaning and suitability of a name they are considering for their child, and another to suggest good, meaningful names that complement a parent's own name.</p>
-
-  <h2>How Our Platform Works</h2>
-  <p>Every tool on ilmejafar.com follows the same basic principle: you provide a name, a question, or both, and our system performs the traditional abjad calculations described above. The detailed spiritual interpretation and suggested wazifa are then generated using an AI language model, which has been guided to respond within the traditional framework of Ilm-e-Jafar, in a respectful and Islamically-grounded tone, and strictly in the language you have selected.</p>
-
-  <p>We do not require account creation, email verification, or any payment. You can use every tool on this site immediately and free of charge. To keep the service running smoothly for everyone and to prevent excessive automated use, each tool has a fair daily usage allowance per device.</p>
-
-  <h2>Why We Built This Site</h2>
-  <p>Ilm-e-Jafar has traditionally been the domain of a small number of spiritual teachers, often accessible only to those who could travel to consult them in person, or who had access to rare, handwritten reference books passed down through generations. We believed that with the right care, this centuries-old tradition could be brought into the modern era — digitized, translated, and made available instantly to anyone, anywhere, on any device, without losing the respect and seriousness the tradition deserves.</p>
-
-  <p>That is why ilmejafar.com is available in four languages — Urdu, English, Hindi, and Arabic — so that speakers of each language can engage with this tradition comfortably in their own tongue, rather than being limited to a single language of access.</p>
-
-  <h2>Our Approach to Faith and Responsibility</h2>
-  <p>We take seriously the Islamic teaching that ultimate knowledge of the unseen belongs to Allah alone. Every tool on our platform is framed as a traditional means of reflection and guidance — never as a certain or guaranteed prediction of the future. We consistently encourage users to approach every question with sincere intention, to perform ablution (wudu) before asking, to recite Durood Shareef, and to hold complete trust in Allah above any specific tool or method.</p>
-
-  <p>We also want to be clear that ilmejafar.com does not replace professional medical, legal, financial, or psychological advice. For matters of physical or mental health, we always recommend consulting a qualified doctor. For matters of magic, jinn, or serious spiritual concern, we recommend consulting a knowledgeable, trustworthy religious scholar rather than relying solely on an online tool.</p>
-
-  <h2>How the Site Sustains Itself</h2>
-  <p>ilmejafar.com is supported by advertising (Google AdSense) displayed on the site. This allows us to keep every tool completely free for users, with no subscriptions, no paywalls, and no hidden charges. We do not sell user data, and we do not require any personal information beyond what a user chooses to type into a question field for the purpose of generating their result.</p>
-
-  <h2>Frequently Asked Questions</h2>
-  <h3>Do I need to create an account to use ilmejafar.com?</h3>
-  <p>No. Every tool on the site is available immediately, without registration, email verification, or any personal account. You simply enter the requested name or question and receive your result right away.</p>
-
-  <h3>Is ilmejafar.com really free?</h3>
-  <p>Yes. All of our tools — Ilm-e-Jafar Akhbar, Ilm-e-Jafar Aasar, Ism-e-Azam, name compatibility, and baby name guidance — are completely free to use. The site is supported through advertising rather than user fees.</p>
-
-  <h3>Why is there a daily limit on each tool?</h3>
-  <p>Generating each detailed spiritual analysis relies on an AI service that has a real operating cost. A fair daily allowance per device allows us to keep every tool free and available to as many people as possible, rather than a small number of users exhausting the service for everyone else.</p>
-
-  <h3>Will the same question always give the same result?</h3>
-  <p>Since the underlying calculation is based on fixed abjad values, the same name, day, and question will always produce the same numerical basis for the answer. The written explanation may vary slightly in wording each time, but the core numerical analysis remains consistent.</p>
-
-  <h3>Which languages does the site support?</h3>
-  <p>ilmejafar.com is currently available in Urdu, English, Hindi, and Arabic. You can switch languages at any time using the language selector at the top of the site.</p>
-
-  <h2>Get in Touch</h2>
-  <p>If you have questions, feedback, or suggestions for new features, we would love to hear from you through our <a href="/contact.html" style="color:var(--gold);">Contact page</a>. We continually look for ways to improve the platform, add new traditional methods, and make the experience smoother for our growing community of users across Pakistan, India, the Middle East, and beyond.</p>
-
-  <p>Thank you for visiting ilmejafar.com, and we pray that whatever guidance you seek here brings you closer to clarity, peace of mind, and — above all — closer to Allah.</p>
-
-  <div class="ur-section">
-    <h2>علم جعفر کے بارے میں (اردو خلاصہ)</h2>
-    <p>ilmejafar.com ایک مفت روحانی رہنمائی کی ویب سائٹ ہے جو روایتی علم جعفر پر مبنی ہے۔ اس سائٹ پر علم جعفر اخبار، علم جعفر آثار (3 تا 28 پر تقسیم کے مختلف طریقے)، اسم اعظم تلاش کرنے کی سہولت، رشتہ/شادی کی نام مناسبت، اور بچے کے نام کی جانچ و تجویز — یہ تمام سہولتیں مکمل مفت اور بغیر رجسٹریشن کے فراہم کی جاتی ہیں۔</p>
-    <p>ہمارا مقصد یہ ہے کہ صدیوں پرانا یہ روایتی اسلامی روحانی علم، جو پہلے صرف مخصوص روحانی اساتذہ یا نایاب کتابوں تک محدود تھا، اب جدید ٹیکنالوجی کے ذریعے ہر عام آدمی تک اس کی اپنی زبان میں پہنچایا جا سکے — اسی لیے یہ سائٹ اردو، انگریزی، ہندی اور عربی چاروں زبانوں میں دستیاب ہے۔</p>
-    <p>ہمیشہ یاد رکھیں کہ غیب کا علم صرف اللہ تعالیٰ کے پاس ہے، اور یہ سائٹ صرف روحانی رہنمائی کا ایک ذریعہ ہے، طبی، قانونی یا مالی مشورے کا متبادل نہیں۔</p>
-  </div>
+  <div id="pageContent"></div>
 
   <div class="footer-links">
     <a href="/">Home</a> | <a href="/about.html">About Us</a> | <a href="/privacy.html">Privacy Policy</a> | <a href="/disclaimer.html">Disclaimer</a> | <a href="/terms.html">Terms</a> | <a href="/contact.html">Contact</a>
-    <br><br>علم جعفر &mdash; تمام حقوق محفوظ ہیں &copy; 2026 | ilmejafar.com
+    <br><br>&copy; 2026 ilmejafar.com — All Rights Reserved
   </div>
 
 </div>
+
+<script>
+var PAGE_CONTENT = {
+  en: "<p>ilmejafar.com is a free, online spiritual guidance platform built around the traditional Islamic discipline of Ilm-e-Jafar — a centuries-old practice that uses the numerical values of Arabic letters (abjad) to reflect on questions, names, and life circumstances. Our goal is simple: to take a body of knowledge that has historically been passed down through spiritual teachers, handwritten manuscripts, and rare books, and make it easily accessible to anyone with a smartphone, in their own language, at no cost.</p>\n\n  <h2>What Is Ilm-e-Jafar?</h2>\n  <p>Ilm-e-Jafar is a traditional Islamic spiritual science in which the letters of the Arabic alphabet — and the words formed from them — are analyzed through a numerical system known as abjad. Each letter carries a fixed numeric value, and by adding, arranging, or dividing these values in specific traditional ways, practitioners derive spiritual insight into a question or situation. The practice is traditionally associated with Imam Jafar as-Sadiq, from whom it takes its name, though the historical details of this association are a matter of ongoing discussion among scholars of Islamic spiritual history.</p>\n\n  <h3>Ilm-e-Jafar Akhbar</h3>\n  <p>This is the oldest method offered on our platform. A user's question is arranged into a staircase-shaped table known as a \"Jafar grid.\" Specific letters are then extracted from this grid according to a fixed traditional pattern, and these letters — along with their accumulated abjad value — form the basis of a direct, detailed answer to the question asked, along with a suggested wazifa (devotional recitation) where appropriate.</p>\n\n  <h3>Ilm-e-Jafar Aasar</h3>\n  <p>This method takes the abjad values of the questioner's name, their mother's name, the day of the question, and the question itself, and adds them together. The resulting total is then divided by a specific number — we currently offer division by 3, 4, 5, 6, 7, 8, 9, 10, 12, and 28 — with each divisor traditionally associated with a different kind of insight: the nature of a problem, its severity, its current stage, the likelihood of receiving help, a relevant day or time, the direction of one's fortune, one's spiritual state, the outcome of an effort, the general character of a matter, or — in the case of division by 28, corresponding to the 28 letters of the Arabic alphabet — the most detailed analysis we offer.</p>\n\n  <h3>Ism-e-Azam Finder</h3>\n  <p>Our Ism-e-Azam tool uses the abjad value of a person's name to identify which of Allah's beautiful names (Asma-ul-Husna) holds the closest traditional correspondence to that individual, along with guidance on reciting its associated wazifa — commonly sought for protection from black magic, jinn, enmity, and general life difficulties.</p>\n\n  <h3>Name Compatibility (Rishta/Marriage Matching)</h3>\n  <p>This tool compares the abjad values of two names — for example, a prospective bride and groom, or business partners — to offer a traditional analysis of how compatible a relationship or partnership may be.</p>\n\n  <h3>Baby Name Guidance</h3>\n  <p>We also offer two simple tools for new parents: one to check the meaning and suitability of a name they are considering for their child, and another to suggest good, meaningful names that complement a parent's own name.</p>\n\n  <h2>How Our Platform Works</h2>\n  <p>Every tool on ilmejafar.com follows the same basic principle: you provide a name, a question, or both, and our system performs the traditional abjad calculations described above. The detailed spiritual interpretation and suggested wazifa are then generated using an AI language model, which has been guided to respond within the traditional framework of Ilm-e-Jafar, in a respectful and Islamically-grounded tone, and strictly in the language you have selected.</p>\n\n  <p>We do not require account creation, email verification, or any payment. You can use every tool on this site immediately and free of charge. To keep the service running smoothly for everyone and to prevent excessive automated use, each tool has a fair daily usage allowance per device.</p>\n\n  <h2>Why We Built This Site</h2>\n  <p>Ilm-e-Jafar has traditionally been the domain of a small number of spiritual teachers, often accessible only to those who could travel to consult them in person, or who had access to rare, handwritten reference books passed down through generations. We believed that with the right care, this centuries-old tradition could be brought into the modern era — digitized, translated, and made available instantly to anyone, anywhere, on any device, without losing the respect and seriousness the tradition deserves.</p>\n\n  <p>That is why ilmejafar.com is available in four languages — Urdu, English, Hindi, and Arabic — so that speakers of each language can engage with this tradition comfortably in their own tongue, rather than being limited to a single language of access.</p>\n\n  <h2>Our Approach to Faith and Responsibility</h2>\n  <p>We take seriously the Islamic teaching that ultimate knowledge of the unseen belongs to Allah alone. Every tool on our platform is framed as a traditional means of reflection and guidance — never as a certain or guaranteed prediction of the future. We consistently encourage users to approach every question with sincere intention, to perform ablution (wudu) before asking, to recite Durood Shareef, and to hold complete trust in Allah above any specific tool or method.</p>\n\n  <p>We also want to be clear that ilmejafar.com does not replace professional medical, legal, financial, or psychological advice. For matters of physical or mental health, we always recommend consulting a qualified doctor. For matters of magic, jinn, or serious spiritual concern, we recommend consulting a knowledgeable, trustworthy religious scholar rather than relying solely on an online tool.</p>\n\n  <h2>How the Site Sustains Itself</h2>\n  <p>ilmejafar.com is supported by advertising (Google AdSense) displayed on the site. This allows us to keep every tool completely free for users, with no subscriptions, no paywalls, and no hidden charges. We do not sell user data, and we do not require any personal information beyond what a user chooses to type into a question field for the purpose of generating their result.</p>\n\n  <h2>Frequently Asked Questions</h2>\n  <h3>Do I need to create an account to use ilmejafar.com?</h3>\n  <p>No. Every tool on the site is available immediately, without registration, email verification, or any personal account. You simply enter the requested name or question and receive your result right away.</p>\n\n  <h3>Is ilmejafar.com really free?</h3>\n  <p>Yes. All of our tools — Ilm-e-Jafar Akhbar, Ilm-e-Jafar Aasar, Ism-e-Azam, name compatibility, and baby name guidance — are completely free to use. The site is supported through advertising rather than user fees.</p>\n\n  <h3>Why is there a daily limit on each tool?</h3>\n  <p>Generating each detailed spiritual analysis relies on an AI service that has a real operating cost. A fair daily allowance per device allows us to keep every tool free and available to as many people as possible, rather than a small number of users exhausting the service for everyone else.</p>\n\n  <h3>Will the same question always give the same result?</h3>\n  <p>Since the underlying calculation is based on fixed abjad values, the same name, day, and question will always produce the same numerical basis for the answer. The written explanation may vary slightly in wording each time, but the core numerical analysis remains consistent.</p>\n\n  <h3>Which languages does the site support?</h3>\n  <p>ilmejafar.com is currently available in Urdu, English, Hindi, and Arabic. You can switch languages at any time using the language selector at the top of the site.</p>\n\n  <h2>Get in Touch</h2>\n  <p>If you have questions, feedback, or suggestions for new features, we would love to hear from you through our <a href=\"/contact.html\" style=\"color:var(--gold);\">Contact page</a>. We continually look for ways to improve the platform, add new traditional methods, and make the experience smoother for our growing community of users across Pakistan, India, the Middle East, and beyond.</p>\n\n  <p>Thank you for visiting ilmejafar.com, and we pray that whatever guidance you seek here brings you closer to clarity, peace of mind, and — above all — closer to Allah.</p>",
+  ur: "<h2>📿 علم جعفر کے بارے میں</h2>\n<p>ilmejafar.com ایک مفت، آن لائن روحانی رہنمائی کی ویب سائٹ ہے جو روایتی اسلامی علم جعفر پر مبنی ہے — یہ صدیوں پرانا علم عربی حروف کے ابجد اعداد کے ذریعے سوالات، ناموں اور زندگی کے معاملات پر روحانی غور و فکر کا ذریعہ ہے۔ ہمارا مقصد یہ ہے کہ جو علم پہلے صرف روحانی اساتذہ یا نایاب کتابوں تک محدود تھا، اب اسے ہر عام آدمی تک، اس کی اپنی زبان میں، بالکل مفت پہنچایا جائے۔</p>\n\n<h3>علم جعفر کیا ہے؟</h3>\n<p>علم جعفر ایک روایتی اسلامی روحانی علم ہے جس میں عربی حروف اور ان سے بننے والے الفاظ کا ابجد نظام کے ذریعے تجزیہ کیا جاتا ہے۔ ہر حرف کی ایک مقررہ عددی قدر ہے، اور انہی اعداد کو مخصوص روایتی طریقوں سے جمع، ترتیب یا تقسیم کر کے روحانی رہنمائی حاصل کی جاتی ہے۔ یہ علم روایتی طور پر امام جعفر صادق سے منسوب کیا جاتا ہے، اگرچہ اس نسبت کی تاریخی تفصیلات پر مختلف آراء پائی جاتی ہیں۔</p>\n\n<h3>📜 علم جعفر اخبار</h3>\n<p>یہ ہماری سائٹ کا سب سے قدیم طریقہ ہے۔ صارف کے سوال کے حروف کو ایک سیڑھی نما \"جعفر گرڈ\" میں ترتیب دیا جاتا ہے، پھر ایک مخصوص ترتیب سے حروف نکالے جاتے ہیں، اور انہی حروف کی روشنی میں سوال کا براہ راست اور تفصیلی جواب دیا جاتا ہے، ساتھ ہی مناسب وظیفہ بھی تجویز کیا جاتا ہے۔</p>\n\n<h3>🔢 علم جعفر آثار</h3>\n<p>اس طریقے میں سائل کا نام، والدہ کا نام، دن اور سوال کے ابجد اعداد جمع کیے جاتے ہیں، پھر مجموعے کو ایک مخصوص عدد پر تقسیم کیا جاتا ہے۔ ہم فی الحال 3، 4، 5، 6، 7، 8، 9، 10، 12 اور 28 پر تقسیم کی سہولت فراہم کرتے ہیں — ہر تقسیم مسئلے کی نوعیت، شدت، مرحلہ، مدد کا امکان، دن یا وقت، قسمت کا رخ، روحانی حالت، کوشش کا نتیجہ، عمومی مزاج، یا (28 کی صورت میں، جو عربی کے 28 حروف سے مطابقت رکھتی ہے) سب سے تفصیلی تجزیہ فراہم کرتی ہے۔</p>\n\n<h3>✨ اسم اعظم فائنڈر</h3>\n<p>یہ ٹول کسی شخص کے نام کے ابجد اعداد کی روشنی میں یہ بتاتا ہے کہ اللہ تعالیٰ کے کون سے اسمِ حسنیٰ سے اس کی سب سے زیادہ مناسبت ہے، ساتھ ہی اس کے وظیفے کی رہنمائی بھی فراہم کرتا ہے — جو عام طور پر جادو، جنات، دشمنی اور عمومی مشکلات سے حفاظت کے لیے استعمال ہوتا ہے۔</p>\n\n<h3>💑 نام کی مناسبت (رشتہ/شادی)</h3>\n<p>یہ ٹول دو ناموں — مثلاً ممکنہ دولہا دلہن یا کاروباری شراکت داروں — کے ابجد اعداد کا موازنہ کر کے بتاتا ہے کہ ان کا رشتہ یا شراکت داری کتنی موافق ہو سکتی ہے۔</p>\n\n<h3>👶 بچے کے نام کی رہنمائی</h3>\n<p>نئے والدین کے لیے ہم دو آسان ٹولز بھی فراہم کرتے ہیں: ایک اپنے پسند کردہ نام کا معنی اور مناسبت چیک کرنے کے لیے، اور دوسرا والدین کے اپنے نام سے ملتے جلتے بامعنی نام تجویز کرنے کے لیے۔</p>\n\n<h3>ہماری سائٹ کیسے کام کرتی ہے</h3>\n<p>ہر ٹول ایک ہی اصول پر کام کرتا ہے: آپ ایک نام یا سوال درج کرتے ہیں، اور ہمارا نظام روایتی ابجد حساب کتاب انجام دیتا ہے۔ تفصیلی روحانی تشریح اور تجویز کردہ وظیفہ ایک AI زبان ماڈل کے ذریعے تیار کیا جاتا ہے، جسے علم جعفر کی روایتی حدود میں، احترام کے ساتھ، اور آپ کی منتخب کردہ زبان میں جواب دینے کی ہدایت دی گئی ہے۔</p>\n<p>ہمیں کسی اکاؤنٹ، ای میل کی تصدیق یا ادائیگی کی ضرورت نہیں۔ آپ ہر ٹول فوری اور مفت استعمال کر سکتے ہیں۔ سروس کو سب کے لیے منصفانہ طور پر چلانے کے لیے ہر ٹول پر ایک مناسب روزانہ استعمال کی حد لاگو ہے۔</p>\n\n<h3>ہم نے یہ سائٹ کیوں بنائی</h3>\n<p>علم جعفر روایتی طور پر چند مخصوص روحانی اساتذہ تک محدود رہا ہے۔ ہم نے یہ سوچا کہ اس صدیوں پرانی روایت کو مناسب احتیاط کے ساتھ جدید دور میں لایا جا سکتا ہے — ڈیجیٹل شکل میں، مختلف زبانوں میں، اور ہر کسی کے لیے فوری دستیاب، بغیر اس کی روایتی سنجیدگی کھوئے۔ اسی لیے یہ سائٹ اردو، انگریزی، ہندی اور عربی — چاروں زبانوں میں دستیاب ہے۔</p>\n\n<h3>ہمارا عقیدہ اور ذمہ داری کا انداز</h3>\n<p>ہم اس اسلامی تعلیم کو سنجیدگی سے لیتے ہیں کہ غیب کا علم صرف اللہ تعالیٰ کے پاس ہے۔ ہماری سائٹ کا ہر ٹول محض روحانی غور و فکر کا ذریعہ ہے، کبھی بھی حتمی یا یقینی پیش گوئی نہیں۔ ہم صارفین کو ہمیشہ خالص نیت، وضو، درود شریف اور اللہ پر کامل توکل کی ترغیب دیتے ہیں۔</p>\n<p>یہ سائٹ کسی بھی طبی، قانونی، مالی یا نفسیاتی مشورے کا متبادل نہیں۔ صحت کے مسائل کے لیے مستند ڈاکٹر سے، اور جادو یا جنات جیسے سنگین روحانی معاملات میں کسی مستند اور دیندار عالم سے رجوع کرنا ضروری ہے۔</p>\n\n<h3>سائٹ کیسے چلتی ہے</h3>\n<p>ilmejafar.com کو Google AdSense کے اشتہارات کے ذریعے سپورٹ کیا جاتا ہے، تاکہ یہ ہر صارف کے لیے مکمل مفت رہے — کوئی سبسکرپشن، کوئی پیمنٹ وال نہیں۔ ہم صارف کا کوئی ڈیٹا نہیں بیچتے۔</p>\n\n<h3>رابطہ کریں</h3>\n<p>اگر آپ کے کوئی سوالات، رائے یا نئے فیچر کی تجویز ہو، تو براہ کرم ہمارے Contact صفحے سے رابطہ کریں۔ ہم مسلسل اس پلیٹ فارم کو بہتر بنانے کی کوشش کرتے رہتے ہیں۔</p>",
+  hi: "<h2>📿 About Us</h2><p><b>ilmejafar.com</b> इल्म-ए-जफ़र के पारंपरिक इस्लामी ज्ञान पर आधारित एक आध्यात्मिक मार्गदर्शन मंच है।</p><h3>हमारा उद्देश्य</h3><p>हमारा उद्देश्य लोगों को आध्यात्मिक मार्गदर्शन प्रदान करना है। इल्म-ए-जफ़र एक सदियों पुराना इस्लामी ज्ञान है जो हुरूफ़ और अंकों की शक्ति पर आधारित है।</p><h3>इल्म-ए-जफ़र क्या है?</h3><p>इल्म-ए-जफ़र एक पारंपरिक इस्लामी ज्ञान है जिसमें अरबी अक्षरों की आध्यात्मिक शक्ति से सवालों का जवाब निकाला जाता है। यह ज्ञान इमाम जाफ़र सादिक़ (रह.) से संबंधित माना जाता है।</p><h3>📜 इल्म-ए-जफ़र अख़बार</h3><p>इस विधि में सवाल के अक्षरों को सीढ़ीनुमा क्रम में लिखा जाता है और हर चौथा अक्षर निकाला जाता है — ये अक्षर मिलकर सवाल का पूरा आध्यात्मिक विश्लेषण देते हैं, जिसमें कुरआनी आयतें और वज़ीफ़े भी शामिल हैं।</p><h3>🔢 इल्म-ए-जफ़र आसार</h3><p>इस विधि में सवाल करने वाले का नाम, माँ का नाम, दिन और सवाल के अबजद अंकों को जोड़कर 4 से भाग दिया जाता है — बचा हुआ अंक बताता है कि मसला शारीरिक बीमारी है, आध्यात्मिक बाधा है या जादू का असर है।</p><h3>✨ इस्म-ए-आज़म Finder</h3><p>अपने नाम के अबजद अंकों से अल्लाह का वह ख़ास नाम जानें जो आपके लिए मुक़र्रर है। इस नाम के वज़ीफ़े से जादू, दुश्मन, जिन्नात और आसमानी असरात से मुकम्मल हिफ़ाज़त होती है और दुआएं क़बूल होती हैं।</p><h3>हमारी सेवाएं</h3><p>✅ मुफ्त ऑनलाइन जफ़र विश्लेषण | ✅ हर अक्षर के आध्यात्मिक अर्थ | ✅ अबजद अंकों से समस्या का निर्धारण | ✅ इस्म-ए-आज़म Finder | ✅ कुरआनी आयतें और वज़ीफ़े | ✅ 4 भाषाओं में उपलब्ध | ✅ बिल्कुल मुफ्त — कोई पंजीकरण नहीं</p><h3>हमारा इतिहास</h3><p>ilmejafar.com की शुरुआत इस सोच से हुई कि इल्म-ए-जफ़र जैसा सदियों पुराना पारंपरिक इस्लामी ज्ञान, जो पहले सिर्फ़ ख़ास आध्यात्मिक गुरुओं या दुर्लभ पुरानी किताबों तक सीमित था, अब आधुनिक तकनीक के ज़रिए हर आम इंसान तक आसानी से पहुंचाया जा सकता है। हमने इस ज्ञान को डिजिटल रूप देकर एक ऐसा मंच बनाया जहां कोई भी व्यक्ति, कहीं से भी, बिना किसी फीस के अपने सवालों का आध्यात्मिक विश्लेषण पा सकता है।</p><h3>हमारा विज़न</h3><p>हमारा विज़न यह है कि आध्यात्मिक मार्गदर्शन कभी भी किसी आर्थिक बाधा या भौगोलिक दूरी की वजह से किसी से दूर न हो। हम चाहते हैं कि उर्दू, अंग्रेज़ी, हिंदी और अरबी बोलने वाले लाखों लोग अपनी भाषा में, अपने फ़ोन पर, तुरंत और मुफ्त मार्गदर्शन पा सकें।</p><h3>अक्सर पूछे जाने वाले सवाल</h3><p><b>सवाल: क्या इस साइट पर रजिस्ट्रेशन ज़रूरी है?</b><br>जवाब: नहीं, कोई रजिस्ट्रेशन या अकाउंट बनाने की ज़रूरत नहीं — सीधा सवाल लिखें और नतीजा पाएं।</p><p><b>सवाल: क्या नतीजा हर बार एक जैसा आएगा?</b><br>जवाब: जी हां, चूंकि हिसाब अक्षरों और अंकों पर आधारित है, एक ही सवाल और नाम पर नतीजा स्थिर रहता है।</p><p><b>सवाल: क्या यह सेवा हमेशा मुफ्त रहेगी?</b><br>जवाब: जी हां, हमारा इरादा है कि बुनियादी सेवा हमेशा मुफ्त रहे।</p>",
+  ar: "<h2>📿 About Us</h2><p><b>ilmejafar.com</b> منصة للإرشاد الروحاني مبنية على علم جعفر التقليدي الإسلامي.</p><h3>هدفنا</h3><p>هدفنا تقديم الإرشاد الروحاني للناس. علم جعفر علم إسلامي عريق يعتمد على قوة الحروف والأرقام.</p><h3>ما هو علم جعفر؟</h3><p>علم جعفر علم إسلامي تقليدي يُستخرج فيه الجواب من القوة الروحانية للحروف العربية، وهو منسوب إلى الإمام جعفر الصادق رحمه الله.</p><h3>📜 علم جعفر الأخبار</h3><p>في هذه الطريقة، تُكتب حروف السؤال بترتيب متدرج ويُستخرج كل حرف رابع — هذه الحروف مجتمعة تعطي تحليلاً روحانياً كاملاً يشمل آيات قرآنية وأدعية.</p><h3>🔢 علم جعفر الآثار</h3><p>في هذه الطريقة، تُجمع الأعداد الأبجدية لاسم السائل واسم الأم ويوم السؤال ونص السؤال، ثم تُقسم على 4 — الباقي يشير إلى ما إذا كانت المشكلة مرضاً جسدياً أو خللاً روحانياً أو أثر سحر.</p><h3>✨ اسم أعظم Finder</h3><p>اكتشف اسم الله الخاص المخصص لك من خلال الأعداد الأبجدية لاسمك. يُعتقد أن قراءة هذا الاسم تحمي من السحر والأعداء والجن والتأثيرات الفلكية، وتساعد على قبول الدعاء.</p><h3>خدماتنا</h3><p>✅ تحليل جعفر مجاني | ✅ معاني روحانية لكل حرف | ✅ تحديد المشكلة بالأبجد | ✅ اسم أعظم Finder | ✅ آيات قرآنية وأدعية روحانية | ✅ متوفر بـ 4 لغات | ✅ مجاني تماماً — بدون تسجيل</p><h3>تاريخنا</h3><p>بدأ ilmejafar.com من فكرة أن علماً إسلامياً تقليدياً عريقاً كعلم جعفر، كان في السابق مقتصراً على مرشدين روحانيين معينين أو كتب قديمة نادرة، يمكن الآن إيصاله لكل شخص عادي عبر التكنولوجيا الحديثة. حوّلنا هذا العلم إلى منصة رقمية يستطيع فيها أي شخص، من أي مكان، الحصول على تحليل روحاني لأسئلته مجاناً تماماً.</p><h3>رؤيتنا</h3><p>رؤيتنا هي ألا يكون الإرشاد الروحاني بعيداً عن أحد بسبب عائق مالي أو مسافة جغرافية. نريد أن يحصل ملايين المتحدثين بالأردية والإنجليزية والهندية والعربية على إرشاد فوري ومجاني بلغتهم، على هواتفهم.</p><h3>الأسئلة الشائعة</h3><p><b>سؤال: هل التسجيل مطلوب في هذا الموقع؟</b><br>الجواب: لا، لا حاجة لأي تسجيل أو حساب — فقط اكتب سؤالك واحصل على النتيجة.</p><p><b>سؤال: هل ستكون النتيجة نفسها في كل مرة؟</b><br>الجواب: نعم، بما أن الحساب مبني على الحروف والأرقام، تبقى النتيجة ثابتة لنفس السؤال والاسم.</p><p><b>سؤال: هل ستبقى هذه الخدمة مجانية دائماً؟</b><br>الجواب: نعم، نيتنا أن تبقى الخدمة الأساسية مجانية دائماً.</p>"
+};
+
+function switchPageLang(code){
+  if(!PAGE_CONTENT[code]) code = 'en';
+  localStorage.setItem('ilmLang', code);
+  document.getElementById('pageContent').innerHTML = PAGE_CONTENT[code];
+  document.documentElement.setAttribute('dir', (code === 'ur' || code === 'ar') ? 'rtl' : 'ltr');
+  document.getElementById('langSelectPage').value = code;
+}
+
+(function(){
+  var saved = localStorage.getItem('ilmLang') || 'en';
+  if(!PAGE_CONTENT[saved]) saved = 'en';
+  switchPageLang(saved);
+})();
+</script>
+
 </body>
 </html>
