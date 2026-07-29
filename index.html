@@ -2274,10 +2274,13 @@ window.addEventListener('DOMContentLoaded',function(){
 
 /* == NAVIGATION == */
 var PAGES=['home','akhbar','asar','ismAzam','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','babycheck','babysuggest','about','disclaimer','privacy','terms','contact'];
+var homeScrollY = 0;
 function showPg(p){
+  var current = PAGES.find(function(x){var el=document.getElementById('pg-'+x);return el && !el.classList.contains('hidden');});
+  if (current === 'home') { homeScrollY = window.scrollY; }
   PAGES.forEach(function(x){var el=document.getElementById('pg-'+x);if(el)el.classList.add('hidden');});
   var t=document.getElementById('pg-'+p); if(t) t.classList.remove('hidden');
-  window.scrollTo(0,0);
+  if (p === 'home') { window.scrollTo(0, homeScrollY); } else { window.scrollTo(0,0); }
 }
 
 /* == ABJAD == */
