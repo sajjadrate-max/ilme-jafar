@@ -2275,13 +2275,21 @@ window.addEventListener('DOMContentLoaded',function(){
 /* == NAVIGATION == */
 var PAGES=['home','akhbar','asar','ismAzam','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','babycheck','babysuggest','about','disclaimer','privacy','terms','contact'];
 var homeScrollY = 0;
-function showPg(p){
+function showPg(p, fromPopState){
   var current = PAGES.find(function(x){var el=document.getElementById('pg-'+x);return el && !el.classList.contains('hidden');});
-  if (current === 'home') { homeScrollY = window.scrollY; }
+  if (current === 'home' && p !== 'home') { homeScrollY = window.scrollY; }
   PAGES.forEach(function(x){var el=document.getElementById('pg-'+x);if(el)el.classList.add('hidden');});
   var t=document.getElementById('pg-'+p); if(t) t.classList.remove('hidden');
   if (p === 'home') { window.scrollTo(0, homeScrollY); } else { window.scrollTo(0,0); }
+  if (!fromPopState) {
+    if (p === 'home') { history.replaceState({page:'home'}, ''); }
+    else { history.pushState({page:p}, ''); }
+  }
 }
+window.addEventListener('popstate', function(e){
+  var p = (e.state && e.state.page) ? e.state.page : 'home';
+  showPg(p, true);
+});
 
 /* == ABJAD == */
 function abjad(t){var s=0;for(var i=0;i<(t||'').length;i++)if(ABJAD[t[i]])s+=ABJAD[t[i]];return s;}
