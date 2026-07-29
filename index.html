@@ -1694,6 +1694,10 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 <!-- FOOTER -->
 <div class="site-footer">
   <div class="footer-links">
+    <a href="/articles-english.html" id="fArticlesEn">Articles</a>
+    <span class="footer-sep">|</span>
+    <a href="/articles-urdu.html" id="fArticlesUr">مضامین</a>
+    <span class="footer-sep">|</span>
     <a href="/about.html" id="fAbout">About Us</a>
     <span class="footer-sep">|</span>
     <a href="/privacy.html" id="fPrivacy">Privacy Policy</a>
@@ -2443,7 +2447,7 @@ function checkUsageLimit(key){
 }
 
 function usageLimitBox(){
-  var L = LNG[localStorage.getItem('ilmLang')||'ur'] || LNG.ur;
+  var L = LNG[localStorage.getItem('ilmLang')||'en'] || LNG.en;
   return '<div style="background:linear-gradient(135deg,#2d1a0a,#1a0f00);border:1px solid rgba(240,185,11,.4);border-radius:14px;padding:24px;text-align:center;direction:rtl;">'+
   '<div style="font-size:32px;margin-bottom:10px;">⏳</div>'+
   '<div style="font-size:14px;font-weight:700;color:#f0b90b;margin-bottom:6px;">'+(L.usageLimitTitle||'آج کی حد مکمل ہو گئی')+'</div>'+
