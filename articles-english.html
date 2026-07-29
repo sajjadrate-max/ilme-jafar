@@ -72,5 +72,22 @@ li a:hover{border-color:var(--gold);color:var(--gold-light);}
     <br><br>&copy; 2026 ilmejafar.com
   </div>
 </div>
+<script>
+(function(){
+  var key = 'scrollpos-' + location.pathname;
+  var saved = sessionStorage.getItem(key);
+  if (saved) {
+    window.scrollTo(0, parseInt(saved, 10));
+  }
+  document.querySelectorAll('li a').forEach(function(link){
+    link.addEventListener('click', function(){
+      sessionStorage.setItem(key, window.scrollY);
+    });
+  });
+  window.addEventListener('pagehide', function(){
+    sessionStorage.setItem(key, window.scrollY);
+  });
+})();
+</script>
 </body>
 </html>
