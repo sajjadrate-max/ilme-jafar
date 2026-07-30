@@ -3014,7 +3014,7 @@ function shareVia(platform){
     link = 'https://twitter.com/intent/tweet?url=' + encodedUrl + '&text=' + encodedText;
   } else if(platform === 'native'){
     if(navigator.share){
-      navigator.share({title:text, url:url}).catch(function(){});
+      navigator.share({text: text + '\n\n' + url}).catch(function(){});
       return;
     } else if(navigator.clipboard){
       navigator.clipboard.writeText(url).then(function(){
@@ -3026,12 +3026,15 @@ function shareVia(platform){
       return;
     }
   } else if(platform === 'copy'){
+    var fullText = text + '\n\n' + url;
+    var copyMsgs = {ur:'مکمل پیغام کاپی ہو گیا ہے!', en:'Full message copied!', hi:'पूरा संदेश कॉपी हो गया!', ar:'تم نسخ الرسالة كاملة!'};
+    var copyMsg = copyMsgs[curLang] || copyMsgs.en;
     if(navigator.clipboard){
-      navigator.clipboard.writeText(url).then(function(){
-        alert('لنک کاپی ہو گیا ہے!');
+      navigator.clipboard.writeText(fullText).then(function(){
+        alert(copyMsg);
       });
     } else {
-      prompt('لنک کاپی کریں:', url);
+      prompt('Copy:', fullText);
     }
     return;
   }
