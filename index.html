@@ -2338,39 +2338,46 @@ function runAsar(){
 
   var rb=document.getElementById('resBox');
   rb.style.padding='0';
-  if(!checkUsageLimit('asar')){ rb.innerHTML=usageLimitBox(); return; }
-  rb.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
-  var gPrompt='آپ علم جفر کے ماہر روحانی عالم ہیں جو اسلامی روحانی علوم میں مہارت رکھتے ہیں۔ آپ کا کام صرف اردو میں مختصر اور درست جواب دینا ہے۔\n\n'+
-    (q?('سوال: "'+q+'"\n'):'')+
-    'یہ علم جفر آثار کا طریقہ ہے: سائل کا نام، والدہ کا نام، دن اور سوال کے ابجد اعداد جمع کیے گئے ہیں۔\n'+
-    'مجموعہ ابجد اعداد: '+tot+'\nتقسیم: '+tot+' ÷ 4 = '+quot+' باقی '+rem+'\n\n'+
-    'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n'+
-    '===جفر کا نتیجہ===\n4 پر تقسیم کے بعد باقی بچنے والے عدد '+rem+' کی روشنی میں مسئلے کی نوعیت بتائیں (جسمانی وجہ، روحانی اثر، یا کوئی اور سبب)'+(q?' اور سوال کا براہ راست جواب دیں':'')+'۔ 3 جملوں میں بتائیں۔\n\n'+
-    '===روحانی حل===\nاس نتیجے کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
-
-  fetch("/api/openai",{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt:gPrompt})
-  }).then(function(r){return r.json();}).then(function(d){
-    rb.innerHTML='';
-    var text='';
-    try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
-    if(!text){ rb.innerHTML=apiErrorBox('runAsar()'); return; }
-    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
-    var parts=text.split('===');
-    var nt='',rh='';
-    for(var i=0;i<parts.length;i++){
-      var label=cleanMd(parts[i]);
-      if(label==='جفر کا نتیجہ'&&parts[i+1])nt=cleanMd(parts[i+1]);
-      if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
+  /* Local, offline (no-AI) traditional interpretation table for Divide-by-4.
+     Keyed by the remainder (باقی) of tot % 4. Each entry gives the
+     "نوعیت" (nature of the matter) explanation and two matching wazifas,
+     based on the traditional four-elements (آتش/آب/خاک/ہوا) framework. */
+  var ASAR4_TABLE={
+    1:{
+      element:'آتش (آگ)',
+      nt:'باقی عدد 1 عنصرِ آتش کی نشاندہی کرتا ہے، جو گرمی، سوزش، اشتعال اور جلد بازی سے جڑا ہے۔ اس لیے آپ کا مسئلہ زیادہ تر جسمانی نوعیت کا ہو سکتا ہے — جیسے بخار، سوزش، خون کی گرمی، یا غصے اور بےچینی کی کیفیت۔ بعض اوقات یہ کسی کی حسد بھری نظر یا جلن کا بھی اشارہ ہو سکتا ہے، اس لیے ٹھنڈک اور سکون پیدا کرنے والے اعمال زیادہ مفید ثابت ہوں گے۔',
+      waz1:'یا سلام — 131 بار — مسلسل 7 دن',
+      waz2:'سورۃ الفلق — 11 بار — ہر نماز کے بعد'
+    },
+    2:{
+      element:'آب (پانی)',
+      nt:'باقی عدد 2 عنصرِ آب کی نشاندہی کرتا ہے، جو نرمی، جذبات، محبت اور روانی سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر جذباتی یا دلی نوعیت کا ہو سکتا ہے — جیسے غم، اداسی، رشتوں میں کھنچاؤ، یا دل کی بےچینی۔ بعض اوقات یہ کسی روحانی بےسکونی کی طرف بھی اشارہ کرتا ہے، اس لیے دل کو سکون دینے والے اذکار خاص طور پر مفید ہوں گے۔',
+      waz1:'یا ودود — 1000 بار — مسلسل 3 دن',
+      waz2:'درود شریف — 100 بار — روزانہ'
+    },
+    3:{
+      element:'خاک (مٹی)',
+      nt:'باقی عدد 3 عنصرِ خاک کی نشاندہی کرتا ہے، جو استحکام، رزق، مال اور جسمانی مضبوطی سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر مالی، کاروباری یا رزق سے متعلق ہو سکتا ہے، یا جسمانی کمزوری اور تھکاوٹ کی صورت میں بھی ظاہر ہو سکتا ہے۔ بعض اوقات یہ زمین، گھر یا جائیداد سے جڑے معاملے کی بھی نشاندہی کرتا ہے۔',
+      waz1:'یا رزاق — 308 بار — مسلسل 7 دن',
+      waz2:'یا فتاح — 489 بار — مسلسل 3 دن'
+    },
+    0:{
+      element:'ہوا (فضا)',
+      nt:'باقی عدد 0 عنصرِ ہوا کی نشاندہی کرتا ہے، جو خیالات، وسوسے، ذہنی الجھن اور روحانی اثرات سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر ذہنی پریشانی، وسوسوں، یا کسی روحانی اثر (جیسے نظرِ بد یا سحر کے شبہ) کی طرف اشارہ کر سکتا ہے۔ بعض اوقات یہ فیصلہ کرنے میں مشکل یا ذہنی انتشار کی صورت میں بھی ظاہر ہوتا ہے۔',
+      waz1:'یا حفیظ — 998 بار — مسلسل 7 دن',
+      waz2:'آیت الکرسی — 1 بار — ہر فرض نماز کے بعد'
     }
-    if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';rb.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;rb.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';rb.appendChild(rbx);}
-  }).catch(function(){ rb.innerHTML=apiErrorBox('runAsar()'); });
+  };
+
+  var info=ASAR4_TABLE[rem];
+  var nt=info.nt + (q? '\n\nآپ کے سوال ("'+q+'") کا جواب بھی اسی نوعیت کی روشنی میں سمجھا جائے — یعنی اوپر بیان کردہ وجہ اور کیفیت آپ کے سوال سے براہِ راست متعلق ہے۔' : '');
+  var rh='• وظیفہ نمبر 1: '+info.waz1+'\n• وظیفہ نمبر 2: '+info.waz2;
+
+  rb.innerHTML='';
+  var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';rb.appendChild(sl);
+  var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;rb.appendChild(rt);
+  var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';rb.appendChild(rbx);
 }
 
 /* == TAQSEEM (DIVISION) SYSTEM == */
