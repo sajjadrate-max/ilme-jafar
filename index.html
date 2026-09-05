@@ -358,6 +358,22 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       </button>
       <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 علم نجوم کیا بتاتا ہے؟</b> اپنی تاریخِ پیدائش درج کریں اور اپنا برج، اس کا عنصر (آتشی/خاکی/بادی/آبی)، حاکم سیارہ، قانونِ مفردِ اعضاء کی تحریک، اور مختصر شخصیت کا جائزہ — ایک ہی جگہ، مکمل طور پر آف لائن پائیں۔</p>
     </div>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('houses')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
+        <span class="home-btn-icon">🏠</span>
+        <span class="home-btn-title">زائچہ — 12 گھر (خانہ دار چارٹ)</span>
+        <span class="home-btn-sub">وقتِ پیدائش اور شہر سے طالع اور بارہ گھر معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 12 گھر کیا بتاتے ہیں؟</b> تاریخ، وقت اور جائے پیدائش درج کریں — آپ کا طالع (Ascendant) اور اس سے بننے والے بارہ گھر (شخصیت، مال، شادی، کیریئر وغیرہ) معلوم کریں۔ یہ فلکیاتی حساب مکمل طور پر آف لائن، بغیر انٹرنیٹ کے، اسی موبائل پر ہوتا ہے۔</p>
+    </div>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('adad')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
+        <span class="home-btn-icon">🔢</span>
+        <span class="home-btn-title">علم الاعداد — مکمل حساب</span>
+        <span class="home-btn-sub">نام اور تاریخِ پیدائش سے ذاتی نمبر، تقدیر کا نمبر اور نام کا عدد معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 علم الاعداد کیا بتاتا ہے؟</b> اپنا نام اور تاریخِ پیدائش درج کریں — آپ کا ذاتی نمبر (مولانک)، تقدیر کا نمبر (بھاگیانک) اور نام کا عدد، ان کا حاکم سیارہ، طبیعت، مبارک رنگ اور دن معلوم کریں — مکمل طور پر آف لائن۔</p>
+    </div>
   </div>
 
   <!-- ISM-E-AZAM BUTTON -->
@@ -806,8 +822,115 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 
   <div id="nujoomResult" class="hidden" style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
     <div class="card">
-      <div class="card-header"><span>♈</span><div class="card-title">علم نجوم کا نتیجہ</div></div>
+      <div class="card-header"><span id="nujoomHeaderIcon">♈</span><div class="card-title">علم نجوم کا نتیجہ</div></div>
       <div style="padding:18px 20px;direction:rtl;" id="nujoomBody"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>🔮</span><div class="card-title">AI سے تفصیلی روحانی تجزیہ</div></div>
+      <div style="padding:18px 20px;direction:rtl;" id="nujoomAiBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 12 HOUSES PAGE -->
+<div id="pg-houses" class="main-wrap hidden">
+  <button class="back-btn" onclick="showPg('home')">← واپس</button>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🏠</div>
+      <div>
+        <div class="card-title">زائچہ — 12 گھر</div>
+        <div class="card-sub">تاریخ، وقت اور شہرِ پیدائش سے طالع اور بارہ گھر معلوم کریں</div>
+      </div>
+    </div>
+    <div class="notebook-body">
+      <label class="abjad-label">۱. تاریخِ پیدائش</label>
+      <div class="abjad-row"><input class="abjad-input" type="date" id="housesDob" style="flex:1;"></div>
+
+      <label class="abjad-label">۲. وقتِ پیدائش</label>
+      <div class="abjad-row"><input class="abjad-input" type="time" id="housesTob" style="flex:1;"></div>
+
+      <label class="abjad-label">۳. شہرِ پیدائش</label>
+      <select class="day-select" id="housesCity" onchange="toggleHousesManual()" style="margin-bottom:8px;">
+        <option value="karachi">کراچی</option>
+        <option value="lahore">لاہور</option>
+        <option value="islamabad">اسلام آباد</option>
+        <option value="rawalpindi">راولپنڈی</option>
+        <option value="faisalabad">فیصل آباد</option>
+        <option value="multan">ملتان</option>
+        <option value="peshawar">پشاور</option>
+        <option value="quetta">کوئٹہ</option>
+        <option value="hyderabad">حیدرآباد</option>
+        <option value="sialkot">سیالکوٹ</option>
+        <option value="gujranwala">گوجرانوالہ</option>
+        <option value="sargodha">سرگودھا</option>
+        <option value="bahawalpur">بہاولپور</option>
+        <option value="sukkur">سکھر</option>
+        <option value="larkana">لاڑکانہ</option>
+        <option value="delhi">دہلی</option>
+        <option value="mumbai">ممبئی</option>
+        <option value="dubai">دبئی</option>
+        <option value="riyadh">ریاض</option>
+        <option value="london">لندن</option>
+        <option value="newyork">نیو یارک</option>
+        <option value="other">دیگر (کوآرڈینیٹس خود درج کریں)</option>
+      </select>
+
+      <div id="housesManual" class="hidden" style="margin-bottom:8px;">
+        <label class="abjad-label">عرض بلد (Latitude)</label>
+        <div class="abjad-row"><input class="abjad-input" type="number" step="0.0001" id="housesLat" placeholder="مثال: 24.8607" style="flex:1;"></div>
+        <label class="abjad-label">طول بلد (Longitude)</label>
+        <div class="abjad-row"><input class="abjad-input" type="number" step="0.0001" id="housesLon" placeholder="مثال: 67.0011 (مشرقی = مثبت)" style="flex:1;"></div>
+        <label class="abjad-label">ٹائم زون (UTC سے فرق، گھنٹے)</label>
+        <div class="abjad-row"><input class="abjad-input" type="number" step="0.5" id="housesTz" placeholder="مثال: پاکستان کے لیے 5" style="flex:1;"></div>
+      </div>
+
+      <button class="q-btn" onclick="runHouses()">← نتیجہ نکالیں</button>
+    </div>
+  </div>
+
+  <div id="housesResult" class="hidden" style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
+    <div class="card">
+      <div class="card-header"><span id="housesHeaderIcon">🏠</span><div class="card-title">زائچے کا نتیجہ</div></div>
+      <div style="padding:18px 20px;direction:rtl;" id="housesBody"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>🔮</span><div class="card-title">AI سے تفصیلی روحانی تجزیہ</div></div>
+      <div style="padding:18px 20px;direction:rtl;" id="housesAiBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ILM-UL-ADAD PAGE -->
+<div id="pg-adad" class="main-wrap hidden">
+  <button class="back-btn" onclick="showPg('home')">← واپس</button>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🔢</div>
+      <div>
+        <div class="card-title">علم الاعداد — مکمل حساب</div>
+        <div class="card-sub">نام اور تاریخِ پیدائش سے ذاتی نمبر، تقدیر کا نمبر اور نام کا عدد معلوم کریں</div>
+      </div>
+    </div>
+    <div class="notebook-body">
+      <label class="abjad-label">۱. اپنا نام</label>
+      <div class="abjad-row"><input class="abjad-input" type="text" id="adadName" placeholder="اپنا نام لکھیں" style="flex:1;"></div>
+
+      <label class="abjad-label">۲. تاریخِ پیدائش</label>
+      <div class="abjad-row"><input class="abjad-input" type="date" id="adadDob" style="flex:1;"></div>
+
+      <button class="q-btn" onclick="runAdad()">← نتیجہ نکالیں</button>
+    </div>
+  </div>
+
+  <div id="adadResult" class="hidden" style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
+    <div class="card">
+      <div class="card-header"><span id="adadHeaderIcon">🔢</span><div class="card-title">علم الاعداد کا نتیجہ</div></div>
+      <div style="padding:18px 20px;direction:rtl;" id="adadBody"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>🔮</span><div class="card-title">AI سے تفصیلی روحانی تجزیہ</div></div>
+      <div style="padding:18px 20px;direction:rtl;" id="adadAiBody"></div>
     </div>
   </div>
 </div>
@@ -2225,7 +2348,7 @@ window.addEventListener('DOMContentLoaded',function(){
 });
 
 /* == NAVIGATION == */
-var PAGES=['home','akhbar','asar','ismAzam','nujoom','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','about','disclaimer','privacy','terms','contact'];
+var PAGES=['home','akhbar','asar','ismAzam','nujoom','houses','adad','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','about','disclaimer','privacy','terms','contact'];
 var homeScrollY = 0;
 function showPg(p, fromPopState){
   var current = PAGES.find(function(x){var el=document.getElementById('pg-'+x);return el && !el.classList.contains('hidden');});
@@ -2803,8 +2926,8 @@ var ASMA=[
 var BURUJ_DATA=[
   {name:'حمل (Aries)',icon:'♈',start:[3,21],end:[4,19],element:'آتشی',kaifiyat:'گرم خشک',planet:'مریخ',tahreekNo:1,tahreekName:'غدی اعصابی',partner:'اسد',desc:'حمل کے زیرِ اثر لوگ عام طور پر بہادر، پرجوش اور جلد باز طبیعت کے حامل ہوتے ہیں۔ نئی چیزیں شروع کرنے کا جذبہ رکھتے ہیں مگر صبر کی کمی ہو سکتی ہے۔ قائدانہ صلاحیت نمایاں ہوتی ہے۔'},
   {name:'ثور (Taurus)',icon:'♉',start:[4,20],end:[5,20],element:'خاکی',kaifiyat:'سرد خشک',planet:'زہرہ',tahreekNo:2,tahreekName:'اعصابی عضلاتی',partner:'سرطان',desc:'ثور کے زیرِ اثر لوگ مستحکم، صابر اور عملیت پسند ہوتے ہیں۔ مالی معاملات میں سمجھدار اور آرام دہ زندگی کو ترجیح دیتے ہیں۔ ضد اور ہٹ دھرمی بھی طبیعت کا حصہ ہو سکتی ہے۔'},
-  {name:'جوزا (Gemini)',icon:'♊',start:[5,21],end:[6,20],element:'بادی (ہوائی)',kaifiyat:'گرم تر',planet:'عطارد',tahreekNo:5,tahreekName:'غدی عضلاتی',partner:'قوس',desc:'جوزا کے زیرِ اثر لوگ ذہین، باتونی اور موافقت پذیر ہوتے ہیں۔ نئی معلومات جلد سیکھتے ہیں مگر توجہ بکھر سکتی ہے۔ رابطے اور تجارت میں ماہر ہوتے ہیں۔'},
-  {name:'سرطان (Cancer)',icon:'♋',start:[6,21],end:[7,22],element:'آبی',kaifiyat:'سرد تر',planet:'قمر',tahreekNo:2,tahreekName:'اعصابی عضلاتی',partner:'ثور',desc:'سرطان کے زیرِ اثر لوگ حساس، جذباتی اور خاندان پسند ہوتے ہیں۔ گھریلو زندگی اور تحفظ کا احساس ان کے لیے اہم ہے۔ مزاج میں اتار چڑھاؤ ممکن ہے۔'},
+  {name:'جوزا (Gemini)',icon:'♊',start:[5,21],end:[6,20],element:'آتشی',kaifiyat:'گرم خشک',planet:'عطارد',tahreekNo:5,tahreekName:'غدی عضلاتی',partner:'قوس',desc:'جوزا کے زیرِ اثر لوگ ذہین، باتونی اور موافقت پذیر ہوتے ہیں۔ نئی معلومات جلد سیکھتے ہیں مگر توجہ بکھر سکتی ہے۔ رابطے اور تجارت میں ماہر ہوتے ہیں۔'},
+  {name:'سرطان (Cancer)',icon:'♋',start:[6,21],end:[7,22],element:'خاکی',kaifiyat:'سرد خشک',planet:'قمر',tahreekNo:2,tahreekName:'اعصابی عضلاتی',partner:'ثور',desc:'سرطان کے زیرِ اثر لوگ حساس، جذباتی اور خاندان پسند ہوتے ہیں۔ گھریلو زندگی اور تحفظ کا احساس ان کے لیے اہم ہے۔ مزاج میں اتار چڑھاؤ ممکن ہے۔'},
   {name:'اسد (Leo)',icon:'♌',start:[7,23],end:[8,22],element:'آتشی',kaifiyat:'گرم خشک',planet:'شمس',tahreekNo:1,tahreekName:'غدی اعصابی',partner:'حمل',desc:'اسد کے زیرِ اثر لوگ پراعتماد، فیاض اور قائدانہ صلاحیت کے حامل ہوتے ہیں۔ عزت و مقام کی خواہش رکھتے ہیں اور توجہ کا مرکز بننا پسند کرتے ہیں۔ غرور سے بچنا ضروری ہے۔'},
   {name:'سنبلہ (Virgo)',icon:'♍',start:[8,23],end:[9,22],element:'خاکی',kaifiyat:'سرد خشک',planet:'عطارد',tahreekNo:6,tahreekName:'عضلاتی غدی',partner:'جدی',desc:'سنبلہ کے زیرِ اثر لوگ نکتہ چیں، محنتی اور نظم و ضبط پسند ہوتے ہیں۔ تفصیلات پر گہری توجہ دیتے ہیں اور خدمت کا جذبہ رکھتے ہیں۔ زیادہ فکرمندی ہو سکتی ہے۔'},
   {name:'میزان (Libra)',icon:'♎',start:[9,23],end:[10,22],element:'بادی (ہوائی)',kaifiyat:'گرم تر',planet:'زہرہ',tahreekNo:4,tahreekName:'عضلاتی اعصابی',partner:'دلو',desc:'میزان کے زیرِ اثر لوگ متوازن، انصاف پسند اور خوش اخلاق ہوتے ہیں۔ تعلقات اور خوبصورتی کی طرف رغبت رکھتے ہیں۔ فیصلہ کرنے میں تذبذب ہو سکتا ہے۔'},
@@ -2849,7 +2972,9 @@ function runNujoom(){
   var res=document.getElementById('nujoomResult');res.classList.remove('hidden');res.style.display='flex';
   res.scrollIntoView({behavior:'smooth',block:'start'});
   var nb=document.getElementById('nujoomBody');
+  var hIcon=document.getElementById('nujoomHeaderIcon');
   if(!burj){ nb.innerHTML='<div style="color:#e88;">تاریخ درست معلوم نہیں ہو سکی، دوبارہ کوشش کریں۔</div>'; return; }
+  if(hIcon) hIcon.textContent=burj.icon;
 
   var sameElementBurj=[];
   for(var j=0;j<BURUJ_DATA.length;j++){ if(BURUJ_DATA[j].element===burj.element&&BURUJ_DATA[j].name!==burj.name) sameElementBurj.push(BURUJ_DATA[j].name); }
@@ -2865,6 +2990,283 @@ function runNujoom(){
   html+='</div></div>';
   html+='<div class="rohani-box green" style="margin-top:14px;"><div class="rohani-box-label">📖 مختصر شخصیت کا جائزہ</div><div class="rohani-box-text">'+burj.desc+'</div></div>';
   nb.innerHTML=html;
+  runNujoomAI(burj);
+}
+
+function runNujoomAI(burj){
+  var ab=document.getElementById('nujoomAiBody');
+  if(!checkUsageLimit('nujoom')){ ab.innerHTML=usageLimitBox(); return; }
+  ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم نجوم کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
+
+  var gPrompt='آپ علم نجوم اور قانونِ مفردِ اعضاء کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
+    'برج: '+burj.name+'\nعنصر: '+burj.element+' ('+burj.kaifiyat+')\nحاکم سیارہ: '+burj.planet+'\nتحریک (قانونِ مفردِ اعضاء): نمبر '+burj.tahreekNo+' — '+burj.tahreekName+'\n\n'+
+    'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n'+
+    '===جفر کا نتیجہ===\nاس برج، عنصر اور تحریک کی روشنی میں شخصیت، طاقت کے پہلو، کمزوریاں، اور مناسب پیشے/میدان کے بارے میں 4-5 جملوں میں تفصیلی تجزیہ دیں۔\n\n'+
+    '===روحانی حل===\nاس برج کے مزاج کو متوازن رکھنے اور بہتری کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
+
+  fetch("/api/openai",{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:gPrompt})
+  }).then(function(r){return r.json();}).then(function(d){
+    ab.innerHTML='';
+    var text='';
+    try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
+    if(!text){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); return; }
+    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
+    var parts=text.split('===');
+    var nt='',rh='';
+    for(var i=0;i<parts.length;i++){
+      var label=cleanMd(parts[i]);
+      if(label==='جفر کا نتیجہ'&&parts[i+1])nt=cleanMd(parts[i+1]);
+      if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
+    }
+    if(!nt)nt=cleanMd(text);
+    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تفصیلی تجزیہ';ab.appendChild(sl);
+    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
+    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
+  }).catch(function(){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); });
+}
+
+/* == 12 HOUSES (Ascendant + Whole Sign Houses) — offline astronomical calculation, no AI/API == */
+var CITY_DATA={
+  karachi:{lat:24.8607,lon:67.0011,tz:5,label:'کراچی'},
+  lahore:{lat:31.5497,lon:74.3436,tz:5,label:'لاہور'},
+  islamabad:{lat:33.6844,lon:73.0479,tz:5,label:'اسلام آباد'},
+  rawalpindi:{lat:33.5651,lon:73.0169,tz:5,label:'راولپنڈی'},
+  faisalabad:{lat:31.4504,lon:73.1350,tz:5,label:'فیصل آباد'},
+  multan:{lat:30.1575,lon:71.5249,tz:5,label:'ملتان'},
+  peshawar:{lat:34.0151,lon:71.5249,tz:5,label:'پشاور'},
+  quetta:{lat:30.1798,lon:66.9750,tz:5,label:'کوئٹہ'},
+  hyderabad:{lat:25.3960,lon:68.3578,tz:5,label:'حیدرآباد'},
+  sialkot:{lat:32.4945,lon:74.5229,tz:5,label:'سیالکوٹ'},
+  gujranwala:{lat:32.1877,lon:74.1945,tz:5,label:'گوجرانوالہ'},
+  sargodha:{lat:32.0836,lon:72.6711,tz:5,label:'سرگودھا'},
+  bahawalpur:{lat:29.3956,lon:71.6836,tz:5,label:'بہاولپور'},
+  sukkur:{lat:27.7052,lon:68.8574,tz:5,label:'سکھر'},
+  larkana:{lat:27.5590,lon:68.2120,tz:5,label:'لاڑکانہ'},
+  delhi:{lat:28.7041,lon:77.1025,tz:5.5,label:'دہلی'},
+  mumbai:{lat:19.0760,lon:72.8777,tz:5.5,label:'ممبئی'},
+  dubai:{lat:25.2048,lon:55.2708,tz:4,label:'دبئی'},
+  riyadh:{lat:24.7136,lon:46.6753,tz:3,label:'ریاض'},
+  london:{lat:51.5072,lon:-0.1276,tz:0,label:'لندن'},
+  newyork:{lat:40.7128,lon:-74.0060,tz:-5,label:'نیو یارک'}
+};
+var HOUSE_MEANINGS=[
+  'شخصیت، جسمانی وجود، ظاہری تاثر',
+  'مال، دولت، ذاتی وسائل',
+  'بہن بھائی، ہمت، مختصر سفر',
+  'گھر، ماں، جائیداد',
+  'اولاد، تخلیقی صلاحیت، محبت',
+  'بیماری، ملازمت، دشمن، قرض',
+  'شادی، شراکت داری، معاہدے',
+  'مشکلات، پوشیدہ معاملات، وراثت',
+  'سفر، مذہب، اعلیٰ تعلیم',
+  'کیریئر، عزت، مقام',
+  'منافع، امیدیں، دوستی',
+  'نقصان، تنہائی، روحانیت، پوشیدہ دشمن'
+];
+function toggleHousesManual(){
+  var v=document.getElementById('housesCity').value;
+  var m=document.getElementById('housesManual');
+  if(v==='other'){ m.classList.remove('hidden'); } else { m.classList.add('hidden'); }
+}
+function toJulianDay(y,mo,d,hourDec){
+  if(mo<=2){ y-=1; mo+=12; }
+  var A=Math.floor(y/100);
+  var B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(mo+1))+d+hourDec/24+B-1524.5;
+}
+function computeAscendant(jdUT,lonEast,latDeg){
+  var T=(jdUT-2451545.0)/36525.0;
+  var gmst=280.46061837+360.98564736629*(jdUT-2451545.0)+0.000387933*T*T-(T*T*T)/38710000.0;
+  gmst=((gmst%360)+360)%360;
+  var ramc=((gmst+lonEast)%360+360)%360;
+  var eps=23.4392911-0.0130042*T;
+  var toRad=Math.PI/180, toDeg=180/Math.PI;
+  var ramcR=ramc*toRad, epsR=eps*toRad, latR=latDeg*toRad;
+  var ascR=Math.atan2(-Math.cos(ramcR), Math.sin(ramcR)*Math.cos(epsR)+Math.tan(latR)*Math.sin(epsR));
+  var ascDeg=((ascR*toDeg)+360)%360;
+  var signIndex=Math.floor(ascDeg/30);
+  var degInSign=ascDeg-signIndex*30;
+  return {ascDeg:ascDeg,signIndex:signIndex,degInSign:degInSign};
+}
+function runHouses(){
+  var dobVal=document.getElementById('housesDob').value;
+  var tobVal=document.getElementById('housesTob').value;
+  if(!dobVal||!tobVal){alert('براہ کرم تاریخ اور وقتِ پیدائش دونوں درج کریں');return;}
+  var cityKey=document.getElementById('housesCity').value;
+  var lat,lon,tz,cityLabel;
+  if(cityKey==='other'){
+    lat=parseFloat(document.getElementById('housesLat').value);
+    lon=parseFloat(document.getElementById('housesLon').value);
+    tz=parseFloat(document.getElementById('housesTz').value);
+    cityLabel='دیگر مقام';
+    if(isNaN(lat)||isNaN(lon)||isNaN(tz)){alert('براہ کرم عرض بلد، طول بلد اور ٹائم زون درست درج کریں');return;}
+  }else{
+    var c=CITY_DATA[cityKey];
+    lat=c.lat; lon=c.lon; tz=c.tz; cityLabel=c.label;
+  }
+  var dp=dobVal.split('-');
+  var year=parseInt(dp[0],10),month=parseInt(dp[1],10),day=parseInt(dp[2],10);
+  var tp=tobVal.split(':');
+  var hourLocal=parseInt(tp[0],10)+parseInt(tp[1],10)/60;
+  var jdNaive=toJulianDay(year,month,day,hourLocal);
+  var jdUT=jdNaive-tz/24;
+  var asc=computeAscendant(jdUT,lon,lat);
+  var ascBurj=BURUJ_DATA[asc.signIndex];
+  var degDisp=Math.floor(asc.degInSign)+'° '+Math.round((asc.degInSign-Math.floor(asc.degInSign))*60)+"'";
+
+  var res=document.getElementById('housesResult');res.classList.remove('hidden');res.style.display='flex';
+  res.scrollIntoView({behavior:'smooth',block:'start'});
+  var hIcon=document.getElementById('housesHeaderIcon');
+  if(hIcon) hIcon.textContent=ascBurj.icon;
+
+  var html='';
+  html+='<div style="font-size:16px;font-weight:700;color:#e8c87a;text-align:center;margin-bottom:6px;">طالع (Ascendant): '+ascBurj.icon+' '+ascBurj.name+'</div>';
+  html+='<div style="font-size:12px;color:rgba(250,247,240,.6);text-align:center;margin-bottom:14px;">شہر: '+cityLabel+' | درجہ: '+degDisp+' '+ascBurj.name.split(' ')[0]+'</div>';
+  html+='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:12px 16px;border:1px solid rgba(201,168,76,.2);direction:rtl;">';
+  var houseSummaryLines=[];
+  for(var i=0;i<12;i++){
+    var houseBurj=BURUJ_DATA[(asc.signIndex+i)%12];
+    html+='<div style="padding:8px 0;'+(i<11?'border-bottom:1px solid rgba(201,168,76,.12);':'')+'font-size:13px;color:#faf7f0;">';
+    html+='<b style="color:#c9a84c;">گھر '+(i+1)+':</b> '+houseBurj.icon+' '+houseBurj.name+' — '+HOUSE_MEANINGS[i];
+    html+='</div>';
+    houseSummaryLines.push('گھر '+(i+1)+' ('+HOUSE_MEANINGS[i]+'): '+houseBurj.name);
+  }
+  html+='</div>';
+  html+='<div class="rohani-box green" style="margin-top:14px;"><div class="rohani-box-label">ℹ️ نوٹ</div><div class="rohani-box-text">یہ حساب "ہول سائن ہاؤس سسٹم" (Whole Sign Houses) پر مبنی ہے اور روایتی اندازِ نجوم کے مطابق ہے۔ ٹائم زون میں تاریخی تبدیلیوں (جیسے پرانے وقتوں میں مختلف آفیشل ٹائم زون) کو شامل نہیں کیا گیا، اس لیے یہ ایک عمومی رہنمائی ہے، حتمی سائنسی زائچہ نہیں۔</div></div>';
+  document.getElementById('housesBody').innerHTML=html;
+  runHousesAI(ascBurj,houseSummaryLines);
+}
+
+function runHousesAI(ascBurj,houseSummaryLines){
+  var ab=document.getElementById('housesAiBody');
+  if(!checkUsageLimit('houses')){ ab.innerHTML=usageLimitBox(); return; }
+  ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">زائچے کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
+
+  var gPrompt='آپ علم نجوم کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
+    'طالع (Ascendant): '+ascBurj.name+'\n\nبارہ گھروں کی تفصیل:\n'+houseSummaryLines.join('\n')+'\n\n'+
+    'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n'+
+    '===جفر کا نتیجہ===\nطالع اور بارہ گھروں کی روشنی میں شخصیت، زندگی کے نمایاں پہلوؤں (مال، شادی، کیریئر) کا خلاصہ 4-5 جملوں میں دیں۔\n\n'+
+    '===روحانی حل===\nزندگی میں توازن اور بہتری کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
+
+  fetch("/api/openai",{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:gPrompt})
+  }).then(function(r){return r.json();}).then(function(d){
+    ab.innerHTML='';
+    var text='';
+    try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
+    if(!text){ ab.innerHTML=apiErrorBox('runHouses()'); return; }
+    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
+    var parts=text.split('===');
+    var nt='',rh='';
+    for(var i=0;i<parts.length;i++){
+      var label=cleanMd(parts[i]);
+      if(label==='جفر کا نتیجہ'&&parts[i+1])nt=cleanMd(parts[i+1]);
+      if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
+    }
+    if(!nt)nt=cleanMd(text);
+    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تفصیلی تجزیہ';ab.appendChild(sl);
+    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
+    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
+  }).catch(function(){ ab.innerHTML=apiErrorBox('runHouses()'); });
+}
+
+/* == ILM-UL-ADAD (Numerology) — offline calculation, no AI/API == */
+var ADAD_DATA={
+  1:{planet:'شمس (سورج)',nature:'قائدانہ صلاحیت، خود اعتمادی، آزاد طبیعت — یہ لوگ رہنما بننے کی فطری صلاحیت رکھتے ہیں۔',color:'نارنجی، سنہری',day:'اتوار'},
+  2:{planet:'قمر (چاند)',nature:'حساس، تعاون پسند، جذباتی — یہ لوگ دوسروں کے جذبات کا خیال رکھنے والے اور سفارتی ہوتے ہیں۔',color:'سفید، چاندی',day:'پیر'},
+  3:{planet:'مشتری',nature:'تخلیقی، خوش مزاج، بات چیت میں ماہر — یہ لوگ خوش قسمت اور علم دوست سمجھے جاتے ہیں۔',color:'پیلا',day:'جمعرات'},
+  4:{planet:'راہو (سایہ دار سیارہ)',nature:'محنتی، عملی، نظم و ضبط پسند — مگر زندگی میں غیرمتوقع رکاوٹوں کا سامنا رہتا ہے۔',color:'نیلا، سرمئی',day:'کوئی مقررہ دن نہیں'},
+  5:{planet:'عطارد',nature:'آزاد خیال، مہم جو، ذہین — یہ لوگ تبدیلی پسند اور جلد فیصلہ کرنے والے ہوتے ہیں۔',color:'سبز',day:'بدھ'},
+  6:{planet:'زہرہ',nature:'ذمہ دار، خاندان پسند، فنکارانہ ذوق — یہ لوگ محبت کرنے والے اور خوبصورتی کے دلدادہ ہوتے ہیں۔',color:'گلابی، فیروزی',day:'جمعہ'},
+  7:{planet:'کیتو (سایہ دار سیارہ)',nature:'پراسرار، تحقیق پسند، روحانی رجحان — یہ لوگ تنہائی پسند اور گہری سوچ رکھنے والے ہوتے ہیں۔',color:'جامنی، سرمئی',day:'کوئی مقررہ دن نہیں'},
+  8:{planet:'زحل',nature:'محنتی، طاقتور، مالی معاملات میں ماہر — زندگی میں اتار چڑھاؤ آتے ہیں مگر صبر سے کامیابی ملتی ہے۔',color:'نیلا، سیاہ',day:'ہفتہ'},
+  9:{planet:'مریخ',nature:'انسان دوست، فیاض، جذباتی طاقت کا مالک — یہ لوگ کام مکمل کرنے کی خواہش رکھتے ہیں۔',color:'سرخ',day:'منگل'}
+};
+function reduceNum(n){
+  n=Math.abs(Math.floor(n));
+  while(n>9){
+    var s=0;
+    while(n>0){ s+=n%10; n=Math.floor(n/10); }
+    n=s;
+  }
+  return n===0?9:n;
+}
+function runAdad(){
+  var name=document.getElementById('adadName').value.trim();
+  var dobVal=document.getElementById('adadDob').value;
+  if(!name||!dobVal){alert('براہ کرم نام اور تاریخِ پیدائش دونوں درج کریں');return;}
+  var dp=dobVal.split('-');
+  var year=parseInt(dp[0],10),month=parseInt(dp[1],10),day=parseInt(dp[2],10);
+
+  var mulank=reduceNum(day);
+  var digitSum=0;
+  (String(day)+String(month)+String(year)).split('').forEach(function(ch){ digitSum+=parseInt(ch,10); });
+  var bhagyank=reduceNum(digitSum);
+  var nameAbjad=abjad(name);
+  var nameNum=reduceNum(nameAbjad);
+
+  var res=document.getElementById('adadResult');res.classList.remove('hidden');res.style.display='flex';
+  res.scrollIntoView({behavior:'smooth',block:'start'});
+  var hIcon=document.getElementById('adadHeaderIcon');
+  if(hIcon) hIcon.textContent='🔢';
+
+  function rowHtml(title,num){
+    var d=ADAD_DATA[num];
+    return '<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid rgba(201,168,76,.2);direction:rtl;margin-bottom:12px;">'+
+      '<div style="font-size:16px;font-weight:700;color:#e8c87a;margin-bottom:8px;">'+title+': <span style="font-size:22px;">'+num+'</span></div>'+
+      '<div style="font-size:13px;color:#faf7f0;line-height:2.2;">'+
+      '<b style="color:#c9a84c;">حاکم سیارہ:</b> '+d.planet+'<br>'+
+      '<b style="color:#c9a84c;">مبارک رنگ:</b> '+d.color+'<br>'+
+      '<b style="color:#c9a84c;">مبارک دن:</b> '+d.day+'<br>'+
+      '<b style="color:#c9a84c;">طبیعت:</b> '+d.nature+
+      '</div></div>';
+  }
+  var html='';
+  html+=rowHtml('ذاتی نمبر (مولانک — تاریخِ پیدائش کے دن سے)',mulank);
+  html+=rowHtml('تقدیر کا نمبر (بھاگیانک — مکمل تاریخِ پیدائش سے)',bhagyank);
+  html+=rowHtml('نام کا عدد (ابجد سے)',nameNum);
+  document.getElementById('adadBody').innerHTML=html;
+  runAdadAI(mulank,bhagyank,nameNum);
+}
+
+function runAdadAI(mulank,bhagyank,nameNum){
+  var ab=document.getElementById('adadAiBody');
+  if(!checkUsageLimit('adad')){ ab.innerHTML=usageLimitBox(); return; }
+  ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم الاعداد کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
+
+  var gPrompt='آپ علم الاعداد (نیومرولوجی) کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
+    'ذاتی نمبر (مولانک): '+mulank+' — حاکم سیارہ: '+ADAD_DATA[mulank].planet+'\nتقدیر کا نمبر (بھاگیانک): '+bhagyank+' — حاکم سیارہ: '+ADAD_DATA[bhagyank].planet+'\nنام کا عدد: '+nameNum+' — حاکم سیارہ: '+ADAD_DATA[nameNum].planet+'\n\n'+
+    'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n'+
+    '===جفر کا نتیجہ===\nان تینوں اعداد (ذاتی، تقدیر، نام) کے باہمی تعلق اور مجموعی اثر کی روشنی میں شخصیت اور زندگی کے رجحانات پر 4-5 جملوں میں تجزیہ دیں۔ اگر اعداد آپس میں ہم آہنگ نہ ہوں تو اس کا اثر بھی بتائیں۔\n\n'+
+    '===روحانی حل===\nاعداد کے اثرات متوازن رکھنے کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
+
+  fetch("/api/openai",{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:gPrompt})
+  }).then(function(r){return r.json();}).then(function(d){
+    ab.innerHTML='';
+    var text='';
+    try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
+    if(!text){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); return; }
+    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
+    var parts=text.split('===');
+    var nt='',rh='';
+    for(var i=0;i<parts.length;i++){
+      var label=cleanMd(parts[i]);
+      if(label==='جفر کا نتیجہ'&&parts[i+1])nt=cleanMd(parts[i+1]);
+      if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
+    }
+    if(!nt)nt=cleanMd(text);
+    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تفصیلی تجزیہ';ab.appendChild(sl);
+    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
+    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
+  }).catch(function(){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); });
 }
 
 function findIsm(){
