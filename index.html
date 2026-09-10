@@ -348,24 +348,29 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
     </div>
   </div>
 
-  <!-- ILM-E-NUJOOM BUTTON -->
+  <!-- PROBLEM PICKER (رہنما) -->
+  <div class="home-btns">
+    <button class="home-btn" onclick="showPg('picker')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
+      <span class="home-btn-icon">🧭</span>
+      <span class="home-btn-title" data-i18n="pickerBtnTitle">آپ کا مسئلہ کیا ہے؟ (رہنما)</span>
+      <span class="home-btn-sub" data-i18n="pickerBtnSub">سمجھ نہیں آ رہی کہ کون سا طریقہ استعمال کریں؟ اپنا مسئلہ منتخب کریں — صحیح صفحہ خود بخود کھل جائے گا</span>
+    </button>
+  </div>
+
+  <!-- AKHBAR BUTTON -->
   <div class="home-btns">
     <div class="btn-unit">
-      <button class="home-btn" onclick="showPg('nujoom')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
-        <span class="home-btn-icon">♈</span>
-        <span class="home-btn-title">علم نجوم — مکمل حساب</span>
-        <span class="home-btn-sub">تاریخ پیدائش سے برج، عنصر، حاکم سیارہ اور تحریک معلوم کریں</span>
+      <button class="home-btn" onclick="showPg('akhbar')">
+        <span class="home-btn-icon">📜</span>
+        <span class="home-btn-title" id="btn1Title">علم جفر اخبار</span>
+        <span class="home-btn-sub" id="btn1Sub">اپنا نام اور سوال لکھیں، فوری جواب پائیں</span>
       </button>
-      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 علم نجوم کیا بتاتا ہے؟</b> اپنی تاریخِ پیدائش درج کریں اور اپنا برج، اس کا عنصر (آتشی/خاکی/بادی/آبی)، حاکم سیارہ، قانونِ مفردِ اعضاء کی تحریک، اور مختصر شخصیت کا جائزہ — ایک ہی جگہ، مکمل طور پر آف لائن پائیں۔</p>
+      <p class="home-btn-desc" data-i18n-html="akhbarExplain"><b>🔹 علم جفر اخبار کیا ہے؟</b> یہ علم جفر کا سب سے پرانا اور روایتی طریقہ ہے۔ سوال کے حروف کو "جعفر گرڈ" میں سجا کر ایک مخصوص حرف نکالا جاتا ہے، اور اسی کی روشنی میں <b>آپ کے سوال کا براہ راست جواب</b> دیا جاتا ہے۔</p>
     </div>
-    <div class="btn-unit">
-      <button class="home-btn" onclick="showPg('houses')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
-        <span class="home-btn-icon">🏠</span>
-        <span class="home-btn-title">زائچہ — 12 گھر (خانہ دار چارٹ)</span>
-        <span class="home-btn-sub">وقتِ پیدائش اور شہر سے طالع اور بارہ گھر معلوم کریں</span>
-      </button>
-      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 12 گھر کیا بتاتے ہیں؟</b> تاریخ، وقت اور جائے پیدائش درج کریں — آپ کا طالع (Ascendant) اور اس سے بننے والے بارہ گھر (شخصیت، مال، شادی، کیریئر وغیرہ) معلوم کریں۔ یہ فلکیاتی حساب مکمل طور پر آف لائن، بغیر انٹرنیٹ کے، اسی موبائل پر ہوتا ہے۔</p>
-    </div>
+  </div>
+
+  <!-- ILM-UL-ADAD BUTTON -->
+  <div class="home-btns">
     <div class="btn-unit">
       <button class="home-btn" onclick="showPg('adad')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
         <span class="home-btn-icon">🔢</span>
@@ -388,15 +393,55 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
     </div>
   </div>
 
-  <!-- TAQSEEM (DIVISION) BUTTONS -->
+  <!-- ILM-E-NUJOOM BUTTON -->
   <div class="home-btns">
-    <button class="home-btn" onclick="showPg('picker')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
-      <span class="home-btn-icon">🧭</span>
-      <span class="home-btn-title" data-i18n="pickerBtnTitle">آپ کا مسئلہ کیا ہے؟ (رہنما)</span>
-      <span class="home-btn-sub" data-i18n="pickerBtnSub">سمجھ نہیں آ رہی کہ کون سا طریقہ استعمال کریں؟ اپنا مسئلہ منتخب کریں — صحیح صفحہ خود بخود کھل جائے گا</span>
-    </button>
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('nujoom')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
+        <span class="home-btn-icon">♈</span>
+        <span class="home-btn-title">علم نجوم — مکمل حساب</span>
+        <span class="home-btn-sub">تاریخ پیدائش سے برج، عنصر، حاکم سیارہ اور تحریک معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 علم نجوم کیا بتاتا ہے؟</b> اپنی تاریخِ پیدائش درج کریں اور اپنا برج، اس کا عنصر (آتشی/خاکی/بادی/آبی)، حاکم سیارہ، قانونِ مفردِ اعضاء کی تحریک، اور مختصر شخصیت کا جائزہ — ایک ہی جگہ، مکمل طور پر آف لائن پائیں۔</p>
+    </div>
   </div>
 
+  <!-- 12 HOUSES BUTTON -->
+  <div class="home-btns">
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('houses')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
+        <span class="home-btn-icon">🏠</span>
+        <span class="home-btn-title">زائچہ — 12 گھر (خانہ دار چارٹ)</span>
+        <span class="home-btn-sub">وقتِ پیدائش اور شہر سے طالع اور بارہ گھر معلوم کریں</span>
+      </button>
+      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 12 گھر کیا بتاتے ہیں؟</b> تاریخ، وقت اور جائے پیدائش درج کریں — آپ کا طالع (Ascendant) اور اس سے بننے والے بارہ گھر (شخصیت، مال، شادی، کیریئر وغیرہ) معلوم کریں۔ یہ فلکیاتی حساب مکمل طور پر آف لائن، بغیر انٹرنیٹ کے، اسی موبائل پر ہوتا ہے۔</p>
+    </div>
+  </div>
+
+  <!-- MATCHING BUTTON -->
+  <div class="home-btns">
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('matching')">
+        <span class="home-btn-icon">💑</span>
+        <span class="home-btn-title" data-i18n="matchCardTitle">علم جفر آثار — شادی/رشتہ کی نام مناسبت</span>
+        <span class="home-btn-sub" data-i18n="matchBtnTag">دو ناموں سے رشتے کی مناسبت جانیں</span>
+      </button>
+      <p class="home-btn-desc" data-i18n-html="matchBtnSub"><b>🔹 نام مناسبت کیا ہے؟</b> یہ طریقہ دونوں ناموں کے ابجد اعداد جمع اور تقسیم کر کے <b>ان کے درمیان ہم آہنگی کا تجزیہ</b> پیش کرتا ہے — خواہ یہ رشتہ ازدواجی ہو یا کاروباری شراکت داری۔</p>
+    </div>
+  </div>
+
+  <!-- BABY NAME SUGGESTION BUTTON -->
+  <div class="home-btns">
+    <div class="btn-unit">
+      <button class="home-btn" onclick="showPg('babyname')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
+        <span class="home-btn-icon">👶</span>
+        <span class="home-btn-title">بچے کے لیے بہترین نام تجویز کریں</span>
+        <span class="home-btn-sub">اسلامی، بامعنی اور والدین کے نام سے ملتا جلتا بہترین نام پائیں</span>
+      </button>
+      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 یہ فیچر کیا دیتا ہے؟</b> بچے کی جنس اور والد/والدہ کا نام درج کریں — ایسے نام تجویز پائیں جو <b>اسلام میں جائز اور بہترین</b> ہوں، اچھا معنی رکھتے ہوں، والدین کے نام سے ملتے جلتے ہوں، اور بچے کے سیدھی راہ پر چلنے کی نیت سے منتخب کیے گئے ہوں۔ تجویز کردہ نام کا عدد "علم الاعداد" میں چیک کرنے کی رہنمائی بھی ساتھ دی جاتی ہے۔</p>
+    </div>
+  </div>
+
+  <!-- TAQSEEM (DIVISION) BUTTONS — ALL GROUPED AT THE END -->
   <div class="home-btns">
     <div class="btn-unit">
       <button class="home-btn" onclick="showPg('taq3')">
@@ -486,24 +531,6 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
         <span class="home-btn-sub" data-i18n="taq28BtnTag">سب سے تفصیلی اور مکمل جواب</span>
       </button>
       <p class="home-btn-desc" data-i18n-html="taq28BtnSub"><b style="color:#c9a84c;">🔹 28 پر تقسیم کرنے کا مطلب:</b><br>جب مجموعہ 28 پر تقسیم کیا جاتا ہے تو اس سے عربی کے 28 حروف میں سے ایک خاص حرف نکلتا ہے، اور اسی حرف کے معنی کے مطابق جواب ملتا ہے — اس لیے یہ سب سے زیادہ تفصیلی اور باریک جواب دیتا ہے۔ آسان لفظوں میں: "سب سے مکمل اور گہرا جواب"۔</p>
-    </div>
-
-    <div class="btn-unit">
-      <button class="home-btn" onclick="showPg('akhbar')">
-        <span class="home-btn-icon">📜</span>
-        <span class="home-btn-title" id="btn1Title">علم جفر اخبار</span>
-        <span class="home-btn-sub" id="btn1Sub">اپنا نام اور سوال لکھیں، فوری جواب پائیں</span>
-      </button>
-      <p class="home-btn-desc" data-i18n-html="akhbarExplain"><b>🔹 علم جفر اخبار کیا ہے؟</b> یہ علم جفر کا سب سے پرانا اور روایتی طریقہ ہے۔ سوال کے حروف کو "جعفر گرڈ" میں سجا کر ایک مخصوص حرف نکالا جاتا ہے، اور اسی کی روشنی میں <b>آپ کے سوال کا براہ راست جواب</b> دیا جاتا ہے۔</p>
-    </div>
-
-    <div class="btn-unit">
-      <button class="home-btn" onclick="showPg('matching')">
-        <span class="home-btn-icon">💑</span>
-        <span class="home-btn-title" data-i18n="matchCardTitle">علم جفر آثار — شادی/رشتہ کی نام مناسبت</span>
-        <span class="home-btn-sub" data-i18n="matchBtnTag">دو ناموں سے رشتے کی مناسبت جانیں</span>
-      </button>
-      <p class="home-btn-desc" data-i18n-html="matchBtnSub"><b>🔹 نام مناسبت کیا ہے؟</b> یہ طریقہ دونوں ناموں کے ابجد اعداد جمع اور تقسیم کر کے <b>ان کے درمیان ہم آہنگی کا تجزیہ</b> پیش کرتا ہے — خواہ یہ رشتہ ازدواجی ہو یا کاروباری شراکت داری۔</p>
     </div>
   </div>
 
@@ -1632,9 +1659,52 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
   </div>
 </div>
 
+<!-- BABY NAME SUGGESTION PAGE -->
+<div id="pg-babyname" class="main-wrap hidden">
+  <button class="back-btn" onclick="showPg('home')">← واپس</button>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">👶</div>
+      <div>
+        <div class="card-title">بچے کے لیے بہترین نام تجویز کریں</div>
+        <div class="card-sub">اسلامی، بامعنی اور والدین کے نام سے ملتا جلتا بہترین نام پائیں</div>
+      </div>
+    </div>
+    <div class="notebook-body">
+      <label class="abjad-label">۱. بچے کی جنس</label>
+      <select class="day-select" id="bnGender" style="margin-bottom:8px;">
+        <option value="لڑکا">لڑکا</option>
+        <option value="لڑکی">لڑکی</option>
+      </select>
+
+      <label class="abjad-label">۲. والد کا نام (اختیاری)</label>
+      <div class="abjad-row"><input class="abjad-input" type="text" id="bnFatherName" placeholder="مثال: محمد علی" style="flex:1;"></div>
+
+      <label class="abjad-label">۳. والدہ کا نام (اختیاری)</label>
+      <div class="abjad-row"><input class="abjad-input" type="text" id="bnMotherName" placeholder="مثال: عائشہ" style="flex:1;"></div>
+
+      <button class="q-btn" onclick="runBabyName()">← نام تجویز کریں</button>
+    </div>
+  </div>
+
+  <div id="babyNameResult" class="hidden" style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
+    <div class="card">
+      <div class="card-header"><span>👶</span><div class="card-title">تجویز کردہ نام</div></div>
+      <div style="padding:18px 20px;direction:rtl;" id="babyNameBody"></div>
+    </div>
+    <div class="rohani-box green">
+      <div class="rohani-box-label">💡 اگلا قدم</div>
+      <div class="rohani-box-text">منتخب نام کا حتمی فیصلہ کرنے سے پہلے <b style="color:#c9a84c;">"علم الاعداد"</b> والے صفحے میں وہ نام لکھ کر اس کا عدد بھی چیک کر لیں — تاکہ نام معنی کے ساتھ ساتھ عدد کے لحاظ سے بھی مبارک ہو۔
+        <div style="margin-top:10px;"><button class="q-btn" onclick="showPg('adad')" style="padding:10px 20px;font-size:13px;">🔢 علم الاعداد میں چیک کریں</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PROBLEM PICKER (GUIDED SELECTOR) -->
 <div id="pg-picker" class="main-wrap hidden">
   <button class="back-btn" onclick="showPg('home')" data-i18n="pickerBackBtn">← واپس</button>
+
 
   <div class="card" style="margin-bottom:16px;">
     <div class="card-header">
@@ -1653,6 +1723,26 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
     <button class="home-btn" onclick="showPg('matching')" style="align-items:flex-start;text-align:right;padding:18px 20px;">
       <span class="home-btn-title" style="font-size:16px;" data-i18n="pickerItem2Title">💑 شادی، رشتہ، منگنی کی مناسبت</span>
       <span class="home-btn-sub" data-i18n="pickerItem2Sub">دو ناموں کا موازنہ کرنا ہو کہ رشتہ یا شادی موافق ہے یا نہیں — یہاں دبائیں</span>
+    </button>
+
+    <button class="home-btn" onclick="showPg('babyname')" style="align-items:flex-start;text-align:right;padding:18px 20px;">
+      <span class="home-btn-title" style="font-size:16px;">👶 بچے کے لیے بہترین اسلامی نام چاہیے</span>
+      <span class="home-btn-sub">نیا بچہ پیدا ہوا ہو اور اچھا، بامعنی، والدین کے نام سے ملتا جلتا نام چاہیے — یہاں دبائیں</span>
+    </button>
+
+    <button class="home-btn" onclick="showPg('nujoom')" style="align-items:flex-start;text-align:right;padding:18px 20px;">
+      <span class="home-btn-title" style="font-size:16px;">♈ اپنی شخصیت، مزاج اور طبیعت جاننی ہو</span>
+      <span class="home-btn-sub">تاریخِ پیدائش سے برج، عنصر اور شخصیت کا جائزہ چاہیے — یہاں دبائیں</span>
+    </button>
+
+    <button class="home-btn" onclick="showPg('houses')" style="align-items:flex-start;text-align:right;padding:18px 20px;">
+      <span class="home-btn-title" style="font-size:16px;">🏠 زندگی کے مختلف شعبوں (مال، شادی، کیریئر) کی تفصیل چاہیے</span>
+      <span class="home-btn-sub">وقتِ پیدائش سے مکمل زائچہ اور 12 گھروں کی تفصیل چاہیے — یہاں دبائیں</span>
+    </button>
+
+    <button class="home-btn" onclick="showPg('adad')" style="align-items:flex-start;text-align:right;padding:18px 20px;">
+      <span class="home-btn-title" style="font-size:16px;">🔢 اپنا خوش قسمت نمبر، رنگ یا دن جاننا ہو</span>
+      <span class="home-btn-sub">نام اور تاریخِ پیدائش سے اپنا ذاتی نمبر اور مبارک اوقات معلوم کریں — یہاں دبائیں</span>
     </button>
 
     <button class="home-btn" onclick="showPg('taq9')" style="align-items:flex-start;text-align:right;padding:18px 20px;">
@@ -2348,7 +2438,7 @@ window.addEventListener('DOMContentLoaded',function(){
 });
 
 /* == NAVIGATION == */
-var PAGES=['home','akhbar','asar','ismAzam','nujoom','houses','adad','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','about','disclaimer','privacy','terms','contact'];
+var PAGES=['home','akhbar','asar','ismAzam','nujoom','houses','adad','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','babyname','about','disclaimer','privacy','terms','contact'];
 var homeScrollY = 0;
 function showPg(p, fromPopState){
   var current = PAGES.find(function(x){var el=document.getElementById('pg-'+x);return el && !el.classList.contains('hidden');});
@@ -3053,18 +3143,18 @@ var CITY_DATA={
   newyork:{lat:40.7128,lon:-74.0060,tz:-5,label:'نیو یارک'}
 };
 var HOUSE_MEANINGS=[
-  'شخصیت، جسمانی وجود، ظاہری تاثر',
-  'مال، دولت، ذاتی وسائل',
-  'بہن بھائی، ہمت، مختصر سفر',
-  'گھر، ماں، جائیداد',
-  'اولاد، تخلیقی صلاحیت، محبت',
-  'بیماری، ملازمت، دشمن، قرض',
-  'شادی، شراکت داری، معاہدے',
-  'مشکلات، پوشیدہ معاملات، وراثت',
-  'سفر، مذہب، اعلیٰ تعلیم',
-  'کیریئر، عزت، مقام',
-  'منافع، امیدیں، دوستی',
-  'نقصان، تنہائی، روحانیت، پوشیدہ دشمن'
+  {title:'شخصیت کا گھر (طالع)',desc:'جسمانی وجود، ظاہری شکل و صورت، مزاج، خود اعتمادی، اور زندگی کے آغاز کی نوعیت۔ یہ سب سے اہم گھر ہے کیونکہ باقی گیارہ گھر اسی سے شمار ہوتے ہیں۔'},
+  {title:'مال کا گھر',desc:'دولت، ذاتی وسائل، بچت، خاندانی اقدار، بولنے کا انداز، اور کھانے پینے کے رجحانات۔'},
+  {title:'ہمت کا گھر',desc:'بہن بھائی، ہمسائے، مختصر سفر، حوصلہ، تحریر و مواصلات کی صلاحیت۔'},
+  {title:'گھر کا گھر',desc:'ماں، جائیداد، گھریلو سکون، دلی اطمینان، تعلیم کی بنیاد، اور زندگی کے آخری حصے کی نوعیت۔'},
+  {title:'اولاد کا گھر',desc:'بچے، تخلیقی صلاحیت، محبت کے معاملات، تعلیم (خصوصاً اعلیٰ)، قسمت آزمائی، اور ذہانت۔'},
+  {title:'بیماری کا گھر',desc:'صحت کے مسائل، ملازمت، روزمرہ کے کام، دشمن، قرض، اور مقابلے/مسابقت۔'},
+  {title:'شادی کا گھر',desc:'شریکِ حیات، شراکت داری، معاہدے، کاروباری پارٹنر، اور کھلے دشمن۔'},
+  {title:'پوشیدہ راز کا گھر',desc:'موت، وراثت، خفیہ معاملات، تحقیق کا شوق، حادثات، اور اچانک تبدیلیاں۔'},
+  {title:'قسمت کا گھر',desc:'مذہب، اعلیٰ تعلیم، لمبے سفر (خصوصاً بیرونِ ملک)، باپ، اور روحانی رجحانات — اسے "بھاگیہ" کا گھر بھی کہتے ہیں۔'},
+  {title:'کیریئر کا گھر',desc:'پیشہ، عزت و مقام، سماجی حیثیت، حکومت سے تعلق، اور کامیابی۔'},
+  {title:'منافع کا گھر',desc:'آمدنی، خواہشات کی تکمیل، دوستی، بڑے بہن بھائی، اور امیدیں۔'},
+  {title:'نقصان کا گھر',desc:'اخراجات، تنہائی، غیر ممالک، روحانیت، خواب، اور پوشیدہ دشمن — اسے روحانی نجات کا گھر بھی کہا جاتا ہے۔'}
 ];
 function toggleHousesManual(){
   var v=document.getElementById('housesCity').value;
@@ -3129,10 +3219,11 @@ function runHouses(){
   var houseSummaryLines=[];
   for(var i=0;i<12;i++){
     var houseBurj=BURUJ_DATA[(asc.signIndex+i)%12];
-    html+='<div style="padding:8px 0;'+(i<11?'border-bottom:1px solid rgba(201,168,76,.12);':'')+'font-size:13px;color:#faf7f0;">';
-    html+='<b style="color:#c9a84c;">گھر '+(i+1)+':</b> '+houseBurj.icon+' '+houseBurj.name+' — '+HOUSE_MEANINGS[i];
+    var hm=HOUSE_MEANINGS[i];
+    html+='<div style="padding:10px 0;'+(i<11?'border-bottom:1px solid rgba(201,168,76,.12);':'')+'font-size:13px;color:#faf7f0;line-height:1.9;">';
+    html+='<b style="color:#c9a84c;">گھر '+(i+1)+' — '+hm.title+':</b> '+houseBurj.icon+' '+houseBurj.name+'<br>'+hm.desc;
     html+='</div>';
-    houseSummaryLines.push('گھر '+(i+1)+' ('+HOUSE_MEANINGS[i]+'): '+houseBurj.name);
+    houseSummaryLines.push('گھر '+(i+1)+' ('+hm.title+'): '+houseBurj.name);
   }
   html+='</div>';
   html+='<div class="rohani-box green" style="margin-top:14px;"><div class="rohani-box-label">ℹ️ نوٹ</div><div class="rohani-box-text">یہ حساب "ہول سائن ہاؤس سسٹم" (Whole Sign Houses) پر مبنی ہے اور روایتی اندازِ نجوم کے مطابق ہے۔ ٹائم زون میں تاریخی تبدیلیوں (جیسے پرانے وقتوں میں مختلف آفیشل ٹائم زون) کو شامل نہیں کیا گیا، اس لیے یہ ایک عمومی رہنمائی ہے، حتمی سائنسی زائچہ نہیں۔</div></div>';
@@ -3267,6 +3358,49 @@ function runAdadAI(mulank,bhagyank,nameNum){
     var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
     if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
   }).catch(function(){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); });
+}
+
+/* == BABY NAME SUGGESTION (Islamic + numerology-aware) — AI-based == */
+function runBabyName(){
+  var gender=document.getElementById('bnGender').value;
+  var father=document.getElementById('bnFatherName').value.trim();
+  var mother=document.getElementById('bnMotherName').value.trim();
+  if(!father&&!mother){alert('براہ کرم کم از کم والد یا والدہ میں سے کسی ایک کا نام درج کریں');return;}
+
+  var bb=document.getElementById('babyNameBody');
+  var res=document.getElementById('babyNameResult');res.classList.remove('hidden');res.style.display='flex';
+  res.scrollIntoView({behavior:'smooth',block:'start'});
+  if(!checkUsageLimit('babyname')){ bb.innerHTML=usageLimitBox(); return; }
+  bb.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">👶</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">مناسب نام تلاش کیے جا رہے ہیں</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
+
+  var gPrompt='آپ اسلامی نام مشاورت کے ماہر عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
+    'بچے کی جنس: '+gender+'\n'+(father?'والد کا نام: '+father+'\n':'')+(mother?'والدہ کا نام: '+mother+'\n':'')+'\n'+
+    'ہدایات:\n1. صرف ایسے نام تجویز کریں جو اسلام میں جائز اور بہترین ہوں — قرآن، حدیث، انبیاء علیہم السلام، صحابہ کرام رضی اللہ عنہم، یا اچھے عربی/اردو معنی رکھنے والے نام\n2. کوشش کریں نام کی آواز والدین کے دیے گئے نام سے ملتی جلتی ہو\n3. ہر نام کا صاف اور مکمل معنی بھی بتائیں کہ یہ نام کیوں موزوں ہے\n4. کوئی ایسا نام تجویز نہ کریں جس کا معنی نامناسب، مشرکانہ، یا غیر اسلامی ہو\n5. صرف اردو زبان میں لکھیں\n\n'+
+    '===تجویز کردہ نام===\nپانچ بہترین نام تجویز کریں، ہر ایک نئی لائن میں، اس format میں:\n[نام] — [معنی] — [یہ کیوں موزوں ہے]\n\n'+
+    '===اضافی رہنمائی===\nنام رکھنے کے بارے میں نبی کریم ﷺ کی چند مختصر ہدایات یا سنتیں (جیسے عقیقہ، کان میں اذان دینا، اچھا نام رکھنے کی اہمیت) کا 2-3 جملوں میں ذکر کریں۔';
+
+  fetch("/api/openai",{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:gPrompt})
+  }).then(function(r){return r.json();}).then(function(d){
+    bb.innerHTML='';
+    var text='';
+    try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
+    if(!text){ bb.innerHTML=apiErrorBox('runBabyName()'); return; }
+    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
+    var parts=text.split('===');
+    var nt='',rh='';
+    for(var i=0;i<parts.length;i++){
+      var label=cleanMd(parts[i]);
+      if(label==='تجویز کردہ نام'&&parts[i+1])nt=cleanMd(parts[i+1]);
+      if(label==='اضافی رہنمائی'&&parts[i+1])rh=cleanMd(parts[i+1]);
+    }
+    if(!nt)nt=cleanMd(text);
+    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تجویز کردہ نام';bb.appendChild(sl);
+    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;bb.appendChild(rt);
+    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🕌 اضافی رہنمائی</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';bb.appendChild(rbx);}
+  }).catch(function(){ bb.innerHTML=apiErrorBox('runBabyName()'); });
 }
 
 function findIsm(){
