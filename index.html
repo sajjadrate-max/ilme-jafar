@@ -1667,7 +1667,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       <div class="card-icon">👶</div>
       <div>
         <div class="card-title">بچے کے لیے بہترین نام تجویز کریں</div>
-        <div class="card-sub">اسلامی، بامعنی اور والدین کے نام سے ملتا جلتا بہترین نام پائیں</div>
+        <div class="card-sub">اسلامی، بامعنی، نسبت والا اور علم الاعداد کے لحاظ سے بہترین نام پائیں</div>
       </div>
     </div>
     <div class="notebook-body">
@@ -1677,11 +1677,14 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
         <option value="لڑکی">لڑکی</option>
       </select>
 
-      <label class="abjad-label">۲. والد کا نام (اختیاری)</label>
-      <div class="abjad-row"><input class="abjad-input" type="text" id="bnFatherName" placeholder="مثال: محمد علی" style="flex:1;"></div>
+      <label class="abjad-label">۲. نسبت کس سے چاہیے؟</label>
+      <select class="day-select" id="bnRelation" onchange="updBnLabel()" style="margin-bottom:8px;">
+        <option value="والد">والد</option>
+        <option value="والدہ">والدہ</option>
+      </select>
 
-      <label class="abjad-label">۳. والدہ کا نام (اختیاری)</label>
-      <div class="abjad-row"><input class="abjad-input" type="text" id="bnMotherName" placeholder="مثال: عائشہ" style="flex:1;"></div>
+      <label class="abjad-label" id="bnNameLabel">۳. والد کا نام</label>
+      <div class="abjad-row"><input class="abjad-input" type="text" id="bnParentName" placeholder="مثال: محمد علی" style="flex:1;"></div>
 
       <button class="q-btn" onclick="runBabyName()">← نام تجویز کریں</button>
     </div>
@@ -1689,14 +1692,8 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 
   <div id="babyNameResult" class="hidden" style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
     <div class="card">
-      <div class="card-header"><span>👶</span><div class="card-title">تجویز کردہ نام</div></div>
+      <div class="card-header"><span>👶</span><div class="card-title">تجویز کردہ نام (علم الاعداد سمیت)</div></div>
       <div style="padding:18px 20px;direction:rtl;" id="babyNameBody"></div>
-    </div>
-    <div class="rohani-box green">
-      <div class="rohani-box-label">💡 اگلا قدم</div>
-      <div class="rohani-box-text">منتخب نام کا حتمی فیصلہ کرنے سے پہلے <b style="color:#c9a84c;">"علم الاعداد"</b> والے صفحے میں وہ نام لکھ کر اس کا عدد بھی چیک کر لیں — تاکہ نام معنی کے ساتھ ساتھ عدد کے لحاظ سے بھی مبارک ہو۔
-        <div style="margin-top:10px;"><button class="q-btn" onclick="showPg('adad')" style="padding:10px 20px;font-size:13px;">🔢 علم الاعداد میں چیک کریں</button></div>
-      </div>
     </div>
   </div>
 </div>
@@ -3268,15 +3265,15 @@ function runHousesAI(ascBurj,houseSummaryLines){
 
 /* == ILM-UL-ADAD (Numerology) — offline calculation, no AI/API == */
 var ADAD_DATA={
-  1:{planet:'شمس (سورج)',nature:'قائدانہ صلاحیت، خود اعتمادی، آزاد طبیعت — یہ لوگ رہنما بننے کی فطری صلاحیت رکھتے ہیں۔',color:'نارنجی، سنہری',day:'اتوار'},
-  2:{planet:'قمر (چاند)',nature:'حساس، تعاون پسند، جذباتی — یہ لوگ دوسروں کے جذبات کا خیال رکھنے والے اور سفارتی ہوتے ہیں۔',color:'سفید، چاندی',day:'پیر'},
-  3:{planet:'مشتری',nature:'تخلیقی، خوش مزاج، بات چیت میں ماہر — یہ لوگ خوش قسمت اور علم دوست سمجھے جاتے ہیں۔',color:'پیلا',day:'جمعرات'},
-  4:{planet:'راہو (سایہ دار سیارہ)',nature:'محنتی، عملی، نظم و ضبط پسند — مگر زندگی میں غیرمتوقع رکاوٹوں کا سامنا رہتا ہے۔',color:'نیلا، سرمئی',day:'کوئی مقررہ دن نہیں'},
-  5:{planet:'عطارد',nature:'آزاد خیال، مہم جو، ذہین — یہ لوگ تبدیلی پسند اور جلد فیصلہ کرنے والے ہوتے ہیں۔',color:'سبز',day:'بدھ'},
-  6:{planet:'زہرہ',nature:'ذمہ دار، خاندان پسند، فنکارانہ ذوق — یہ لوگ محبت کرنے والے اور خوبصورتی کے دلدادہ ہوتے ہیں۔',color:'گلابی، فیروزی',day:'جمعہ'},
-  7:{planet:'کیتو (سایہ دار سیارہ)',nature:'پراسرار، تحقیق پسند، روحانی رجحان — یہ لوگ تنہائی پسند اور گہری سوچ رکھنے والے ہوتے ہیں۔',color:'جامنی، سرمئی',day:'کوئی مقررہ دن نہیں'},
-  8:{planet:'زحل',nature:'محنتی، طاقتور، مالی معاملات میں ماہر — زندگی میں اتار چڑھاؤ آتے ہیں مگر صبر سے کامیابی ملتی ہے۔',color:'نیلا، سیاہ',day:'ہفتہ'},
-  9:{planet:'مریخ',nature:'انسان دوست، فیاض، جذباتی طاقت کا مالک — یہ لوگ کام مکمل کرنے کی خواہش رکھتے ہیں۔',color:'سرخ',day:'منگل'}
+  1:{planet:'شمس (سورج)',nature:'قائدانہ صلاحیت، خود اعتمادی، آزاد طبیعت — یہ لوگ رہنما بننے کی فطری صلاحیت رکھتے ہیں۔',color:'نارنجی، سنہری',day:'اتوار',favorable:true},
+  2:{planet:'قمر (چاند)',nature:'حساس، تعاون پسند، جذباتی — یہ لوگ دوسروں کے جذبات کا خیال رکھنے والے اور سفارتی ہوتے ہیں۔',color:'سفید، چاندی',day:'پیر',favorable:true},
+  3:{planet:'مشتری',nature:'تخلیقی، خوش مزاج، بات چیت میں ماہر — یہ لوگ خوش قسمت اور علم دوست سمجھے جاتے ہیں۔',color:'پیلا',day:'جمعرات',favorable:true},
+  4:{planet:'راہو (سایہ دار سیارہ)',nature:'محنتی، عملی، نظم و ضبط پسند — مگر زندگی میں غیرمتوقع رکاوٹوں کا سامنا رہتا ہے۔',color:'نیلا، سرمئی',day:'کوئی مقررہ دن نہیں',favorable:false},
+  5:{planet:'عطارد',nature:'آزاد خیال، مہم جو، ذہین — یہ لوگ تبدیلی پسند اور جلد فیصلہ کرنے والے ہوتے ہیں۔',color:'سبز',day:'بدھ',favorable:true},
+  6:{planet:'زہرہ',nature:'ذمہ دار، خاندان پسند، فنکارانہ ذوق — یہ لوگ محبت کرنے والے اور خوبصورتی کے دلدادہ ہوتے ہیں۔',color:'گلابی، فیروزی',day:'جمعہ',favorable:true},
+  7:{planet:'کیتو (سایہ دار سیارہ)',nature:'پراسرار، تحقیق پسند، روحانی رجحان — یہ لوگ تنہائی پسند اور گہری سوچ رکھنے والے ہوتے ہیں۔',color:'جامنی، سرمئی',day:'کوئی مقررہ دن نہیں',favorable:false},
+  8:{planet:'زحل',nature:'محنتی، طاقتور، مالی معاملات میں ماہر — زندگی میں اتار چڑھاؤ آتے ہیں مگر صبر سے کامیابی ملتی ہے۔',color:'نیلا، سیاہ',day:'ہفتہ',favorable:false},
+  9:{planet:'مریخ',nature:'انسان دوست، فیاض، جذباتی طاقت کا مالک — یہ لوگ کام مکمل کرنے کی خواہش رکھتے ہیں۔',color:'سرخ',day:'منگل',favorable:false}
 };
 function reduceNum(n){
   n=Math.abs(Math.floor(n));
@@ -3360,12 +3357,17 @@ function runAdadAI(mulank,bhagyank,nameNum){
   }).catch(function(){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); });
 }
 
-/* == BABY NAME SUGGESTION (Islamic + numerology-aware) — AI-based == */
+/* == BABY NAME SUGGESTION (Islamic + numerology-verified) — AI generates names, our own abjad/adad math verifies each == */
+function updBnLabel(){
+  var rel=document.getElementById('bnRelation').value;
+  document.getElementById('bnNameLabel').textContent='۳. '+rel+' کا نام';
+  document.getElementById('bnParentName').placeholder=rel==='والد'?'مثال: محمد علی':'مثال: عائشہ';
+}
 function runBabyName(){
   var gender=document.getElementById('bnGender').value;
-  var father=document.getElementById('bnFatherName').value.trim();
-  var mother=document.getElementById('bnMotherName').value.trim();
-  if(!father&&!mother){alert('براہ کرم کم از کم والد یا والدہ میں سے کسی ایک کا نام درج کریں');return;}
+  var relation=document.getElementById('bnRelation').value;
+  var parentName=document.getElementById('bnParentName').value.trim();
+  if(!parentName){alert('براہ کرم '+relation+' کا نام درج کریں');return;}
 
   var bb=document.getElementById('babyNameBody');
   var res=document.getElementById('babyNameResult');res.classList.remove('hidden');res.style.display='flex';
@@ -3374,10 +3376,16 @@ function runBabyName(){
   bb.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">👶</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">مناسب نام تلاش کیے جا رہے ہیں</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ اسلامی نام مشاورت کے ماہر عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
-    'بچے کی جنس: '+gender+'\n'+(father?'والد کا نام: '+father+'\n':'')+(mother?'والدہ کا نام: '+mother+'\n':'')+'\n'+
-    'ہدایات:\n1. صرف ایسے نام تجویز کریں جو اسلام میں جائز اور بہترین ہوں — قرآن، حدیث، انبیاء علیہم السلام، صحابہ کرام رضی اللہ عنہم، یا اچھے عربی/اردو معنی رکھنے والے نام\n2. کوشش کریں نام کی آواز والدین کے دیے گئے نام سے ملتی جلتی ہو\n3. ہر نام کا صاف اور مکمل معنی بھی بتائیں کہ یہ نام کیوں موزوں ہے\n4. کوئی ایسا نام تجویز نہ کریں جس کا معنی نامناسب، مشرکانہ، یا غیر اسلامی ہو\n5. صرف اردو زبان میں لکھیں\n\n'+
-    '===تجویز کردہ نام===\nپانچ بہترین نام تجویز کریں، ہر ایک نئی لائن میں، اس format میں:\n[نام] — [معنی] — [یہ کیوں موزوں ہے]\n\n'+
-    '===اضافی رہنمائی===\nنام رکھنے کے بارے میں نبی کریم ﷺ کی چند مختصر ہدایات یا سنتیں (جیسے عقیقہ، کان میں اذان دینا، اچھا نام رکھنے کی اہمیت) کا 2-3 جملوں میں ذکر کریں۔';
+    'بچے کی جنس: '+gender+'\n'+relation+' کا نام: '+parentName+'\n\n'+
+    'ہدایات:\n'+
+    '1. صرف ایسے نام تجویز کریں جو اسلام میں جائز اور بہترین ہوں — قرآن، حدیث، انبیاء علیہم السلام، صحابہ کرام رضی اللہ عنہم سے منسوب، یا اچھے عربی/اردو معنی رکھنے والے نام\n'+
+    '2. نام کے الفاظ/آواز '+relation+' کے نام "'+parentName+'" سے قریب ترین ملتے جلتے ہوں (نسبت والا نام) — یہ سب سے اہم شرط ہے\n'+
+    '3. نام کا معنی ایسا ہو جو نیکی، ترقی، سیدھی راہ اور اچھے مستقبل کی طرف اشارہ کرے\n'+
+    '4. کوئی ایسا نام تجویز نہ کریں جس کا معنی نامناسب، مشرکانہ، یا غیر اسلامی ہو\n'+
+    '5. بالکل تین (3) نام تجویز کریں، نہ کم نہ زیادہ\n'+
+    '6. صرف اردو زبان میں لکھیں\n\n'+
+    'جواب صرف نیچے دیے گئے format میں تین سطروں پر مشتمل ہو، کوئی عنوان، نمبرنگ یا اضافی متن شامل نہ کریں:\n'+
+    '[نام] | [مختصر معنی] | [یہ نام کیوں موزوں ہے — نسبت اور راہِ راست سے تعلق واضح کریں]';
 
   fetch("/api/openai",{
     method:'POST',
@@ -3388,18 +3396,44 @@ function runBabyName(){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ bb.innerHTML=apiErrorBox('runBabyName()'); return; }
-    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
-    var parts=text.split('===');
-    var nt='',rh='';
-    for(var i=0;i<parts.length;i++){
-      var label=cleanMd(parts[i]);
-      if(label==='تجویز کردہ نام'&&parts[i+1])nt=cleanMd(parts[i+1]);
-      if(label==='اضافی رہنمائی'&&parts[i+1])rh=cleanMd(parts[i+1]);
+
+    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^[-•\d.\s]+/,'').replace(/^\s+|\s+$/g,''); }
+    var lines=text.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.indexOf('|')!==-1;});
+
+    if(lines.length===0){
+      var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=cleanMd(text);bb.appendChild(rt);
+      return;
     }
-    if(!nt)nt=cleanMd(text);
+
     var sl=document.createElement('div');sl.className='section-label';sl.textContent='تجویز کردہ نام';bb.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;bb.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🕌 اضافی رہنمائی</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';bb.appendChild(rbx);}
+
+    lines.slice(0,3).forEach(function(line){
+      var cols=line.split('|').map(function(c){return cleanMd(c);});
+      var nm=cols[0]||'';
+      var meaning=cols[1]||'';
+      var reason=cols[2]||'';
+      if(!nm) return;
+
+      var num=reduceNum(abjad(nm));
+      var info=ADAD_DATA[num];
+      var badge=info.favorable
+        ? '<span style="background:rgba(80,200,120,.15);color:#6fcf97;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">✅ عدد کے لحاظ سے مبارک</span>'
+        : '<span style="background:rgba(230,160,60,.15);color:#e8a03c;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">⚠️ عدد میں محنت و صبر درکار</span>';
+
+      var card=document.createElement('div');
+      card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid rgba(201,168,76,.2);direction:rtl;margin-bottom:12px;';
+      card.innerHTML=
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">'+
+          '<div style="font-size:18px;font-weight:700;color:#e8c87a;">'+nm+'</div>'+badge+
+        '</div>'+
+        '<div style="font-size:13px;color:#faf7f0;line-height:2.1;">'+
+          (meaning?'<b style="color:#c9a84c;">معنی:</b> '+meaning+'<br>':'')+
+          (reason?'<b style="color:#c9a84c;">وجہ:</b> '+reason+'<br>':'')+
+          '<b style="color:#c9a84c;">علم الاعداد:</b> عدد '+num+' — حاکم سیارہ '+info.planet+'<br>'+
+          '<b style="color:#c9a84c;">طبیعت:</b> '+info.nature+
+        '</div>';
+      bb.appendChild(card);
+    });
   }).catch(function(){ bb.innerHTML=apiErrorBox('runBabyName()'); });
 }
 
