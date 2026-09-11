@@ -3382,9 +3382,9 @@ function runBabyName(){
     '2. نام کے الفاظ/آواز '+relation+' کے نام "'+parentName+'" سے قریب ترین ملتے جلتے ہوں (نسبت والا نام) — یہ سب سے اہم شرط ہے\n'+
     '3. نام کا معنی ایسا ہو جو نیکی، ترقی، سیدھی راہ اور اچھے مستقبل کی طرف اشارہ کرے\n'+
     '4. کوئی ایسا نام تجویز نہ کریں جس کا معنی نامناسب، مشرکانہ، یا غیر اسلامی ہو\n'+
-    '5. بالکل تین (3) نام تجویز کریں، نہ کم نہ زیادہ\n'+
+    '5. بالکل پانچ (5) نام تجویز کریں، نہ کم نہ زیادہ\n'+
     '6. صرف اردو زبان میں لکھیں\n\n'+
-    'جواب صرف نیچے دیے گئے format میں تین سطروں پر مشتمل ہو، کوئی عنوان، نمبرنگ یا اضافی متن شامل نہ کریں:\n'+
+    'جواب صرف نیچے دیے گئے format میں پانچ سطروں پر مشتمل ہو، کوئی عنوان، نمبرنگ یا اضافی متن شامل نہ کریں:\n'+
     '[نام] | [مختصر معنی] | [یہ نام کیوں موزوں ہے — نسبت اور راہِ راست سے تعلق واضح کریں]';
 
   fetch("/api/openai",{
@@ -3405,32 +3405,39 @@ function runBabyName(){
       return;
     }
 
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تجویز کردہ نام';bb.appendChild(sl);
+    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تجویز کردہ نام (بہترین عدد سب سے اوپر)';bb.appendChild(sl);
 
-    lines.slice(0,3).forEach(function(line){
+    var RANK_ORDER=[3,1,6,5,2,9,4,7,8]; // best-to-least preferred, per Ilm-ul-Adad
+    var results=[];
+    lines.slice(0,5).forEach(function(line){
       var cols=line.split('|').map(function(c){return cleanMd(c);});
       var nm=cols[0]||'';
       var meaning=cols[1]||'';
       var reason=cols[2]||'';
       if(!nm) return;
-
       var num=reduceNum(abjad(nm));
-      var info=ADAD_DATA[num];
-      var badge=info.favorable
+      results.push({nm:nm,meaning:meaning,reason:reason,num:num,info:ADAD_DATA[num]});
+    });
+
+    results.sort(function(a,b){ return RANK_ORDER.indexOf(a.num)-RANK_ORDER.indexOf(b.num); });
+
+    results.forEach(function(r,idx){
+      var badge=r.info.favorable
         ? '<span style="background:rgba(80,200,120,.15);color:#6fcf97;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">✅ عدد کے لحاظ سے مبارک</span>'
         : '<span style="background:rgba(230,160,60,.15);color:#e8a03c;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">⚠️ عدد میں محنت و صبر درکار</span>';
+      var topPick=idx===0?'<div style="font-size:11px;color:#f0d878;font-weight:700;margin-bottom:6px;">⭐ سب سے بہترین انتخاب (عدد کے لحاظ سے)</div>':'';
 
       var card=document.createElement('div');
-      card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid rgba(201,168,76,.2);direction:rtl;margin-bottom:12px;';
-      card.innerHTML=
+      card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid '+(idx===0?'rgba(240,216,120,.5)':'rgba(201,168,76,.2)')+';direction:rtl;margin-bottom:12px;';
+      card.innerHTML=topPick+
         '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">'+
-          '<div style="font-size:18px;font-weight:700;color:#e8c87a;">'+nm+'</div>'+badge+
+          '<div style="font-size:18px;font-weight:700;color:#e8c87a;">'+r.nm+'</div>'+badge+
         '</div>'+
         '<div style="font-size:13px;color:#faf7f0;line-height:2.1;">'+
-          (meaning?'<b style="color:#c9a84c;">معنی:</b> '+meaning+'<br>':'')+
-          (reason?'<b style="color:#c9a84c;">وجہ:</b> '+reason+'<br>':'')+
-          '<b style="color:#c9a84c;">علم الاعداد:</b> عدد '+num+' — حاکم سیارہ '+info.planet+'<br>'+
-          '<b style="color:#c9a84c;">طبیعت:</b> '+info.nature+
+          (r.meaning?'<b style="color:#c9a84c;">معنی:</b> '+r.meaning+'<br>':'')+
+          (r.reason?'<b style="color:#c9a84c;">وجہ:</b> '+r.reason+'<br>':'')+
+          '<b style="color:#c9a84c;">علم الاعداد:</b> عدد '+r.num+' — حاکم سیارہ '+r.info.planet+'<br>'+
+          '<b style="color:#c9a84c;">طبیعت:</b> '+r.info.nature+
         '</div>';
       bb.appendChild(card);
     });
