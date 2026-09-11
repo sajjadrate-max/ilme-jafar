@@ -3380,11 +3380,12 @@ function runBabyName(){
     'ہدایات:\n'+
     '1. صرف ایسے نام تجویز کریں جو اسلام میں جائز اور بہترین ہوں — قرآن، حدیث، انبیاء علیہم السلام، صحابہ کرام رضی اللہ عنہم سے منسوب، یا اچھے عربی/اردو معنی رکھنے والے نام\n'+
     '2. نام کے الفاظ/آواز '+relation+' کے نام "'+parentName+'" سے قریب ترین ملتے جلتے ہوں (نسبت والا نام) — یہ سب سے اہم شرط ہے\n'+
-    '3. نام کا معنی ایسا ہو جو نیکی، ترقی، سیدھی راہ اور اچھے مستقبل کی طرف اشارہ کرے\n'+
-    '4. کوئی ایسا نام تجویز نہ کریں جس کا معنی نامناسب، مشرکانہ، یا غیر اسلامی ہو\n'+
-    '5. بالکل پانچ (5) نام تجویز کریں، نہ کم نہ زیادہ\n'+
-    '6. صرف اردو زبان میں لکھیں\n\n'+
-    'جواب صرف نیچے دیے گئے format میں پانچ سطروں پر مشتمل ہو، کوئی عنوان، نمبرنگ یا اضافی متن شامل نہ کریں:\n'+
+    '3. ⚠️ نہایت اہم: تجویز کردہ نام عین "'+parentName+'" جیسا (ہو بہو وہی نام) ہرگز نہ ہو — نام مختلف ہو مگر آواز/الفاظ ملتے جلتے ہوں، نہ کہ خود وہی نام دہرا دیں\n'+
+    '4. نام کا معنی ایسا ہو جو نیکی، ترقی، سیدھی راہ اور اچھے مستقبل کی طرف اشارہ کرے\n'+
+    '5. کوئی ایسا نام تجویز نہ کریں جس کا معنی نامناسب، مشرکانہ، یا غیر اسلامی ہو\n'+
+    '6. بالکل آٹھ (8) مختلف نام تجویز کریں، نہ کم نہ زیادہ\n'+
+    '7. صرف اردو زبان میں لکھیں\n\n'+
+    'جواب صرف نیچے دیے گئے format میں آٹھ سطروں پر مشتمل ہو، کوئی عنوان، نمبرنگ یا اضافی متن شامل نہ کریں:\n'+
     '[نام] | [مختصر معنی] | [یہ نام کیوں موزوں ہے — نسبت اور راہِ راست سے تعلق واضح کریں]';
 
   fetch("/api/openai",{
@@ -3398,38 +3399,48 @@ function runBabyName(){
     if(!text){ bb.innerHTML=apiErrorBox('runBabyName()'); return; }
 
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^[-•\d.\s]+/,'').replace(/^\s+|\s+$/g,''); }
-    var lines=text.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.indexOf('|')!==-1;});
+    var normParent=parentName.replace(/[\s\u200c\u200f]/g,'');
+    var lines=text.split('\n').map(function(l){return l.trim();}).filter(function(l){
+      if(l.indexOf('|')===-1) return false;
+      var firstCol=cleanMd(l.split('|')[0]).replace(/[\s\u200c\u200f]/g,'');
+      if(firstCol===normParent) return false; // safety net: never show the exact parent name as a suggestion
+      return true;
+    });
 
     if(lines.length===0){
       var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=cleanMd(text);bb.appendChild(rt);
       return;
     }
 
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تجویز کردہ نام (بہترین عدد سب سے اوپر)';bb.appendChild(sl);
+    var FAVORABLE_ORDER=[3,1,6,5,2];   // easy-success numbers, best-to-least preferred
+    var CHALLENGING_ORDER=[9,4,7,8];   // harder-earned-success numbers, best-to-least preferred
 
-    var RANK_ORDER=[3,1,6,5,2,9,4,7,8]; // best-to-least preferred, per Ilm-ul-Adad
-    var results=[];
-    lines.slice(0,5).forEach(function(line){
+    var all=[];
+    lines.forEach(function(line){
       var cols=line.split('|').map(function(c){return cleanMd(c);});
       var nm=cols[0]||'';
       var meaning=cols[1]||'';
       var reason=cols[2]||'';
       if(!nm) return;
       var num=reduceNum(abjad(nm));
-      results.push({nm:nm,meaning:meaning,reason:reason,num:num,info:ADAD_DATA[num]});
+      all.push({nm:nm,meaning:meaning,reason:reason,num:num,info:ADAD_DATA[num]});
     });
 
-    results.sort(function(a,b){ return RANK_ORDER.indexOf(a.num)-RANK_ORDER.indexOf(b.num); });
+    var favorable=all.filter(function(r){return FAVORABLE_ORDER.indexOf(r.num)!==-1;});
+    var challenging=all.filter(function(r){return CHALLENGING_ORDER.indexOf(r.num)!==-1;});
+    favorable.sort(function(a,b){return FAVORABLE_ORDER.indexOf(a.num)-FAVORABLE_ORDER.indexOf(b.num);});
+    challenging.sort(function(a,b){return CHALLENGING_ORDER.indexOf(a.num)-CHALLENGING_ORDER.indexOf(b.num);});
 
-    results.forEach(function(r,idx){
-      var badge=r.info.favorable
+    var topFavorable=favorable.slice(0,3);
+    var topChallenging=challenging.slice(0,2);
+
+    function renderCard(r,badgeGood){
+      var badge=badgeGood
         ? '<span style="background:rgba(80,200,120,.15);color:#6fcf97;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">✅ عدد کے لحاظ سے مبارک</span>'
         : '<span style="background:rgba(230,160,60,.15);color:#e8a03c;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">⚠️ عدد میں محنت و صبر درکار</span>';
-      var topPick=idx===0?'<div style="font-size:11px;color:#f0d878;font-weight:700;margin-bottom:6px;">⭐ سب سے بہترین انتخاب (عدد کے لحاظ سے)</div>':'';
-
       var card=document.createElement('div');
-      card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid '+(idx===0?'rgba(240,216,120,.5)':'rgba(201,168,76,.2)')+';direction:rtl;margin-bottom:12px;';
-      card.innerHTML=topPick+
+      card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid rgba(201,168,76,.2);direction:rtl;margin-bottom:12px;';
+      card.innerHTML=
         '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">'+
           '<div style="font-size:18px;font-weight:700;color:#e8c87a;">'+r.nm+'</div>'+badge+
         '</div>'+
@@ -3439,8 +3450,24 @@ function runBabyName(){
           '<b style="color:#c9a84c;">علم الاعداد:</b> عدد '+r.num+' — حاکم سیارہ '+r.info.planet+'<br>'+
           '<b style="color:#c9a84c;">طبیعت:</b> '+r.info.nature+
         '</div>';
-      bb.appendChild(card);
-    });
+      return card;
+    }
+
+    if(topFavorable.length>0){
+      var sl1=document.createElement('div');sl1.className='section-label';sl1.textContent='🟢 کم محنت سے جلدی کامیابی والے نام';bb.appendChild(sl1);
+      var note1=document.createElement('div');note1.style.cssText='font-size:12px;color:rgba(250,247,240,.7);margin-bottom:10px;direction:rtl;';note1.textContent='ان ناموں کا عدد (1, 2, 3, 5, 6) مبارک زمرے میں آتا ہے — روایتی طور پر ان کے حامل افراد کو کامیابی اور ترقی نسبتاً کم محنت اور جلدی مل جاتی ہے۔';bb.appendChild(note1);
+      topFavorable.forEach(function(r){ bb.appendChild(renderCard(r,true)); });
+    }
+
+    if(topChallenging.length>0){
+      var sl2=document.createElement('div');sl2.className='section-label';sl2.textContent='🟠 زیادہ محنت سے کامیابی والے نام';bb.appendChild(sl2);
+      var note2=document.createElement('div');note2.style.cssText='font-size:12px;color:rgba(250,247,240,.7);margin-bottom:10px;direction:rtl;';note2.textContent='ان ناموں کا عدد (4, 7, 8, 9) محنت طلب زمرے میں آتا ہے — کامیابی ضرور ملتی ہے، مگر عام طور پر زیادہ محنت، وقت اور صبر کے بعد۔';bb.appendChild(note2);
+      topChallenging.forEach(function(r){ bb.appendChild(renderCard(r,false)); });
+    }
+
+    if(topFavorable.length===0&&topChallenging.length===0){
+      var rt2=document.createElement('div');rt2.className='result-text';rt2.style.whiteSpace='pre-line';rt2.textContent=cleanMd(text);bb.appendChild(rt2);
+    }
   }).catch(function(){ bb.innerHTML=apiErrorBox('runBabyName()'); });
 }
 
@@ -3620,10 +3647,16 @@ function submitContactForm(){
 
 </script>
 <script>
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && (location.protocol==='https:'||location.protocol==='http:')) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/service-worker.js').catch(function(err){
-      console.log('Service worker registration failed:', err);
+    fetch('/service-worker.js', {method:'HEAD'}).then(function(res){
+      if(res && res.ok){
+        navigator.serviceWorker.register('/service-worker.js').catch(function(){
+          /* silently ignore any registration failure */
+        });
+      }
+    }).catch(function(){
+      /* file not reachable in this environment — skip registration entirely, no console noise */
     });
   });
 }
