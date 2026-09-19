@@ -878,38 +878,26 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       <div class="abjad-row"><input class="abjad-input" type="time" id="housesTob" style="flex:1;"></div>
 
       <label class="abjad-label">۳. شہرِ پیدائش</label>
-      <select class="day-select" id="housesCity" onchange="toggleHousesManual()" style="margin-bottom:8px;">
-        <option value="karachi">کراچی</option>
-        <option value="lahore">لاہور</option>
-        <option value="islamabad">اسلام آباد</option>
-        <option value="rawalpindi">راولپنڈی</option>
-        <option value="faisalabad">فیصل آباد</option>
-        <option value="multan">ملتان</option>
-        <option value="peshawar">پشاور</option>
-        <option value="quetta">کوئٹہ</option>
-        <option value="hyderabad">حیدرآباد</option>
-        <option value="sialkot">سیالکوٹ</option>
-        <option value="gujranwala">گوجرانوالہ</option>
-        <option value="sargodha">سرگودھا</option>
-        <option value="bahawalpur">بہاولپور</option>
-        <option value="sukkur">سکھر</option>
-        <option value="larkana">لاڑکانہ</option>
-        <option value="delhi">دہلی</option>
-        <option value="mumbai">ممبئی</option>
-        <option value="dubai">دبئی</option>
-        <option value="riyadh">ریاض</option>
-        <option value="london">لندن</option>
-        <option value="newyork">نیو یارک</option>
-        <option value="other">دیگر (کوآرڈینیٹس خود درج کریں)</option>
-      </select>
+      <div class="abjad-row" style="gap:8px;">
+        <input class="abjad-input" type="text" id="housesCityInput" placeholder="شہر کا نام لکھیں (دنیا کا کوئی بھی شہر)…" autocomplete="off" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupHousesCity();}">
+        <button type="button" class="q-btn" style="width:auto;padding:0 16px;" onclick="lookupHousesCity()">🔎 تلاش</button>
+      </div>
+      <div id="housesCityStatus" style="font-size:11px;color:rgba(250,247,240,.5);margin:4px 2px 8px;"></div>
+      <input type="hidden" id="housesLat">
+      <input type="hidden" id="housesLon">
+      <input type="hidden" id="housesTz">
+      <input type="hidden" id="housesCityLabel">
 
+      <div style="text-align:left;margin:-4px 0 8px;">
+        <a href="javascript:void(0)" onclick="toggleHousesManual()" style="font-size:11px;color:rgba(232,200,122,.8);text-decoration:underline;">شہر نہیں ملا؟ کوآرڈینیٹس خود درج کریں</a>
+      </div>
       <div id="housesManual" class="hidden" style="margin-bottom:8px;">
         <label class="abjad-label">عرض بلد (Latitude)</label>
-        <div class="abjad-row"><input class="abjad-input" type="number" step="0.0001" id="housesLat" placeholder="مثال: 24.8607" style="flex:1;"></div>
+        <div class="abjad-row"><input class="abjad-input" type="number" step="0.0001" id="housesLatManual" placeholder="مثال: 24.8607" style="flex:1;"></div>
         <label class="abjad-label">طول بلد (Longitude)</label>
-        <div class="abjad-row"><input class="abjad-input" type="number" step="0.0001" id="housesLon" placeholder="مثال: 67.0011 (مشرقی = مثبت)" style="flex:1;"></div>
+        <div class="abjad-row"><input class="abjad-input" type="number" step="0.0001" id="housesLonManual" placeholder="مثال: 67.0011 (مشرقی = مثبت)" style="flex:1;"></div>
         <label class="abjad-label">ٹائم زون (UTC سے فرق، گھنٹے)</label>
-        <div class="abjad-row"><input class="abjad-input" type="number" step="0.5" id="housesTz" placeholder="مثال: پاکستان کے لیے 5" style="flex:1;"></div>
+        <div class="abjad-row"><input class="abjad-input" type="number" step="0.5" id="housesTzManual" placeholder="مثال: پاکستان کے لیے 5" style="flex:1;"></div>
       </div>
 
       <button class="q-btn" onclick="runHouses()">← نتیجہ نکالیں</button>
@@ -2597,6 +2585,18 @@ function checkUsageLimit(key){
   }catch(e){ return true; }
 }
 
+/* Fire-and-forget: send every Q&A to the site owner's private log (Telegram),
+   without ever blocking or breaking the feature itself if it fails. */
+function logQA(feature, question, answer){
+  try{
+    fetch('/api/log',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({feature:feature, question:question, answer:answer})
+    }).catch(function(){});
+  }catch(e){}
+}
+
 function usageLimitBox(){
   var L = LNG[localStorage.getItem('ilmLang')||'en'] || LNG.en;
   return '<div style="background:linear-gradient(135deg,#2d1a0a,#1a0f00);border:1px solid rgba(240,185,11,.4);border-radius:14px;padding:24px;text-align:center;direction:rtl;">'+
@@ -2648,6 +2648,7 @@ function runTaqseemD(divisor){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ tb.innerHTML=apiErrorBox('runTaqseemD('+divisor+')'); return; }
+    logQA('taqseem-'+divisor, (q?q:('مجموعہ: '+tot+' ÷ '+divisor)), text);
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
     var parts=text.split('===');
     var nt='',rh='';
@@ -2708,6 +2709,7 @@ function runMatching(){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ mb.innerHTML=apiErrorBox('runMatching()'); return; }
+    logQA('matching', name1+' + '+name2, text);
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
     var parts=text.split('===');
     var nt='',rh='';
@@ -2893,6 +2895,7 @@ function runJafar(){
   text = "";
     }
     if(!text){showFallback(aiDiv,ext,q);return;}
+    logQA('akhbar', q, text);
     function cleanMd(s){
       return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,'');
     }
@@ -3040,14 +3043,21 @@ var BURUJ_DATA=[
   {name:'حوت (Pisces)',icon:'♓',start:[2,19],end:[3,20],element:'آبی',kaifiyat:'سرد تر',planet:'مشتری',tahreekNo:3,tahreekName:'اعصابی غدی',partner:'عقرب',desc:'حوت کے زیرِ اثر لوگ حساس، تخیل پسند اور روحانی رجحان رکھنے والے ہوتے ہیں۔ دوسروں کا درد محسوس کرتے ہیں اور فن یا روحانیت کی طرف مائل ہوتے ہیں۔'}
 ];
 var PLANET_INFO={
-  'شمس':'گرم خشک — خودی، قیادت، توانائی',
-  'قمر':'سرد تر — جذبات، گھریلو زندگی',
-  'عطارد':'متغیر — ذہانت، تجارت، بات چیت',
-  'زہرہ':'سرد تر — محبت، خوبصورتی، مال',
-  'مریخ':'گرم خشک — جرات، توانائی، جوش',
-  'مشتری':'گرم تر — خوش قسمتی، علم، وسعت',
-  'زحل':'سرد خشک — صبر، مشقت، سنجیدگی'
+  'شمس':{tabiyat:'گرم خشک',dasha:'۶ سال',numayandagi:'خودی، انا، اقتدار، قیادت، باپ، حکومت و اعلیٰ عہدہ، صحت اور جانی توانائی، عزت و وقار، ہڈیاں، دل، آنکھ (دائیں)، سرکاری معاملات، حکمران و افسرِ اعلیٰ سے تعلق۔ خودی، انا، اقتدار، قیادت اور حکمرانی کا رجحان؛ باپ، حکومت اور اعلیٰ عہدہ حاصل کرنے کی صلاحیت — ڈاکٹر بننے کی قابلیت بھی مضبوط شمس سے دیکھی جاتی ہے؛ صحت، جانی توانائی اور بجلی کی سی طاقت؛ عزت، وقار اور بزرگوں کا احترام؛ ہڈیاں اور وٹامن ڈی کی کمی؛ آنتوں کی بیماری؛ بینائی، نور اور روشنی دیکھنے کی صلاحیت؛ سر درد اور تیز بخار؛ دل کی بیماریاں؛ ذائقہ محسوس کرنے کی حس؛ مرگی کی بیماری اگر خراب پوزیشن میں ہو؛ اچھا برتاؤ اور فطرت؛ غرور و خود اعتمادی — بہت خراب ہو تو انسان اپنی کامیابی پر بھی خوش نہیں ہوتا؛ ذہن کی تیزی؛ رشتوں میں اعتماد یا بےاعتباری؛ سیاسی طاقت؛ اولاد کی کامیابی سے جڑی ساکھ کا معاملہ؛ اور یہ کبھی برداشت نہیں کرتا کہ اپنے خون کے سوا کوئی حریف بنے۔',din:'اتوار',rang:'سرخ، سنہری، نارنجی',dhaat:'سونا، تانبا'},
+  'قمر':{tabiyat:'سرد تر',dasha:'~۲۷-۲۸ دن کا چکر',numayandagi:'ذہن، جذبات، ماں، گھریلو زندگی، عوام سے تعلق، تخیل، حساسیت، سفر (پانی سے متعلق)، دودھ اور مائعات، نسوانی امور، ذہنی سکون یا بےچینی۔ ذہن، جذبات، احساسات اور موڈ کی جلد تبدیلی؛ ماں اور ممتا؛ گھریلو زندگی، گھر کی عزت اور گھومنے پھرنے کا شوق؛ عوام سے تعلق؛ تخیل، حساسیت اور خوف — خاص طور پر اولاد کی حفاظت کا خدشہ؛ خون کی کمی؛ پیاس کا بڑھنا؛ بہادری؛ بچے کی پیدائش؛ صفائی پسندی؛ خریداری کا شوق؛ خوبصورت آنکھیں؛ تعلیم؛ کمزور بچوں کی شکایت؛ بےتکلفی؛ دودھ اور مائعات؛ مذہبی رسومات اور رومانس؛ سفید رنگ کی چیزیں؛ چھاتی؛ احتیاط؛ محبت کرنے والا مگر خراب ہونے کی صورت میں ڈرپوک اور بےوفا بھی ہو سکنے والا۔',din:'پیر',rang:'سفید، چاندی',dhaat:'چاندی، پیتل'},
+  'عطارد':{tabiyat:'متغیر (دوسرے سیارے کے زیرِ اثر بدل جاتا ہے)',dasha:'۱۷ سال',numayandagi:'ذہانت، تعلیم، تجارت و کاروبار، بات چیت اور تحریر، حساب کتاب، دوستی، چھوٹے بہن بھائی، سفر (مختصر)، صحافت، وکالت، ہاضمہ کا نظام۔ ذہانت، تعلیم، تجارت و کاروبار؛ بات چیت، تحریر اور آواز کی خوبصورتی؛ حساب کتاب اور بجٹ؛ دوستی اور چھوٹے بہن بھائی؛ پیٹ؛ غائب ہو جانے کی عادت اور ایک وقت میں کئی کام کرنا؛ حافظہ اور یاد کرنے کی صلاحیت — کمزور ہو تو بھولنے کی بیماری؛ عمر سے کم نظر آنا؛ سفیر اور پیغام رسانی؛ سوشل میڈیا کا استعمال؛ نقشہ نویسی اور آرکیٹیکچر؛ بائیک/سائیکل چلانا؛ درآمد و برآمد کا کاروبار؛ خوبصورت اور لمبی آنکھیں؛ لطیفے، جوا اور اندازہ لگانے کی صلاحیت؛ جلد غصہ آنا؛ دل کی دھڑکن؛ "میں سب جانتا ہوں" کا رویہ؛ صحافت؛ عالم فاضل ہونا؛ فیصلہ کرنے کی صلاحیت میں کمزوری؛ سفر اور نقل و حمل؛ کسی کو سمجھانے کا انداز۔',din:'بدھ',rang:'سبز، کریم',dhaat:'پارہ / مرکب دھاتیں'},
+  'زہرہ':{tabiyat:'سرد تر',dasha:'۲۰ سال',numayandagi:'محبت، شادی، خوبصورتی، فنون لطیفہ، موسیقی، آرام و آسائش، جنسی معاملات، بیوی/عورت، مال و دولت، گاڑیاں اور آرائشی اشیاء، سفارت کاری۔ محبت، شادی، خوبصورتی اور فنون لطیفہ؛ موسیقی اور رقص؛ آرام و آسائش، مال و دولت اور آرائشی اشیاء؛ محبت اور نفرت دونوں کا ذریعہ — والدین کی طرف سے بچوں میں تفریق آپس میں رقابت پیدا کرتی ہے؛ اسقاطِ حمل کی ہمت؛ چاپلوسی اور غصہ پر قابو رکھنا؛ گھر کی سجاوٹ؛ کشش اور دلکش آنکھیں؛ بچوں سے پیار اور گانے؛ کلب اور آرام؛ ساتھی کی خواہش؛ محبت میں پیدا ہونے والی مشکلات؛ بچہ دانی کی بیماریاں؛ بغیر میک اپ کے قدرتی حسن؛ طلاق؛ گھریلو خوشی، لباس اور کھانے کا ذوق؛ آنکھوں کی بیماری؛ تہواروں کا شوق؛ دوستی اور خوبصورت زیورات؛ اچھا کھلاڑی؛ ایمانداری اور اعلیٰ مقام؛ محبت کے تمام معاملات اور شادی؛ جنسی تعلق؛ مثانے کی پتھری اور گلے کی بیماری۔',din:'جمعہ',rang:'سفید، گلابی، فیروزی، نیلا، پیلا',dhaat:'چاندی، تانبا'},
+  'مریخ':{tabiyat:'گرم خشک',dasha:'۷ سال',numayandagi:'جرات، توانائی، غصہ، جنگ و لڑائی، بھائی، جائیداد (زمین)، حادثات، خون، سرجری، مقابلہ اور دشمنی، ہمت اور بہادری، جنسی توانائی۔ جرات، توانائی، غصہ اور جنگ و لڑائی؛ بھائی اور بہادری؛ فوری اور بےخوف فیصلہ کرنے کی صلاحیت؛ بچپن کے بخار؛ خون کی مقدار، بلڈ کینسر اور تھیلیسیمیا؛ ہڈیوں کا گودا؛ خسرہ اور چہرے کے دانے؛ قصاب کا پیشہ؛ خود مختار کاروبار؛ دشمن اور طاقت کا اظہار؛ عسکری/انتہا پسند رجحانات؛ قانونی طور پر درج معاملات؛ مردانہ قوت؛ نئی نسل پیدا کرنا؛ خود مختار اور مشکل وقت میں نہ جھکنے والا مزاج؛ دھوکہ دینا؛ اندھیرے سے نہ ڈرنا؛ دولت و کامیابی کی صلاحیت؛ ہتھیار؛ جنگ لڑنا؛ جائیداد، حادثات، مقابلہ اور دشمنی۔',din:'منگل',rang:'سرخ',dhaat:'لوہا، تانبا'},
+  'مشتری':{tabiyat:'گرم تر',dasha:'~۱۲-۱۳ سال کا چکر',numayandagi:'علم و حکمت، دین و مذہب، اساتذہ و مرشد، اولاد، خوش قسمتی، انصاف اور قانون، مالی خوشحالی، سچائی و اخلاق، وسعت اور ترقی، جگر۔ علم و حکمت، دین و مذہب اور روحانیت؛ اساتذہ و مرشد؛ اولاد اور خوش قسمتی؛ انصاف، قانون اور دانائی؛ مالی خوشحالی، وسعت اور ترقی؛ حفاظت؛ کالج کی تعلیم؛ موٹاپا؛ کاروباری سرگرمیاں اور حکومت سے تعلق؛ ذمہ داری کا احساس؛ محنت سے کمائی گئی خوبصورتی؛ لاپرواہی؛ ہکلا کر بولنا؛ شوگر؛ آسانی سے بھروسہ کرنے والا مزاج؛ وراثتی معاملات؛ عقلمندی اور فیصلہ سازی؛ جگر کی شکایات؛ قسمت — اچھی یا بری؛ سیاسی طاقت؛ بزرگوں کی عزت اور سماجی سرگرمیاں۔',din:'جمعرات',rang:'پیلا، سنہری',dhaat:'سونا'},
+  'زحل':{tabiyat:'سرد خشک',dasha:'۱۹ سال',numayandagi:'محنت، صبر، تاخیر، مشقت، غم و پریشانی، بڑھاپا، نظم و ضبط، انصاف (سخت)، خدمت گار/ملازمین، پرانی چیزیں، دائمی امراض، حدود و پابندیاں۔ محنت، صبر، تاخیر اور مشقت؛ غم و پریشانی اور بڑھاپا؛ نظم و ضبط، خدمت گار اور حدود و پابندیاں؛ انصاف اور فیصلہ کرنا — مگر ساتھ ہی گڑبڑ کا سبب بھی؛ دولت جمع کرنا، بخیل پن اور مشکلات؛ بری رفاقت؛ وقت سے پہلے تیاری کرنے کی عادت؛ ہر چیز کو گہری نظر سے دیکھنا؛ الزام تراشی؛ ظاہری بیماری؛ زمین جائیداد اور بیوی سے متعلق دنیاوی معاملات؛ گھنے اور سیاہ بال؛ قبض؛ زیادہ سے زیادہ چیزیں جمع کرنا؛ پاگل پن اور ظلم؛ خطرہ، مایوسی، تحقیق اور سرمایہ کاری؛ غلامی/قید کی کیفیت؛ سستی؛ دل کا درد؛ کمزور لوگ، قید اور بدقسمتی؛ بےچینی؛ مذہبی پابندیاں؛ گہری اور وسیع سوچ؛ اور "تیسری آنکھ" کا کھلنا۔',din:'ہفتہ',rang:'نیلا، سیاہ، جامنی',dhaat:'لوہا، سیسہ'}
 };
+function planetInfoHtml(planetName){
+  var p=PLANET_INFO[planetName];
+  if(!p) return '';
+  return '<b style="color:#c9a84c;">طبیعت:</b> '+p.tabiyat+' | <b style="color:#c9a84c;">دَشا:</b> '+p.dasha+'<br>'+
+    '<b style="color:#c9a84c;">نمائندگی:</b> '+p.numayandagi+'<br>'+
+    '<b style="color:#c9a84c;">دن:</b> '+p.din+' | <b style="color:#c9a84c;">رنگ:</b> '+p.rang+' | <b style="color:#c9a84c;">دھات:</b> '+p.dhaat;
+}
 function nujoomInRange(m,d,sm,sd,em,ed){
   if(sm<=em){
     if(m<sm||m>em) return false;
@@ -3086,10 +3096,14 @@ function runNujoom(){
   html+='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:18px 20px;border:1px solid rgba(201,168,76,.2);direction:rtl;">';
   html+='<div style="font-size:14px;color:#faf7f0;line-height:2.4;">';
   html+='<b style="color:#c9a84c;">عنصر:</b> '+burj.element+' ('+burj.kaifiyat+')<br>';
-  html+='<b style="color:#c9a84c;">حاکم سیارہ:</b> '+burj.planet+' — '+(PLANET_INFO[burj.planet]||'')+'<br>';
+  html+='<b style="color:#c9a84c;">حاکم سیارہ:</b> '+burj.planet+'<br>';
   html+='<b style="color:#c9a84c;">تحریک (قانونِ مفردِ اعضاء):</b> نمبر '+burj.tahreekNo+' — '+burj.tahreekName+' (جوڑا دار برج: '+burj.partner+')<br>';
   html+='<b style="color:#c9a84c;">ہم عنصر بروج:</b> '+sameElementBurj.join('، ');
   html+='</div></div>';
+  html+='<div style="background:linear-gradient(135deg,#1a2f52,#0d1c38);border-radius:14px;padding:16px 18px;margin-top:12px;border:1px solid rgba(201,168,76,.2);direction:rtl;">';
+  html+='<div style="font-size:13px;font-weight:700;color:#e8c87a;margin-bottom:8px;">🪐 حاکم سیارہ ('+burj.planet+') کی منسوبات</div>';
+  html+='<div style="font-size:13px;color:#faf7f0;line-height:2.2;">'+planetInfoHtml(burj.planet)+'</div>';
+  html+='</div>';
   html+='<div class="rohani-box green" style="margin-top:14px;"><div class="rohani-box-label">📖 مختصر شخصیت کا جائزہ</div><div class="rohani-box-text">'+burj.desc+'</div></div>';
   nb.innerHTML=html;
   runNujoomAI(burj);
@@ -3115,6 +3129,7 @@ function runNujoomAI(burj){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); return; }
+    logQA('nujoom', burj.name, text);
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
     var parts=text.split('===');
     var nt='',rh='';
@@ -3130,48 +3145,62 @@ function runNujoomAI(burj){
   }).catch(function(){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); });
 }
 
-/* == 12 HOUSES (Ascendant + Whole Sign Houses) — offline astronomical calculation, no AI/API == */
-var CITY_DATA={
-  karachi:{lat:24.8607,lon:67.0011,tz:5,label:'کراچی'},
-  lahore:{lat:31.5497,lon:74.3436,tz:5,label:'لاہور'},
-  islamabad:{lat:33.6844,lon:73.0479,tz:5,label:'اسلام آباد'},
-  rawalpindi:{lat:33.5651,lon:73.0169,tz:5,label:'راولپنڈی'},
-  faisalabad:{lat:31.4504,lon:73.1350,tz:5,label:'فیصل آباد'},
-  multan:{lat:30.1575,lon:71.5249,tz:5,label:'ملتان'},
-  peshawar:{lat:34.0151,lon:71.5249,tz:5,label:'پشاور'},
-  quetta:{lat:30.1798,lon:66.9750,tz:5,label:'کوئٹہ'},
-  hyderabad:{lat:25.3960,lon:68.3578,tz:5,label:'حیدرآباد'},
-  sialkot:{lat:32.4945,lon:74.5229,tz:5,label:'سیالکوٹ'},
-  gujranwala:{lat:32.1877,lon:74.1945,tz:5,label:'گوجرانوالہ'},
-  sargodha:{lat:32.0836,lon:72.6711,tz:5,label:'سرگودھا'},
-  bahawalpur:{lat:29.3956,lon:71.6836,tz:5,label:'بہاولپور'},
-  sukkur:{lat:27.7052,lon:68.8574,tz:5,label:'سکھر'},
-  larkana:{lat:27.5590,lon:68.2120,tz:5,label:'لاڑکانہ'},
-  delhi:{lat:28.7041,lon:77.1025,tz:5.5,label:'دہلی'},
-  mumbai:{lat:19.0760,lon:72.8777,tz:5.5,label:'ممبئی'},
-  dubai:{lat:25.2048,lon:55.2708,tz:4,label:'دبئی'},
-  riyadh:{lat:24.7136,lon:46.6753,tz:3,label:'ریاض'},
-  london:{lat:51.5072,lon:-0.1276,tz:0,label:'لندن'},
-  newyork:{lat:40.7128,lon:-74.0060,tz:-5,label:'نیو یارک'}
-};
+/* == 12 HOUSES (Ascendant + Whole Sign Houses) — city lookup via existing /api/openai backend == */
+function lookupHousesCity(){
+  var cityName=document.getElementById('housesCityInput').value.trim();
+  var st=document.getElementById('housesCityStatus');
+  if(!cityName){ st.textContent='⚠️ شہر کا نام لکھیں۔'; return; }
+  st.textContent='🔎 شہر تلاش کیا جا رہا ہے…';
+
+  var prompt='آپ ایک جغرافیائی ڈیٹا بیس ہیں۔ نیچے دیے گئے شہر کے لیے صرف ایک درست JSON آبجیکٹ دیں — کوئی اور متن، وضاحت، یا مارک ڈاؤن (```) نہ لکھیں۔\n\n'+
+    'شہر: "'+cityName+'"\n\n'+
+    'JSON format بالکل اسی طرح ہو:\n'+
+    '{"lat": <latitude, decimal number>, "lon": <longitude, decimal number — مشرقی مثبت، مغربی منفی>, "tz": <معیاری UTC آفسیٹ گھنٹوں میں، decimal، مثلاً 5 یا 5.5 یا -5 — بغیر DST کے standard time>, "label": "<شہر اور ملک کا صاف نام>"}\n\n'+
+    'اگر شہر واضح طور پر نہ ملے یا مبہم ہو تو صرف {"error":"not_found"} دیں۔';
+
+  fetch("/api/openai",{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})
+  }).then(function(r){return r.json();}).then(function(d){
+    var text='';
+    try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
+    var jsonStr=(text||'').replace(/```json/gi,'').replace(/```/g,'').trim();
+    var obj=null;
+    try{ obj=JSON.parse(jsonStr); }catch(e){
+      var m=jsonStr.match(/\{[\s\S]*\}/);
+      if(m){ try{ obj=JSON.parse(m[0]); }catch(e2){} }
+    }
+    if(!obj || obj.error || typeof obj.lat!=='number' || typeof obj.lon!=='number' || typeof obj.tz!=='number'){
+      st.textContent='⚠️ شہر معلوم نہیں ہو سکا — نیچے لنک سے کوآرڈینیٹس خود درج کریں۔';
+      return;
+    }
+    document.getElementById('housesLat').value=obj.lat;
+    document.getElementById('housesLon').value=obj.lon;
+    document.getElementById('housesTz').value=obj.tz;
+    document.getElementById('housesCityLabel').value=obj.label||cityName;
+    st.textContent='📍 '+(obj.label||cityName)+' | ٹائم زون: UTC '+(obj.tz>=0?'+':'')+obj.tz;
+  }).catch(function(){
+    st.textContent='⚠️ سرور سے رابطہ نہیں ہو سکا — دوبارہ کوشش کریں یا نیچے لنک سے کوآرڈینیٹس خود درج کریں۔';
+  });
+}
 var HOUSE_MEANINGS=[
-  {title:'شخصیت کا گھر (طالع)',desc:'جسمانی وجود، ظاہری شکل و صورت، مزاج، خود اعتمادی، اور زندگی کے آغاز کی نوعیت۔ یہ سب سے اہم گھر ہے کیونکہ باقی گیارہ گھر اسی سے شمار ہوتے ہیں۔'},
-  {title:'مال کا گھر',desc:'دولت، ذاتی وسائل، بچت، خاندانی اقدار، بولنے کا انداز، اور کھانے پینے کے رجحانات۔'},
-  {title:'ہمت کا گھر',desc:'بہن بھائی، ہمسائے، مختصر سفر، حوصلہ، تحریر و مواصلات کی صلاحیت۔'},
-  {title:'گھر کا گھر',desc:'ماں، جائیداد، گھریلو سکون، دلی اطمینان، تعلیم کی بنیاد، اور زندگی کے آخری حصے کی نوعیت۔'},
-  {title:'اولاد کا گھر',desc:'بچے، تخلیقی صلاحیت، محبت کے معاملات، تعلیم (خصوصاً اعلیٰ)، قسمت آزمائی، اور ذہانت۔'},
-  {title:'بیماری کا گھر',desc:'صحت کے مسائل، ملازمت، روزمرہ کے کام، دشمن، قرض، اور مقابلے/مسابقت۔'},
-  {title:'شادی کا گھر',desc:'شریکِ حیات، شراکت داری، معاہدے، کاروباری پارٹنر، اور کھلے دشمن۔'},
-  {title:'پوشیدہ راز کا گھر',desc:'موت، وراثت، خفیہ معاملات، تحقیق کا شوق، حادثات، اور اچانک تبدیلیاں۔'},
-  {title:'قسمت کا گھر',desc:'مذہب، اعلیٰ تعلیم، لمبے سفر (خصوصاً بیرونِ ملک)، باپ، اور روحانی رجحانات — اسے "بھاگیہ" کا گھر بھی کہتے ہیں۔'},
-  {title:'کیریئر کا گھر',desc:'پیشہ، عزت و مقام، سماجی حیثیت، حکومت سے تعلق، اور کامیابی۔'},
-  {title:'منافع کا گھر',desc:'آمدنی، خواہشات کی تکمیل، دوستی، بڑے بہن بھائی، اور امیدیں۔'},
-  {title:'نقصان کا گھر',desc:'اخراجات، تنہائی، غیر ممالک، روحانیت، خواب، اور پوشیدہ دشمن — اسے روحانی نجات کا گھر بھی کہا جاتا ہے۔'}
+  {title:'پہلا گھر — خود (طالع)',desc:'یہ زائچے کا سب سے اہم گھر ہے۔ اس سے انسان کی شخصیت، مزاج، جسمانی ساخت اور زندگی کا عمومی رخ معلوم ہوتا ہے۔ اس کا حاکم سیارہ پوری زندگی پر اثر انداز ہوتا ہے۔ جسمانی وجود، قد و قامت، رنگت اور چہرہ مہرہ؛ خودی، اعتماد اور یہ صلاحیت کہ انسان فائدے کا اہل ہے یا نہیں؛ زندگی کے ہر نئے کام کا آغاز، شادی کے وقت میاں بیوی کی باہمی مطابقت؛ ذاتی اصول و ضابطہ، ہمت و حوصلہ اور دل کھول کر بات کرنے کی صلاحیت؛ تخلیقی خواہش اور کام سے اطمینان؛ وقار اور عزت — نیز ماں کی عزت (دسواں گھر آگے شمار کرکے)؛ پیدائشی فطرت اور عمر بھر ساتھ رہنے والی عادات؛ سفر کے دوران پیش آنے والے واقعات؛ کام کی توانائی، چستی و پھرتی؛ چھوٹے بھائیوں کے دوست اور ان سے منافع (گیارہویں گھر سے)؛ چہرے کی حالت، سونا، چہرے کے بالوں کی رنگت، خوشی؛ سر اور بینائی سے متعلق طبی پہلو؛ قد و قامت؛ ذاتی شناخت اور دوسروں پر شخصیت کا اثر؛ لباس، باڈی لینگویج اور روزمرہ رویہ؛ خوش مزاجی یا غمگینی؛ زندگی میں جدوجہد اور صلاحیت؛ کسی کمپنی یا کاروبار کی نمائندگی؛ پوشیدہ دشمنوں کی دولت (دوسرے گھر سے)؛ اور بھول جانے کی عادت۔'},
+  {title:'دوسرا گھر — رشتے دار',desc:'خاندانی مال و دولت، بچت، ذاتی اثاثے، بولنے کا انداز، اور کھانے پینے کی عادات اسی گھر سے دیکھی جاتی ہیں۔ جمع شدہ دولت، بچت اور بینک بیلنس؛ دوسروں کے ساتھ رویہ، مہربانی یا شک کرنا؛ بینائی سے متعلق مسائل؛ خونی رشتہ دار؛ کام سے وفاداری اور دلچسپی؛ بچپن کی زندگی اور چھوٹے بھائی کا نقصان؛ بچپن میں گالوں پر دانے اور جلد کے مسائل؛ جمع کرنے کی عادت — نوٹس، اثاثے، ہر قسم کا ذخیرہ؛ خاندانی ثقافتی اقدار؛ مالی نقصان؛ سوچ، گفتگو یا جگہ کی گہرائی؛ والد کی بیماری (چھٹے گھر سے)؛ دستاویزات؛ خرچ پر قابو یا بےقابو خرچ؛ اقتصادی معاملات؛ تعلیم کا شوق؛ اولاد کی نسل اور بڑھوتری؛ دائیں آنکھ؛ کھانے پینے کا ذوق؛ والد کے دوست؛ خوش نصیبی اور بدنصیبی دونوں؛ زر و جواہرات؛ دادا دادی اور نانا نانی؛ وراثت؛ زیورات پر قرض؛ یادداشت؛ ناخن اور ناک؛ نفسیاتی سکون؛ بینک لین دین اور ملکیت؛ دوسری (یا خفیہ) شادی؛ بہنیں؛ دانت اور بولنا/زبان۔'},
+  {title:'تیسرا گھر — بہن بھائیوں کے ساتھ',desc:'بہن بھائی، ہمسائے، تعلقات، ہمت و حوصلہ، مختصر سفر، لکھنے پڑھنے اور رابطے (کمیونیکیشن) کی صلاحیت۔ قابلیت اور کسی صورتحال سے نمٹنے کی صلاحیت؛ حساب کتاب، اکاؤنٹس اور کتاب لکھنا؛ ناک کی بیماری، دمہ اور سانس کی مشقیں؛ روزانہ کا سفر؛ کہانیاں سنانا، پیغام رساں، گپ شپ؛ سینہ اور کالر بون؛ رابطہ کاری — بات چیت، اشارے، پیغام رسانی، سوشل میڈیا؛ کھانسی اور پھرتی؛ طاقت و جوش؛ ملازم اور بچوں کے دوست (گیارہویں گھر سے)؛ ہاتھ اور بازو؛ چھوٹے بھائی کی صحت؛ اعلیٰ تعلیم کی طرف رغبت اور عقلمندی؛ چھوٹا سفر اور لائبریری؛ ذہنی و اعصابی طاقت؛ روزمرہ رکاوٹ؛ جائیداد کی خریدوفروخت کی درخواستیں؛ ریڈیو، ریلوے اور تحقیقی کام؛ پسلیوں کا اوپری حصہ؛ دایاں کان؛ افواہیں پھیلانا؛ کندھا؛ روحانیت کی پڑھائی؛ موبائل، ٹی وی، ٹیکنالوجی اور گیجٹس؛ نقل مکانی؛ اور روزمرہ تحریر۔'},
+  {title:'چوتھا گھر — ماں سے تعلق',desc:'گھریلو ماحول، جائیداد و زمین، ذہنی و جذباتی سکون اور زندگی کے آخری حصے کی نوعیت۔ گھر کا سکون اور راحت؛ زراعت؛ یادگاریں اور مونومنٹس؛ ماں (خاص طور پر چھاتی سے متعلق امور)؛ عمارت کی تعمیر؛ سینے کی بیماریاں؛ کپڑے؛ کسی بھی کام کا نتیجہ اور بڑھاپے کی زندگی؛ وراثت کا خطرہ؛ کہنی؛ جذبات؛ کسی منصوبے کا خاتمہ؛ بڑے بھائی کے دشمن اور جائیداد کے معاملات؛ گھر والوں کی طرف سے غلط الزامات؛ خاندانی سپورٹ؛ ملازم اور اس کے دوست؛ ماں کی خوشی اور دل کی بیماریاں؛ خفیہ چیزیں جو خاندان سے چھپائی جائیں؛ مستقل رہائش اور پتہ؛ زمین کا ٹھیکہ؛ بچوں کا نقصان اور خفیہ دشمن؛ پھیپھڑے اور پیر کا اوپری حصہ؛ دیسی دوائیں اور دودھ؛ یادگار لمحات؛ جائیداد کی مستقل ملکیت و رجسٹری؛ خفیہ تعلقات؛ زراعت کے مسائل اور حاملہ خواتین کی پریشانی؛ دشمنوں کی تجارت؛ سفر میں آسانی؛ گاڑی کی ملکیت؛ اور زمین/پانی میں دفن خزانہ۔'},
+  {title:'پانچواں گھر — اولاد',desc:'رومانوی تعلقات، تعلیم، فنون اور تخلیقی صلاحیتیں۔ بچے، تخلیقی صلاحیت، محبت کے معاملات (خصوصاً شادی سے پہلے)، تعلیم (خصوصاً اعلیٰ)، قسمت آزمائی/سٹہ، اور ذہانت۔ اختیار اور طاقت؛ عوام اور سفیر؛ تقریر، صلاحیت، ٹیلنٹ اور کشش؛ کتاب لکھنا؛ دعوت اور گیٹ ٹوگیدر؛ شرط لگانا اور مقابلہ؛ عمومی صحت؛ معاہدے اور کنٹریکٹ؛ گال بلیڈر اور والد سے تعلق؛ جوا اور شرط والے کھیل؛ غیرقانونی سرگرمیاں؛ اغوا؛ محبت اور رومانس؛ جگر؛ انعام اور لاٹری؛ بڑے بھائی کی شادی (ساتویں گھر سے)؛ ماں کی دولت کی حالت؛ سائنسز اور مذہبی علوم؛ روحانی سفر (حج/زیارت)؛ تفریح اور کلبنگ؛ حاملہ خواتین کا حمل نہ ٹھہرنا؛ مذہب سے قربت یا دوری؛ بڑی بہن کی شادی؛ تلی؛ کھیل اور اسٹاک ایکسچینج؛ پہلا بچہ اور اس کی تعلیم و تربیت؛ اور استادوں سے تعلق۔'},
+  {title:'چھٹا گھر — بڑی بیماریاں',desc:'دشمن، قرضے، روزمرہ کی ملازمت اور مقدمہ بازی سے متعلق معاملات، صحت کے مسائل اور مقابلے/مسابقت، چھوٹی نوکری۔ صحت کے تمام معاملات؛ پالتو جانور اور ان سے ناراضگی؛ کھانے کی جگہ؛ جھگڑا اور تعلقات میں بگاڑ؛ قرض لینا؛ ملازمین اور دفتری عملہ؛ چھوٹے بھائی کی زندگی؛ لباس پہننے کا انداز؛ دوسروں پر انحصار؛ شیطانی عمل، جادو اور تعویذ؛ شوگر اور پینکریاز؛ طویل بیماری اور مشکلات؛ بزنس پارٹنر کے دشمن؛ دشمنی اور برائی؛ چوروں کا ڈر اور چوری؛ موت کا ڈر اور بیوگی؛ ملک یا جگہ کی تبدیلی؛ بزنس پارٹنر کی سرمایہ کاری؛ گردے اور بڑی آنت؛ قانونی معاملات اور مقدمہ بازی؛ شریک حیات کو کچھ دینا یا شراکت ختم کرنا؛ ماموں؛ تیمارداری اور مخالفین کی طاقت؛ صفائی و حفظانِ صحت؛ عوامی تقریر؛ چوری، مریض کا علاج اور جسمانی زخم۔'},
+  {title:'ساتواں گھر — شادی',desc:'مرد و عورت دونوں کے لیے ایک ہی نمبر میں دیکھیں۔ اپنی شریک حیات کی خصوصیات، کاروباری شراکت داری اور معاہدے۔ گم شدہ افراد کو دیکھنے کے لیے بھی، کاروباری پارٹنر، اور کھلے دشمن۔ خوبصورتی کا پیمانہ اور ہر کام سلیقے سے کرنا؛ معاہدہ کرنا؛ اچھا اور مہنگا لباس؛ کاروباری شراکت داری اور منصوبہ؛ بھائیوں کے بچے؛ ساتھ رہنے والوں سے تعلق و مطابقت؛ مقابل شخص؛ طلاق؛ گھریلو خوشی (شادی سے پہلے اور بعد کی دونوں)؛ فیصلہ کرنے والا؛ بحث و تکرار اور کسی چیز کا خاتمہ؛ کھانے پینے کا سلیقہ؛ جرمانہ؛ پھول اور خوشبو؛ سرکاری یا خواتین سے متعلق فائدہ؛ گمشدہ افراد اور جیب کترے؛ انتظار کرنا؛ عوامی حلقے؛ کھوئی ہوئی جائیداد کی واپسی؛ سائے/ہمزاد کا تصور؛ بیرونِ ملک عزت کمانا؛ دوسرا بچہ؛ خریدوفروخت اور جنسی لذت؛ دوستوں کے بچے؛ سفر اور جنگ؛ اور میاں بیوی کا باہمی سکھ۔'},
+  {title:'آٹھواں گھر — موت',desc:'وراثت میں ملنے والی چیزیں، خفیہ راز، مشکل وقت۔ نا امیدی، ہڈیوں میں درد، تحقیق کا شوق، حادثات، اور اچانک بڑی تبدیلیاں۔ حادثات؛ ہر قسم کی پوشیدہ چیزیں؛ ہڈیاں اور وٹامن ڈی کی کمی؛ بغیر محنت کے ملنے والی خفیہ دولت (وراثت)؛ کرپشن اور موت؛ ہارنا، نقصان اور سفر کی مشکلات؛ بواسیر؛ فیملی ڈاکٹر؛ بیوی کا جہیز اور سسرالی رشتے؛ خفیہ معاملات اور رکاوٹیں؛ موت کے بعد راحت یا بےعزتی؛ انشورنس؛ راز چھپانا اور فطرت کو سمجھنا؛ وراثت؛ نشے کا زیادہ استعمال؛ پنشن اور اسکینڈل؛ لاعلاج/سنگین بیماری اور حساسیت؛ بہن بھائیوں کی بیماری؛ اسٹاک مارکیٹ میں نفع یا نقصان؛ اور خودکشی کی وصیت۔'},
+  {title:'نواں گھر — قسمت',desc:'مذہب و روحانیت، اعلیٰ تعلیم، لمبے سفر (خصوصاً بیرونِ ملک)، باپ، اور روحانی رجحانات — اسے "بھاگیہ" (خوش قسمتی) کا گھر بھی کہتے ہیں۔ کامیابی سیکھنے کی صلاحیت؛ بزرگوں کا نئی چیزوں کو سمجھنا یا نہ سمجھنا؛ لمبے سفر خصوصاً بیرونِ ملک؛ اچھے لوگوں سے تعلقات؛ تقدیر اور نصیب؛ کتاب چھپوانا؛ تیسرا بچہ؛ روحانیت اور کسی مضبوط/روحانی جگہ پر جانا؛ کالج کی تعلیم؛ روحانی کنٹرول کی صلاحیت؛ استادوں سے تعلق اور مذہب کا علم؛ بزرگوں کی خدمت؛ دور اندیشی اور پیشین گوئی؛ دوستوں کی خوش نصیبی؛ کامیابی کا پھل؛ سخاوت اور پوتے پوتیاں؛ الہام ہونا؛ بچوں کی پرورش؛ اور قربانی دینا۔'},
+  {title:'دسواں گھر — کیریئر/روزگار',desc:'سماجی عزت و مقام، پیشہ ورانہ کامیابی، حکومت سے تعلق۔ عزت، شان و شوکت اور انتظامی ذمہ داری؛ گود لیا ہوا بچہ؛ ترقی اور پروموشن؛ ذمہ داریوں کی تقسیم؛ اقتدار اور کاروبار؛ لائف پارٹنر کی سواری؛ اچھے کاموں کا ذخیرہ اور وقار؛ مستقبل کی طرف پیش قدمی؛ کسی بھی چیز کو دی جانے والی اہمیت؛ قانونی دشمن؛ شہرت، منافع اور عظمت؛ سرکاری نوکری؛ بال اور اچھے کام پر فخر؛ جوڑوں کا درد؛ فیصلہ سازی؛ ذریعۂ آمدن اور روزگار کا سلسلہ؛ قابلِ تحسین کام اور ذمہ داریاں؛ ملازمت کی نوعیت؛ مستقل مزاجی یا غیرمستقل مزاجی؛ حال میں ملنے والی کامیابی؛ اور ترقی کی رفتار۔'},
+  {title:'گیارہواں گھر — آمدنی',desc:'دوست احباب، امیدیں اور خواہشات کی تکمیل۔ بڑے بہن بھائی کی امیدیں، چھوٹی بیماریاں، داماد، بہو، والد سے فائدہ لینا چاہنے والے لوگ اور مشورہ دینے والے؛ خواہش اور رزق؛ بہنوئی؛ سماجی سرگرمیاں؛ مہنگے زیورات اور سامان؛ بہو؛ ہسپتال سے ڈسچارج ہونا؛ ترمیم و اصلاح؛ جذباتی وابستگی؛ ناجائز تعلق؛ تعلقات کی پسندیدگی؛ چاپلوسی؛ مشکلات سے آزادی؛ دوستی اور دوستوں سے فائدہ؛ کاروبار میں منافع؛ قرض لینا؛ ذہانت؛ شاہانہ/لگژری سواری؛ دوستوں میں عزت؛ امید اور آمدنی؛ دایاں کان اور ٹانگیں؛ زیورات سے محبت اور بال؛ چچا، پھوپھی اور چاچی؛ خوشی اور خواہش کی تسکین؛ بہو کا شوہر؛ اور بڑا بھائی، بڑی بہن۔'},
+  {title:'بارہواں گھر — نقصانات',desc:'اخراجات، تنہائی، روحانی ترقی اور بیرون ملک سے تعلق، خواب، اور پوشیدہ دشمن — اسے نجات یا آزادی کا گھر بھی کہا جاتا ہے۔ حسد، نظر بندی، جادو؛ بیوی کا گھر؛ بیوی کی بیماری؛ ذہن کا کام نہ کرنا؛ اختلاف؛ ہر قسم کی بدنصیبی؛ قتل؛ خفیہ/پوشیدہ کام؛ قید — حقیقی یا نفسیاتی احساسِ قید؛ قرض کا خاتمہ؛ نافرمانی اور بری عادات؛ ذہنی پریشانی اور خواب؛ مشکل تجربات؛ نجات اور اخراجات؛ پاؤں؛ بیرونِ ملک ہجرت اور امیگریشن؛ ہسپتال میں داخلہ اور رخصتی؛ بیماریوں پر خرچ؛ ہر قسم کی رکاوٹ؛ ملازمت کا خاتمہ؛ آزادی اور اپنی حدود کا علم؛ بدنصیبی سے پیدا ہونے والا نقصان؛ دوستوں کا نقصان؛ نرسنگ ہومز؛ مشکل وقت میں نئی مہارت سیکھنا؛ ظلم و ستم اور غربت؛ عمل/نقشہ اور مشاعرہ؛ قرض کی ادائیگی؛ سکون بخش جگہ؛ خفیہ دشمن اور بغاوت؛ مختصر وقت کی عزت اور اس کا چلا جانا؛ شریکِ حیات کی بیماری؛ گناہ، تنہائی اور شک؛ تعطیلات؛ اور جسمانی زخم پہنچانے والے حادثات۔'}
 ];
 function toggleHousesManual(){
-  var v=document.getElementById('housesCity').value;
   var m=document.getElementById('housesManual');
-  if(v==='other'){ m.classList.remove('hidden'); } else { m.classList.add('hidden'); }
+  m.classList.toggle('hidden');
 }
 function toJulianDay(y,mo,d,hourDec){
   if(mo<=2){ y-=1; mo+=12; }
@@ -3197,17 +3226,21 @@ function runHouses(){
   var dobVal=document.getElementById('housesDob').value;
   var tobVal=document.getElementById('housesTob').value;
   if(!dobVal||!tobVal){alert('براہ کرم تاریخ اور وقتِ پیدائش دونوں درج کریں');return;}
-  var cityKey=document.getElementById('housesCity').value;
+  var manualOpen=!document.getElementById('housesManual').classList.contains('hidden');
   var lat,lon,tz,cityLabel;
-  if(cityKey==='other'){
+  if(manualOpen && document.getElementById('housesLatManual').value){
+    lat=parseFloat(document.getElementById('housesLatManual').value);
+    lon=parseFloat(document.getElementById('housesLonManual').value);
+    tz=parseFloat(document.getElementById('housesTzManual').value);
+    cityLabel='دیگر مقام (دستی کوآرڈینیٹس)';
+    if(isNaN(lat)||isNaN(lon)||isNaN(tz)){alert('براہ کرم عرض بلد، طول بلد اور ٹائم زون درست درج کریں');return;}
+  }else{
     lat=parseFloat(document.getElementById('housesLat').value);
     lon=parseFloat(document.getElementById('housesLon').value);
     tz=parseFloat(document.getElementById('housesTz').value);
-    cityLabel='دیگر مقام';
-    if(isNaN(lat)||isNaN(lon)||isNaN(tz)){alert('براہ کرم عرض بلد، طول بلد اور ٹائم زون درست درج کریں');return;}
-  }else{
-    var c=CITY_DATA[cityKey];
-    lat=c.lat; lon=c.lon; tz=c.tz; cityLabel=c.label;
+    cityLabel=document.getElementById('housesCityLabel').value;
+    if(isNaN(lat)||isNaN(lon)){alert('براہ کرم فہرست سے ایک شہر منتخب کریں (ٹائپ کر کے تجویز پر کلک کریں)');return;}
+    if(isNaN(tz)){alert('ٹائم زون ابھی معلوم ہو رہا ہے، چند ثانیے بعد دوبارہ کوشش کریں — یا نیچے لنک سے دستی درج کریں');return;}
   }
   var dp=dobVal.split('-');
   var year=parseInt(dp[0],10),month=parseInt(dp[1],10),day=parseInt(dp[2],10);
@@ -3227,6 +3260,10 @@ function runHouses(){
   var html='';
   html+='<div style="font-size:16px;font-weight:700;color:#e8c87a;text-align:center;margin-bottom:6px;">طالع (Ascendant): '+ascBurj.icon+' '+ascBurj.name+'</div>';
   html+='<div style="font-size:12px;color:rgba(250,247,240,.6);text-align:center;margin-bottom:14px;">شہر: '+cityLabel+' | درجہ: '+degDisp+' '+ascBurj.name.split(' ')[0]+'</div>';
+  html+='<div style="background:linear-gradient(135deg,#1a2f52,#0d1c38);border-radius:14px;padding:16px 18px;margin-bottom:12px;border:1px solid rgba(201,168,76,.2);direction:rtl;">';
+  html+='<div style="font-size:13px;font-weight:700;color:#e8c87a;margin-bottom:8px;">🪐 طالع کے حاکم سیارے ('+ascBurj.planet+') کی منسوبات</div>';
+  html+='<div style="font-size:13px;color:#faf7f0;line-height:2.2;">'+planetInfoHtml(ascBurj.planet)+'</div>';
+  html+='</div>';
   html+='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:12px 16px;border:1px solid rgba(201,168,76,.2);direction:rtl;">';
   var houseSummaryLines=[];
   for(var i=0;i<12;i++){
@@ -3263,6 +3300,7 @@ function runHousesAI(ascBurj,houseSummaryLines){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ ab.innerHTML=apiErrorBox('runHouses()'); return; }
+    logQA('houses', 'طالع: '+ascBurj.name, text);
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
     var parts=text.split('===');
     var nt='',rh='';
@@ -3357,6 +3395,7 @@ function runAdadAI(mulank,bhagyank,nameNum){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); return; }
+    logQA('adad', 'مولانک:'+mulank+' بھاگیانک:'+bhagyank+' نام کا عدد:'+nameNum, text);
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^\s+|\s+$/g,''); }
     var parts=text.split('===');
     var nt='',rh='';
@@ -3412,6 +3451,7 @@ function runBabyName(){
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ bb.innerHTML=apiErrorBox('runBabyName()'); return; }
+    logQA('babyname', gender+' - نسبت: '+relation+': '+parentName, text);
 
     function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^[-•\d.\s]+/,'').replace(/^\s+|\s+$/g,''); }
     var normParent=parentName.replace(/[\s\u200c\u200f]/g,'');
