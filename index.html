@@ -684,7 +684,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
     </div>
     <div class="notebook-body">
       <label class="q-label" id="qLabel">یا علیم — اپنا سوال یہاں لکھیں:</label>
-      <input type="text" class="q-input" id="qInput" maxlength="300" placeholder="جو دل میں آئے لکھ دیں..." onkeydown="if(event.key==='Enter')runJafar()">
+      <input type="text" class="q-input" id="qInput" placeholder="جو دل میں آئے لکھ دیں..." onkeydown="if(event.key==='Enter')runJafar()">
       <button class="q-btn" id="analyzeBtn" onclick="runJafar()">← تجزیہ کریں</button>
     </div>
   </div>
@@ -2879,7 +2879,6 @@ function runJafar(){
 
   // Gemini AI
   var tb2=document.getElementById('tafseerBody');
-  if(!checkUsageLimit('akhbar')){ tb2.innerHTML=usageLimitBox(); return; }
   var aiDiv=document.createElement('div');
   aiDiv.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;margin-top:8px;border:1px solid rgba(201,168,76,.2);';
   aiDiv.innerHTML='<div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div>';
