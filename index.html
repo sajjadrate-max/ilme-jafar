@@ -2881,8 +2881,25 @@ function runJafar(){
   var tb2=document.getElementById('tafseerBody');
   var aiDiv=document.createElement('div');
   aiDiv.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;margin-top:8px;border:1px solid rgba(201,168,76,.2);';
-  aiDiv.innerHTML='<div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div>';
   tb2.appendChild(aiDiv);
+
+  function renderJafarResult(div,nt,rh){
+    div.innerHTML='';
+    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';div.appendChild(sl);
+    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;div.appendChild(rt);
+    if(rh){var rb=document.createElement('div');rb.className='rohani-box green';rb.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';div.appendChild(rb);}
+    div.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  // Same question (same letters) always gives the same answer — cached per device,
+  // so copy-pasting the same question again doesn't trigger a fresh, different AI reply.
+  function hashKey(s){ var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h+s.charCodeAt(i))|0; } return (h>>>0).toString(36); }
+  var cacheKey='jafrAns_'+hashKey(q+'|'+ext.join(''));
+  var cached=null;
+  try{ var raw=localStorage.getItem(cacheKey); if(raw) cached=JSON.parse(raw); }catch(e){ cached=null; }
+  if(cached){ renderJafarResult(aiDiv,cached.nt,cached.rh); return; }
+
+  aiDiv.innerHTML='<div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div>';
 
   var gPrompt='آپ علم جفر کے ماہر روحانی عالم ہیں جو اسلامی روحانی علوم میں مہارت رکھتے ہیں۔ آپ کا کام صرف اردو میں مختصر اور درست جواب دینا ہے۔\n\nسوال: "'+q+'"\nجفر حروف: '+ext.join('، ')+'\n\nہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n===جفر کا نتیجہ===\nحروف '+ext.join('، ')+' کا تجزیہ کریں اور سوال کا براہ راست جواب دیں۔ 3 جملوں میں بتائیں کہ کیا ہوگا اور کیوں۔\n\n===روحانی حل===\nاس مسئلے کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
 
@@ -2897,7 +2914,6 @@ function runJafar(){
   prompt: gPrompt
 })
   }).then(function(res){return res.json();}).then(function(d){
-    aiDiv.innerHTML='';
     var text='';
     try{
   text = d.output_text || (d.output && d.output[0] && d.output[0].content && d.output[0].content[0] && d.output[0].content[0].text) || "";
@@ -2917,18 +2933,13 @@ function runJafar(){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';aiDiv.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;aiDiv.appendChild(rt);
-    if(rh){var rb=document.createElement('div');rb.className='rohani-box green';rb.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';aiDiv.appendChild(rb);}
-    aiDiv.scrollIntoView({behavior:'smooth',block:'start'});
+    try{ localStorage.setItem(cacheKey, JSON.stringify({nt:nt,rh:rh})); }catch(e){}
+    renderJafarResult(aiDiv,nt,rh);
   }).catch(function(){showFallback(aiDiv,ext,q);});
 
   function showFallback(div,letters,question){
     var r=buildHarfResponse(letters,question);
-    div.innerHTML='';
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';div.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=r.r;div.appendChild(rt);
-    var rb=document.createElement('div');rb.className='rohani-box green';rb.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+r.rh+'</div>';div.appendChild(rb);
+    renderJafarResult(div,r.r,r.rh);
   }
 }
 
