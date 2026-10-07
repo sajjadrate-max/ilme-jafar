@@ -2615,6 +2615,26 @@ function apiErrorBox(retryCallStr){
   '</div>';
 }
 
+/* == AI ANSWER CACHE ==
+   Same inputs must always give the same answer — the AI call itself is
+   non-deterministic, so without this, repeating the exact same question
+   could come back with a different (sometimes contradictory) answer.
+   Cached per device/browser, keyed by a hash of the exact inputs. */
+function hashKey(s){ var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h+s.charCodeAt(i))|0; } return (h>>>0).toString(36); }
+function aiCacheGet(key){
+  try{ var raw=localStorage.getItem('aiCache_'+key); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+}
+function aiCacheSet(key,obj){
+  try{ localStorage.setItem('aiCache_'+key, JSON.stringify(obj)); }catch(e){}
+}
+function renderNtRh(div,label,nt,rh){
+  div.innerHTML='';
+  var sl=document.createElement('div');sl.className='section-label';sl.textContent=label;div.appendChild(sl);
+  var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;div.appendChild(rt);
+  if(rh){var rb=document.createElement('div');rb.className='rohani-box green';rb.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';div.appendChild(rb);}
+  div.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function runTaqseemD(divisor){
   var n1=abjad(document.getElementById('t1_'+divisor).value),n2=abjad(document.getElementById('t2_'+divisor).value),n3=parseInt(document.getElementById('t3_'+divisor).value)||0,n4=abjad(document.getElementById('t4_'+divisor).value);
   var tot=n1+n2+n3+n4;
@@ -2630,6 +2650,11 @@ function runTaqseemD(divisor){
 
   var tb=document.getElementById('taqBody_'+divisor);
   if(!checkUsageLimit('taq'+divisor)){ tb.innerHTML=usageLimitBox(); return; }
+
+  var cacheKey=hashKey('taq'+divisor+'|'+q+'|'+tot);
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderNtRh(tb,'جفر کا نتیجہ',cached.nt,cached.rh); return; }
+
   tb.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ علم جفر کے ماہر روحانی عالم ہیں جو اسلامی روحانی علوم میں مہارت رکھتے ہیں۔ آپ کا کام صرف اردو میں مختصر اور درست جواب دینا ہے۔\n\n'+
@@ -2644,7 +2669,6 @@ function runTaqseemD(divisor){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:gPrompt})
   }).then(function(r){return r.json();}).then(function(d){
-    tb.innerHTML='';
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ tb.innerHTML=apiErrorBox('runTaqseemD('+divisor+')'); return; }
@@ -2658,9 +2682,8 @@ function runTaqseemD(divisor){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';tb.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;tb.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';tb.appendChild(rbx);}
+    aiCacheSet(cacheKey,{nt:nt,rh:rh});
+    renderNtRh(tb,'جفر کا نتیجہ',nt,rh);
   }).catch(function(){ tb.innerHTML=apiErrorBox('runTaqseemD('+divisor+')'); });
 }
 
@@ -2690,6 +2713,11 @@ function runMatching(){
 
   var mb=document.getElementById('matchBody');
   if(!checkUsageLimit('matching')){ mb.innerHTML=usageLimitBox(); return; }
+
+  var cacheKey=hashKey('matching|'+name1+'|'+name2);
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderNtRh(mb,'جفر کا نتیجہ',cached.nt,cached.rh); return; }
+
   mb.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ علم جفر کے ماہر روحانی عالم ہیں جو اسلامی روحانی علوم میں مہارت رکھتے ہیں۔ آپ کا کام صرف اردو میں مختصر اور درست جواب دینا ہے۔\n\n'+
@@ -2705,7 +2733,6 @@ function runMatching(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:gPrompt})
   }).then(function(r){return r.json();}).then(function(d){
-    mb.innerHTML='';
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ mb.innerHTML=apiErrorBox('runMatching()'); return; }
@@ -2719,9 +2746,8 @@ function runMatching(){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';mb.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;mb.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';mb.appendChild(rbx);}
+    aiCacheSet(cacheKey,{nt:nt,rh:rh});
+    renderNtRh(mb,'جفر کا نتیجہ',nt,rh);
   }).catch(function(){ mb.innerHTML=apiErrorBox('runMatching()'); });
 }
 
@@ -2883,21 +2909,9 @@ function runJafar(){
   aiDiv.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;margin-top:8px;border:1px solid rgba(201,168,76,.2);';
   tb2.appendChild(aiDiv);
 
-  function renderJafarResult(div,nt,rh){
-    div.innerHTML='';
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';div.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;div.appendChild(rt);
-    if(rh){var rb=document.createElement('div');rb.className='rohani-box green';rb.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';div.appendChild(rb);}
-    div.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-
-  // Same question (same letters) always gives the same answer — cached per device,
-  // so copy-pasting the same question again doesn't trigger a fresh, different AI reply.
-  function hashKey(s){ var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h+s.charCodeAt(i))|0; } return (h>>>0).toString(36); }
-  var cacheKey='jafrAns_'+hashKey(q+'|'+ext.join(''));
-  var cached=null;
-  try{ var raw=localStorage.getItem(cacheKey); if(raw) cached=JSON.parse(raw); }catch(e){ cached=null; }
-  if(cached){ renderJafarResult(aiDiv,cached.nt,cached.rh); return; }
+  var cacheKey='jafr_'+hashKey(q+'|'+ext.join(''));
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderNtRh(aiDiv,'جفر کا نتیجہ',cached.nt,cached.rh); return; }
 
   aiDiv.innerHTML='<div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم جفر کی روشنی میں تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div>';
 
@@ -2933,13 +2947,13 @@ function runJafar(){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    try{ localStorage.setItem(cacheKey, JSON.stringify({nt:nt,rh:rh})); }catch(e){}
-    renderJafarResult(aiDiv,nt,rh);
+    aiCacheSet(cacheKey,{nt:nt,rh:rh});
+    renderNtRh(aiDiv,'جفر کا نتیجہ',nt,rh);
   }).catch(function(){showFallback(aiDiv,ext,q);});
 
   function showFallback(div,letters,question){
     var r=buildHarfResponse(letters,question);
-    renderJafarResult(div,r.r,r.rh);
+    renderNtRh(div,'جفر کا نتیجہ',r.r,r.rh);
   }
 }
 
@@ -3133,6 +3147,11 @@ function runNujoom(){
 function runNujoomAI(burj){
   var ab=document.getElementById('nujoomAiBody');
   if(!checkUsageLimit('nujoom')){ ab.innerHTML=usageLimitBox(); return; }
+
+  var cacheKey=hashKey('nujoom|'+burj.name);
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderNtRh(ab,'تفصیلی تجزیہ',cached.nt,cached.rh); return; }
+
   ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم نجوم کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ علم نجوم اور قانونِ مفردِ اعضاء کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
@@ -3146,7 +3165,6 @@ function runNujoomAI(burj){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:gPrompt})
   }).then(function(r){return r.json();}).then(function(d){
-    ab.innerHTML='';
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); return; }
@@ -3160,9 +3178,8 @@ function runNujoomAI(burj){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تفصیلی تجزیہ';ab.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
+    aiCacheSet(cacheKey,{nt:nt,rh:rh});
+    renderNtRh(ab,'تفصیلی تجزیہ',nt,rh);
   }).catch(function(){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); });
 }
 
@@ -3171,6 +3188,18 @@ function lookupHousesCity(){
   var cityName=document.getElementById('housesCityInput').value.trim();
   var st=document.getElementById('housesCityStatus');
   if(!cityName){ st.textContent='⚠️ شہر کا نام لکھیں۔'; return; }
+
+  var cacheKey=hashKey('city|'+cityName);
+  var cached=aiCacheGet(cacheKey);
+  if(cached){
+    document.getElementById('housesLat').value=cached.lat;
+    document.getElementById('housesLon').value=cached.lon;
+    document.getElementById('housesTz').value=cached.tz;
+    document.getElementById('housesCityLabel').value=cached.label||cityName;
+    st.textContent='📍 '+(cached.label||cityName)+' | ٹائم زون: UTC '+(cached.tz>=0?'+':'')+cached.tz;
+    return;
+  }
+
   st.textContent='🔎 شہر تلاش کیا جا رہا ہے…';
 
   var prompt='آپ ایک جغرافیائی ڈیٹا بیس ہیں۔ نیچے دیے گئے شہر کے لیے صرف ایک درست JSON آبجیکٹ دیں — کوئی اور متن، وضاحت، یا مارک ڈاؤن (```) نہ لکھیں۔\n\n'+
@@ -3196,6 +3225,7 @@ function lookupHousesCity(){
       st.textContent='⚠️ شہر معلوم نہیں ہو سکا — نیچے لنک سے کوآرڈینیٹس خود درج کریں۔';
       return;
     }
+    aiCacheSet(cacheKey,obj);
     document.getElementById('housesLat').value=obj.lat;
     document.getElementById('housesLon').value=obj.lon;
     document.getElementById('housesTz').value=obj.tz;
@@ -3304,6 +3334,11 @@ function runHouses(){
 function runHousesAI(ascBurj,houseSummaryLines){
   var ab=document.getElementById('housesAiBody');
   if(!checkUsageLimit('houses')){ ab.innerHTML=usageLimitBox(); return; }
+
+  var cacheKey=hashKey('houses|'+ascBurj.name+'|'+houseSummaryLines.join('|'));
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderNtRh(ab,'تفصیلی تجزیہ',cached.nt,cached.rh); return; }
+
   ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">زائچے کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ علم نجوم کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
@@ -3317,7 +3352,6 @@ function runHousesAI(ascBurj,houseSummaryLines){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:gPrompt})
   }).then(function(r){return r.json();}).then(function(d){
-    ab.innerHTML='';
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ ab.innerHTML=apiErrorBox('runHouses()'); return; }
@@ -3331,9 +3365,8 @@ function runHousesAI(ascBurj,houseSummaryLines){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تفصیلی تجزیہ';ab.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
+    aiCacheSet(cacheKey,{nt:nt,rh:rh});
+    renderNtRh(ab,'تفصیلی تجزیہ',nt,rh);
   }).catch(function(){ ab.innerHTML=apiErrorBox('runHouses()'); });
 }
 
@@ -3399,6 +3432,11 @@ function runAdad(){
 function runAdadAI(mulank,bhagyank,nameNum){
   var ab=document.getElementById('adadAiBody');
   if(!checkUsageLimit('adad')){ ab.innerHTML=usageLimitBox(); return; }
+
+  var cacheKey=hashKey('adad|'+mulank+'|'+bhagyank+'|'+nameNum);
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderNtRh(ab,'تفصیلی تجزیہ',cached.nt,cached.rh); return; }
+
   ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم الاعداد کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ علم الاعداد (نیومرولوجی) کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
@@ -3412,7 +3450,6 @@ function runAdadAI(mulank,bhagyank,nameNum){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:gPrompt})
   }).then(function(r){return r.json();}).then(function(d){
-    ab.innerHTML='';
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); return; }
@@ -3426,9 +3463,8 @@ function runAdadAI(mulank,bhagyank,nameNum){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
-    var sl=document.createElement('div');sl.className='section-label';sl.textContent='تفصیلی تجزیہ';ab.appendChild(sl);
-    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;ab.appendChild(rt);
-    if(rh){var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';ab.appendChild(rbx);}
+    aiCacheSet(cacheKey,{nt:nt,rh:rh});
+    renderNtRh(ab,'تفصیلی تجزیہ',nt,rh);
   }).catch(function(){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); });
 }
 
@@ -3438,6 +3474,86 @@ function updBnLabel(){
   document.getElementById('bnNameLabel').textContent='۳. '+rel+' کا نام';
   document.getElementById('bnParentName').placeholder=rel==='والد'?'مثال: محمد علی':'مثال: عائشہ';
 }
+function renderBabyNames(bb,text,parentName){
+  bb.innerHTML='';
+  function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^[-•\d.\s]+/,'').replace(/^\s+|\s+$/g,''); }
+  var normParent=parentName.replace(/[\s‌‏]/g,'');
+  var lines=text.split('\n').map(function(l){return l.trim();}).filter(function(l){
+    if(l.indexOf('|')===-1) return false;
+    var firstCol=cleanMd(l.split('|')[0]).replace(/[\s‌‏]/g,'');
+    if(firstCol===normParent) return false; // safety net: never show the exact parent name as a suggestion
+    return true;
+  });
+
+  if(lines.length===0){
+    var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=cleanMd(text);bb.appendChild(rt);
+    return;
+  }
+
+  var FAVORABLE_ORDER=[3,1,6,5,2];   // easy-success numbers, best-to-least preferred
+  var CHALLENGING_ORDER=[9,4,7,8];   // harder-earned-success numbers, best-to-least preferred
+
+  var disc=document.createElement('div');
+  disc.style.cssText='background:#fdf0d9;border-radius:10px;padding:10px 14px;border:1.5px solid #e8a03c;margin-bottom:14px;direction:rtl;';
+  disc.innerHTML='<span style="font-size:11.5px;color:#1a1a2e;line-height:1.9;"><b style="color:#9a5c00;">⚠️</b> عدد والی معلومات محض روایتی رہنمائی ہے — رزق و کامیابی کا حتمی فیصلہ صرف اللہ تعالیٰ کے اختیار میں ہے۔ نام کا انتخاب معنی اور اسلامی جواز کی بنیاد پر کریں۔</span>';
+  bb.appendChild(disc);
+  var all=[];
+  lines.forEach(function(line){
+    var cols=line.split('|').map(function(c){return cleanMd(c);});
+    var nm=cols[0]||'';
+    var meaning=cols[1]||'';
+    var reason=cols[2]||'';
+    if(!nm) return;
+    var num=reduceNum(abjad(nm));
+    all.push({nm:nm,meaning:meaning,reason:reason,num:num,info:ADAD_DATA[num]});
+  });
+
+  var favorable=all.filter(function(r){return FAVORABLE_ORDER.indexOf(r.num)!==-1;});
+  var challenging=all.filter(function(r){return CHALLENGING_ORDER.indexOf(r.num)!==-1;});
+  favorable.sort(function(a,b){return FAVORABLE_ORDER.indexOf(a.num)-FAVORABLE_ORDER.indexOf(b.num);});
+  challenging.sort(function(a,b){return CHALLENGING_ORDER.indexOf(a.num)-CHALLENGING_ORDER.indexOf(b.num);});
+
+  var topFavorable=favorable.slice(0,3);
+  var topChallenging=challenging.slice(0,2);
+
+  function renderCard(r,badgeGood){
+    var badge=badgeGood
+      ? '<span style="background:rgba(80,200,120,.15);color:#6fcf97;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">✅ عدد کے لحاظ سے مبارک</span>'
+      : '<span style="background:rgba(230,160,60,.15);color:#e8a03c;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">⚠️ عدد میں محنت و صبر درکار</span>';
+    var card=document.createElement('div');
+    card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid rgba(201,168,76,.2);direction:rtl;margin-bottom:12px;';
+    card.innerHTML=
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">'+
+        '<div style="font-size:18px;font-weight:700;color:#e8c87a;">'+r.nm+'</div>'+badge+
+      '</div>'+
+      '<div style="font-size:13px;color:#faf7f0;line-height:2.1;">'+
+        (r.meaning?'<b style="color:#c9a84c;">معنی:</b> '+r.meaning+'<br>':'')+
+        (r.reason?'<b style="color:#c9a84c;">وجہ:</b> '+r.reason+'<br>':'')+
+        '<b style="color:#c9a84c;">علم الاعداد:</b> عدد '+r.num+' — حاکم سیارہ '+r.info.planet+'<br>'+
+        '<b style="color:#c9a84c;">طبیعت:</b> '+r.info.nature+
+      '</div>';
+    return card;
+  }
+
+  if(topFavorable.length>0){
+    var sl1=document.createElement('div');sl1.className='section-label';sl1.textContent='🟢 کم محنت سے جلدی کامیابی والے نام';bb.appendChild(sl1);
+    var note1=document.createElement('div');note1.style.cssText='font-size:12px;color:#4a4a6a;margin-bottom:10px;direction:rtl;';note1.textContent='ان ناموں کا عدد (1, 2, 3, 5, 6) مبارک زمرے میں آتا ہے — روایتی طور پر ان کے حامل افراد کو کامیابی اور ترقی نسبتاً کم محنت اور جلدی مل جاتی ہے۔';bb.appendChild(note1);
+    topFavorable.forEach(function(r){ bb.appendChild(renderCard(r,true)); });
+  }
+
+  if(topChallenging.length>0){
+    var sl2=document.createElement('div');sl2.className='section-label';sl2.textContent='🟠 زیادہ محنت سے کامیابی والے نام';bb.appendChild(sl2);
+    var note2=document.createElement('div');note2.style.cssText='font-size:12px;color:#4a4a6a;margin-bottom:10px;direction:rtl;';note2.textContent='ان ناموں کا عدد (4, 7, 8, 9) محنت طلب زمرے میں آتا ہے — کامیابی ضرور ملتی ہے، مگر عام طور پر زیادہ محنت، وقت اور صبر کے بعد۔';bb.appendChild(note2);
+    topChallenging.forEach(function(r){ bb.appendChild(renderCard(r,false)); });
+  } else if(topFavorable.length>0){
+    var missNote=document.createElement('div');missNote.style.cssText='font-size:12px;color:#6a6a8a;margin:4px 0 10px;direction:rtl;font-style:italic;';missNote.textContent='ℹ️ اس بار تجویز کردہ ناموں میں کوئی بھی "محنت طلب" زمرے (4, 7, 8, 9) کا نام نہیں نکلا — تمام تجویز کردہ نام اتفاقاً مبارک زمرے میں آ گئے۔';bb.appendChild(missNote);
+  }
+
+  if(topFavorable.length===0&&topChallenging.length===0){
+    var rt2=document.createElement('div');rt2.className='result-text';rt2.style.whiteSpace='pre-line';rt2.textContent=cleanMd(text);bb.appendChild(rt2);
+  }
+}
+
 function runBabyName(){
   var gender=document.getElementById('bnGender').value;
   var relation=document.getElementById('bnRelation').value;
@@ -3448,6 +3564,11 @@ function runBabyName(){
   var res=document.getElementById('babyNameResult');res.classList.remove('hidden');res.style.display='flex';
   res.scrollIntoView({behavior:'smooth',block:'start'});
   if(!checkUsageLimit('babyname')){ bb.innerHTML=usageLimitBox(); return; }
+
+  var cacheKey=hashKey('babyname|'+gender+'|'+relation+'|'+parentName);
+  var cached=aiCacheGet(cacheKey);
+  if(cached){ renderBabyNames(bb,cached.text,parentName); return; }
+
   bb.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">👶</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">مناسب نام تلاش کیے جا رہے ہیں</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
   var gPrompt='آپ اسلامی نام مشاورت کے ماہر عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
@@ -3468,88 +3589,12 @@ function runBabyName(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:gPrompt})
   }).then(function(r){return r.json();}).then(function(d){
-    bb.innerHTML='';
     var text='';
     try{ text=d.output_text||(d.output&&d.output[0]&&d.output[0].content&&d.output[0].content[0]&&d.output[0].content[0].text)||""; }catch(e){ text=""; }
     if(!text){ bb.innerHTML=apiErrorBox('runBabyName()'); return; }
     logQA('babyname', gender+' - نسبت: '+relation+': '+parentName, text);
-
-    function cleanMd(s){ return s.replace(/^#+\s*/gm,'').replace(/\*\*/g,'').replace(/^[-•\d.\s]+/,'').replace(/^\s+|\s+$/g,''); }
-    var normParent=parentName.replace(/[\s\u200c\u200f]/g,'');
-    var lines=text.split('\n').map(function(l){return l.trim();}).filter(function(l){
-      if(l.indexOf('|')===-1) return false;
-      var firstCol=cleanMd(l.split('|')[0]).replace(/[\s\u200c\u200f]/g,'');
-      if(firstCol===normParent) return false; // safety net: never show the exact parent name as a suggestion
-      return true;
-    });
-
-    if(lines.length===0){
-      var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=cleanMd(text);bb.appendChild(rt);
-      return;
-    }
-
-    var FAVORABLE_ORDER=[3,1,6,5,2];   // easy-success numbers, best-to-least preferred
-    var CHALLENGING_ORDER=[9,4,7,8];   // harder-earned-success numbers, best-to-least preferred
-
-    var disc=document.createElement('div');
-    disc.style.cssText='background:#fdf0d9;border-radius:10px;padding:10px 14px;border:1.5px solid #e8a03c;margin-bottom:14px;direction:rtl;';
-    disc.innerHTML='<span style="font-size:11.5px;color:#1a1a2e;line-height:1.9;"><b style="color:#9a5c00;">⚠️</b> عدد والی معلومات محض روایتی رہنمائی ہے — رزق و کامیابی کا حتمی فیصلہ صرف اللہ تعالیٰ کے اختیار میں ہے۔ نام کا انتخاب معنی اور اسلامی جواز کی بنیاد پر کریں۔</span>';
-    bb.appendChild(disc);
-    var all=[];
-    lines.forEach(function(line){
-      var cols=line.split('|').map(function(c){return cleanMd(c);});
-      var nm=cols[0]||'';
-      var meaning=cols[1]||'';
-      var reason=cols[2]||'';
-      if(!nm) return;
-      var num=reduceNum(abjad(nm));
-      all.push({nm:nm,meaning:meaning,reason:reason,num:num,info:ADAD_DATA[num]});
-    });
-
-    var favorable=all.filter(function(r){return FAVORABLE_ORDER.indexOf(r.num)!==-1;});
-    var challenging=all.filter(function(r){return CHALLENGING_ORDER.indexOf(r.num)!==-1;});
-    favorable.sort(function(a,b){return FAVORABLE_ORDER.indexOf(a.num)-FAVORABLE_ORDER.indexOf(b.num);});
-    challenging.sort(function(a,b){return CHALLENGING_ORDER.indexOf(a.num)-CHALLENGING_ORDER.indexOf(b.num);});
-
-    var topFavorable=favorable.slice(0,3);
-    var topChallenging=challenging.slice(0,2);
-
-    function renderCard(r,badgeGood){
-      var badge=badgeGood
-        ? '<span style="background:rgba(80,200,120,.15);color:#6fcf97;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">✅ عدد کے لحاظ سے مبارک</span>'
-        : '<span style="background:rgba(230,160,60,.15);color:#e8a03c;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;">⚠️ عدد میں محنت و صبر درکار</span>';
-      var card=document.createElement('div');
-      card.style.cssText='background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:16px 18px;border:1px solid rgba(201,168,76,.2);direction:rtl;margin-bottom:12px;';
-      card.innerHTML=
-        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">'+
-          '<div style="font-size:18px;font-weight:700;color:#e8c87a;">'+r.nm+'</div>'+badge+
-        '</div>'+
-        '<div style="font-size:13px;color:#faf7f0;line-height:2.1;">'+
-          (r.meaning?'<b style="color:#c9a84c;">معنی:</b> '+r.meaning+'<br>':'')+
-          (r.reason?'<b style="color:#c9a84c;">وجہ:</b> '+r.reason+'<br>':'')+
-          '<b style="color:#c9a84c;">علم الاعداد:</b> عدد '+r.num+' — حاکم سیارہ '+r.info.planet+'<br>'+
-          '<b style="color:#c9a84c;">طبیعت:</b> '+r.info.nature+
-        '</div>';
-      return card;
-    }
-
-    if(topFavorable.length>0){
-      var sl1=document.createElement('div');sl1.className='section-label';sl1.textContent='🟢 کم محنت سے جلدی کامیابی والے نام';bb.appendChild(sl1);
-      var note1=document.createElement('div');note1.style.cssText='font-size:12px;color:#4a4a6a;margin-bottom:10px;direction:rtl;';note1.textContent='ان ناموں کا عدد (1, 2, 3, 5, 6) مبارک زمرے میں آتا ہے — روایتی طور پر ان کے حامل افراد کو کامیابی اور ترقی نسبتاً کم محنت اور جلدی مل جاتی ہے۔';bb.appendChild(note1);
-      topFavorable.forEach(function(r){ bb.appendChild(renderCard(r,true)); });
-    }
-
-    if(topChallenging.length>0){
-      var sl2=document.createElement('div');sl2.className='section-label';sl2.textContent='🟠 زیادہ محنت سے کامیابی والے نام';bb.appendChild(sl2);
-      var note2=document.createElement('div');note2.style.cssText='font-size:12px;color:#4a4a6a;margin-bottom:10px;direction:rtl;';note2.textContent='ان ناموں کا عدد (4, 7, 8, 9) محنت طلب زمرے میں آتا ہے — کامیابی ضرور ملتی ہے، مگر عام طور پر زیادہ محنت، وقت اور صبر کے بعد۔';bb.appendChild(note2);
-      topChallenging.forEach(function(r){ bb.appendChild(renderCard(r,false)); });
-    } else if(topFavorable.length>0){
-      var missNote=document.createElement('div');missNote.style.cssText='font-size:12px;color:#6a6a8a;margin:4px 0 10px;direction:rtl;font-style:italic;';missNote.textContent='ℹ️ اس بار تجویز کردہ ناموں میں کوئی بھی "محنت طلب" زمرے (4, 7, 8, 9) کا نام نہیں نکلا — تمام تجویز کردہ نام اتفاقاً مبارک زمرے میں آ گئے۔';bb.appendChild(missNote);
-    }
-
-    if(topFavorable.length===0&&topChallenging.length===0){
-      var rt2=document.createElement('div');rt2.className='result-text';rt2.style.whiteSpace='pre-line';rt2.textContent=cleanMd(text);bb.appendChild(rt2);
-    }
+    aiCacheSet(cacheKey,{text:text});
+    renderBabyNames(bb,text,parentName);
   }).catch(function(){ bb.innerHTML=apiErrorBox('runBabyName()'); });
 }
 
