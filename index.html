@@ -2861,7 +2861,18 @@ function runJafar(){
   }
 
   function buildHarfResponse(ext2,q){
-    return {r:'⚠️ انٹرنیٹ کنکشن چیک کریں اور دوبارہ کوشش کریں۔',rh:'اللہ پر توکل رکھیں اور دعا کریں۔'};
+    if(q){
+      for(var i=0;i<kR.length;i++){
+        var item=kR[i];
+        for(var j=0;j<item.k.length;j++){
+          if(q.indexOf(item.k[j])>=0){
+            var rr=(typeof item.r==='function')?item.r(ext2):item.r;
+            return {r:rr,rh:item.rh};
+          }
+        }
+      }
+    }
+    return fbk[rem4];
   }
 
 
@@ -3578,8 +3589,7 @@ function speakIsm(){
     d.name+' کا اسم اعظم',
     d.ur,
     d.ar,
-    'فائدہ: '+d.faida,
-    'وظیفہ: '+d.wazifa
+    d.faida
   ];
   var idx=0;
   function speakNext(){
