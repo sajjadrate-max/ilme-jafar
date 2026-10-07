@@ -2621,11 +2621,14 @@ function apiErrorBox(retryCallStr){
    could come back with a different (sometimes contradictory) answer.
    Cached per device/browser, keyed by a hash of the exact inputs. */
 function hashKey(s){ var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h+s.charCodeAt(i))|0; } return (h>>>0).toString(36); }
+/* Bump this prefix whenever the parsing/formatting logic changes, so stale
+   cached answers from before the fix don't keep showing old mistakes. */
+var AI_CACHE_PREFIX='aiCache_v2_';
 function aiCacheGet(key){
-  try{ var raw=localStorage.getItem('aiCache_'+key); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+  try{ var raw=localStorage.getItem(AI_CACHE_PREFIX+key); return raw?JSON.parse(raw):null; }catch(e){ return null; }
 }
 function aiCacheSet(key,obj){
-  try{ localStorage.setItem('aiCache_'+key, JSON.stringify(obj)); }catch(e){}
+  try{ localStorage.setItem(AI_CACHE_PREFIX+key, JSON.stringify(obj)); }catch(e){}
 }
 function renderNtRh(div,label,nt,rh){
   div.innerHTML='';
@@ -2682,6 +2685,7 @@ function runTaqseemD(divisor){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
+    if(nt.indexOf('===')!==-1) nt=cleanMd(nt.split('===')[0]);
     aiCacheSet(cacheKey,{nt:nt,rh:rh});
     renderNtRh(tb,'جفر کا نتیجہ',nt,rh);
   }).catch(function(){ tb.innerHTML=apiErrorBox('runTaqseemD('+divisor+')'); });
@@ -2746,6 +2750,7 @@ function runMatching(){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
+    if(nt.indexOf('===')!==-1) nt=cleanMd(nt.split('===')[0]);
     aiCacheSet(cacheKey,{nt:nt,rh:rh});
     renderNtRh(mb,'جفر کا نتیجہ',nt,rh);
   }).catch(function(){ mb.innerHTML=apiErrorBox('runMatching()'); });
@@ -2922,7 +2927,7 @@ function runJafar(){
     'سوال: "'+q+'"\n'+
     'جعفر گرڈ سے بالترتیب نکالے گئے حروف: '+lettersList+'\n'+
     'ان حروف کو ملا کر بننے والا مکمل کلمہ: "'+formedWord+'"\n\n'+
-    'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n5. جواب لازمی طور پر انہی حروف اور مکمل کلمہ "'+formedWord+'" کی بنیاد پر ہو، کوئی غیر متعلقہ یا عمومی بات نہ کریں\n6. "جفر کا نتیجہ" میں حروف کی فہرست خود دوبارہ نہ لکھیں (وہ پہلے ہی دکھائی جا چکی ہے) — صرف "معلوم ہوتا ہے کہ..." سے شروع کر کے براہ راست تجزیہ اور نتیجہ لکھیں\n\n'+
+    'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n5. جواب لازمی طور پر انہی حروف اور مکمل کلمہ "'+formedWord+'" کی بنیاد پر ہو، کوئی غیر متعلقہ یا عمومی بات نہ کریں\n6. "جفر کا نتیجہ" کے متن میں حروف کی فہرست خود دوبارہ نہ لکھیں (وہ پہلے ہی دکھائی جا چکی ہے) — صرف "معلوم ہوتا ہے کہ..." سے شروع کر کے براہ راست تجزیہ اور نتیجہ لکھیں\n7. نیچے دیے گئے دونوں headings ===جفر کا نتیجہ=== اور ===روحانی حل=== بالکل جوں کے توں، ہر بار لازمی لکھیں — کبھی حذف نہ کریں اور کوئی اور === استعمال نہ کریں\n\n'+
     '===جفر کا نتیجہ===\nمکمل کلمہ "'+formedWord+'" اور حروف '+lettersList+' کا تجزیہ کریں اور سوال کا براہ راست جواب دیں۔ جواب عین "معلوم ہوتا ہے کہ" سے شروع کریں (حروف کی فہرست دوبارہ نہ لکھیں) اور 3 جملوں میں بتائیں کہ کیا ہوگا اور کیوں۔\n\n'+
     '===روحانی حل===\nاس نتیجے کی روشنی میں دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
 
@@ -2956,6 +2961,7 @@ function runJafar(){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
+    if(nt.indexOf('===')!==-1) nt=cleanMd(nt.split('===')[0]);
     nt=openingLine+nt.replace(new RegExp('^'+openingLine.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')),'');
     aiCacheSet(cacheKey,{nt:nt,rh:rh});
     renderNtRh(aiDiv,'جفر کا نتیجہ',nt,rh);
@@ -3188,6 +3194,7 @@ function runNujoomAI(burj){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
+    if(nt.indexOf('===')!==-1) nt=cleanMd(nt.split('===')[0]);
     aiCacheSet(cacheKey,{nt:nt,rh:rh});
     renderNtRh(ab,'تفصیلی تجزیہ',nt,rh);
   }).catch(function(){ ab.innerHTML=apiErrorBox('runNujoomAI(BURUJ_DATA['+BURUJ_DATA.indexOf(burj)+'])'); });
@@ -3375,6 +3382,7 @@ function runHousesAI(ascBurj,houseSummaryLines){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
+    if(nt.indexOf('===')!==-1) nt=cleanMd(nt.split('===')[0]);
     aiCacheSet(cacheKey,{nt:nt,rh:rh});
     renderNtRh(ab,'تفصیلی تجزیہ',nt,rh);
   }).catch(function(){ ab.innerHTML=apiErrorBox('runHouses()'); });
@@ -3473,6 +3481,7 @@ function runAdadAI(mulank,bhagyank,nameNum){
       if(label==='روحانی حل'&&parts[i+1])rh=cleanMd(parts[i+1]);
     }
     if(!nt)nt=cleanMd(text);
+    if(nt.indexOf('===')!==-1) nt=cleanMd(nt.split('===')[0]);
     aiCacheSet(cacheKey,{nt:nt,rh:rh});
     renderNtRh(ab,'تفصیلی تجزیہ',nt,rh);
   }).catch(function(){ ab.innerHTML=apiErrorBox('runAdadAI('+mulank+','+bhagyank+','+nameNum+')'); });
