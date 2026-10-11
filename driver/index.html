@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>ڈرائیور سیٹ</title>
+<meta name="description" content="مینوئل گاڑی چلانے کی مشق: کلچ، گیئر، اسٹیئرنگ، اشارے اور ٹریفک قوانین۔">
+<meta name="theme-color" content="#141619">
+<link rel="manifest" href="/driver/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/driver/icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="/driver/icon-192.png">
+<link rel="apple-touch-icon" href="/driver/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ڈرائیور سیٹ">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
 <style>
 :root{color-scheme:dark;--bg:#141619;--panel:#1c1f23;--btn:#2b3036;--btnHi:#3a4047;--ink:#EDEBE4;--muted:#9AA1A8;--yellow:#F2BC2A;--red:#E8445A;--green:#3FBF7F}
@@ -36,7 +46,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .row1 button.on{background:var(--yellow);color:#15171a}
 .row1 button.warn{background:#6b1e28;color:#fff}
 .row1 button.blink{background:var(--green);color:#0c1a12}
-#bIndL,#bIndR,#bReset{flex:.6 1 0;font-size:17px}
+#bIndL,#bIndR,#bReset,#bApp{flex:.6 1 0;font-size:17px}
 #bKey{background:#3b3320;color:var(--yellow)}
 #bKey.on{background:var(--green);color:#0c1a12}
 .row2{display:grid;grid-template-columns:1fr 1.5fr 1fr 1fr;gap:8px;direction:ltr;height:132px}
@@ -61,6 +71,8 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:1px}
 .card ol{margin:6px 0;padding-inline-start:20px;font-size:15px}
 .card p{margin:4px 0;font-size:14px;color:var(--muted)}
 .card button{margin-top:10px;width:100%;font:inherit;font-size:17px;font-weight:700;padding:8px;border-radius:10px;border:0;background:var(--yellow);color:#15171a;cursor:pointer}
+.card button.alt{background:transparent;color:var(--yellow);border:1px solid var(--yellow)}
+.iosTip{margin-top:8px;padding:8px 10px;border-radius:10px;background:#15181b;border:1px solid #333a41;font-size:14px;color:var(--ink)}
 @media (orientation:landscape) and (max-height:520px){
   .app{flex-direction:row}
   .panel{width:44%;border-top:0;border-left:1px solid #000;justify-content:flex-end;padding:8px}
@@ -98,6 +110,8 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:1px}
         <p><b>اسٹیئرنگ:</b> انگلی اسٹیئرنگ پر رکھ کر اسے گول گھمائیں، جیسے اصل گاڑی میں۔ دونوں ہاتھ 9 اور 3 بجے کی جگہ رکھیں۔ نظر دور سڑک پر رکھیں، گاڑی کے بالکل سامنے نہیں۔ اوپر والی لین پٹی میں ہرا نشان لین کے بیچ میں رکھیں۔ تھوڑا سا گھمانا کافی ہوتا ہے، زیادہ نہیں۔</p><p>شروع میں مشکل لگے تو "لین مدد" آن کر لیں، گاڑی خود لین میں رہے گی۔</p>
         <p><b>ہارن:</b> اسٹیئرنگ کے بیچ والا گول حصہ دبائیں۔</p><p>پاکستان میں بائیں طرف چلتے ہیں۔ بائیں لین میں رہیں۔</p>
         <button id="bGo">گاڑی میں بیٹھیں</button>
+        <button id="bInstall" class="alt" hidden>📲 ایپ انسٹال کریں</button>
+        <div class="iosTip" id="iosTip" hidden>آئی فون پر انسٹال کرنے کیلئے: Safari میں نیچے <b>شیئر</b> بٹن (⬆️) دبائیں، پھر <b>Add to Home Screen</b> چنیں۔</div>
       </div>
     </div>
   </div>
@@ -110,6 +124,7 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:1px}
       <button id="bIndR" aria-label="دایاں اشارہ">▶</button>
       <button id="bAssist" class="on">لین مدد</button>
       <button id="bReset" aria-label="دوبارہ شروع">↺</button>
+      <button id="bApp" aria-label="ایپ انسٹال کریں" hidden>📲</button>
     </div>
     <div class="row2">
       <div class="pedal" id="pClutch"><div class="fill"></div><div class="grooves"></div><div class="bite"></div><span>کلچ</span></div>
@@ -831,6 +846,29 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 reset();resize();requestAnimationFrame(frame);
+})();
+</script>
+<script>
+/* ---------- install as app ---------- */
+(function(){
+  const $=id=>document.getElementById(id);
+  const standalone=matchMedia("(display-mode: standalone),(display-mode: fullscreen)").matches||navigator.standalone===true;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  let deferred=null;
+  const show=on=>{$("bInstall").hidden=!on;$("bApp").hidden=!on};
+  if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){
+    addEventListener("load",()=>navigator.serviceWorker.register("/driver/sw.js",{scope:"/driver/"}).catch(()=>{}));
+  }
+  if(standalone)return;
+  addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;show(true)});
+  addEventListener("appinstalled",()=>{deferred=null;show(false);$("iosTip").hidden=true});
+  // iOS Safari has no install prompt; offer the manual Add to Home Screen steps instead.
+  if(ios)show(true);
+  const install=async()=>{
+    if(deferred){deferred.prompt();const r=await deferred.userChoice.catch(()=>null);deferred=null;if(r&&r.outcome==="accepted")show(false);return}
+    if(ios){$("intro").hidden=false;$("iosTip").hidden=false;$("iosTip").scrollIntoView({block:"center",behavior:"smooth"})}
+  };
+  $("bInstall").onclick=install;$("bApp").onclick=install;
 })();
 </script>
 
