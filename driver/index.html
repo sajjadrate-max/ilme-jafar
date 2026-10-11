@@ -412,7 +412,9 @@ function physics(dt){
   if(inG&&eng>0){
     const wr=s.v*dir/KPK[s.gear]*1000, slip=s.rpm-wr;
     if(eng>.98&&Math.abs(slip)<140){
-      s.v+=(Te-Tf)*GM[s.gear]*dir*.9*dt; resist(drag+brk);
+      // net engine drag only slows the car; it must never push a stopped car backwards
+      if(Te>=Tf)s.v+=(Te-Tf)*GM[s.gear]*dir*.9*dt; else resist((Tf-Te)*GM[s.gear]*.9);
+      resist(drag+brk);
       s.rpm=s.v*dir/KPK[s.gear]*1000;
     }else{
       const Tc=clamp(slip/150,-1,1)*eng*1.7;
@@ -469,10 +471,12 @@ function physics(dt){
 
   // signals
   for(const g of signals){
-    if(!g.armed&&g.z>s.pz&&g.z-s.pz<30000){g.armed=true;g.t=rnd(.5,4);g.state="green"}
+    // arm close enough that the light is red when the driver arrives
+    if(!g.armed&&g.z>s.pz&&g.z-s.pz<13000){g.armed=true;g.t=rnd(.5,4);g.state="green"}
     if(g.armed&&g.state!=="done"){
-      g.t-=dt;
-      if(g.t<=0){if(g.state==="green"){g.state="yellow";g.t=3}else if(g.state==="yellow"){g.state="red";g.t=9}else if(g.state==="red"){g.state="done";if(s.pz<g.z&&g.z-s.pz<3000)toast("ہری بتی! گیئر 1 لگائیں اور چلیں","good")}}
+      // red waits for the driver: it only counts down once they are near the line, stopped, or past it
+      if(g.state!=="red"||g.z-s.pz<4500||s.v<1)g.t-=dt;
+      if(g.t<=0){if(g.state==="green"){g.state="yellow";g.t=3}else if(g.state==="yellow"){g.state="red";g.t=9}else if(g.state==="red"){g.state="done";if(s.pz<g.z&&g.z-s.pz<4500)toast("ہری بتی! گیئر 1 لگائیں اور چلیں","good")}}
     }
     if(prevFront<g.z&&front>=g.z){
       if(g.state==="red")penalty("red",15,"سرخ بتی توڑ دی! سرخ بتی پر لکیر سے پہلے رکیں",1);
