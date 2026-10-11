@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>ڈرائیور سیٹ</title>
+<meta name="theme-color" content="#141619">
+<meta name="description" content="مینوئل گاڑی چلانا سیکھنے کا سمیولیٹر: کلچ، گیئر، ریس، بریک اور اسٹیئرنگ۔">
+<link rel="manifest" href="/driver/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/driver/favicon-32.png">
+<link rel="apple-touch-icon" href="/driver/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ڈرائیور سیٹ">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
 <style>
 :root{color-scheme:dark;--bg:#141619;--panel:#1c1f23;--btn:#2b3036;--btnHi:#3a4047;--ink:#EDEBE4;--muted:#9AA1A8;--yellow:#F2BC2A;--red:#E8445A;--green:#3FBF7F}
@@ -67,6 +76,8 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:1px}
   .row1{flex-wrap:wrap}.row1 button{flex:1 1 28%;height:34px}
   .row2{height:auto;flex:1;max-height:170px}
 }
+.card button.install{background:transparent;color:var(--yellow);border:1px solid var(--yellow);font-size:16px}
+.iosTip{margin-top:8px!important;background:#15181b;border:1px dashed #3a4047;border-radius:10px;padding:6px 10px;color:var(--ink)!important}
 </style>
 
 </head>
@@ -98,6 +109,8 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:1px}
         <p><b>اسٹیئرنگ:</b> انگلی اسٹیئرنگ پر رکھ کر اسے گول گھمائیں، جیسے اصل گاڑی میں۔ دونوں ہاتھ 9 اور 3 بجے کی جگہ رکھیں۔ نظر دور سڑک پر رکھیں، گاڑی کے بالکل سامنے نہیں۔ اوپر والی لین پٹی میں ہرا نشان لین کے بیچ میں رکھیں۔ تھوڑا سا گھمانا کافی ہوتا ہے، زیادہ نہیں۔</p><p>شروع میں مشکل لگے تو "لین مدد" آن کر لیں، گاڑی خود لین میں رہے گی۔</p>
         <p><b>ہارن:</b> اسٹیئرنگ کے بیچ والا گول حصہ دبائیں۔</p><p>پاکستان میں بائیں طرف چلتے ہیں۔ بائیں لین میں رہیں۔</p>
         <button id="bGo">گاڑی میں بیٹھیں</button>
+        <button id="bInstall" class="install" hidden>📲 ایپ انسٹال کریں</button>
+        <p class="iosTip" id="iosTip" hidden>ایپ انسٹال کرنے کے لیے Safari میں نیچے <b>شیئر</b> بٹن (⬆️) دبائیں، پھر <b>Add to Home Screen</b> چنیں۔</p>
       </div>
     </div>
   </div>
@@ -827,6 +840,27 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 reset();resize();requestAnimationFrame(frame);
+})();
+</script>
+<script>
+(function(){
+  var standalone=window.matchMedia("(display-mode: standalone)").matches||window.matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
+  if("serviceWorker" in navigator&&location.protocol!=="file:"){
+    window.addEventListener("load",function(){navigator.serviceWorker.register("/driver/sw.js",{scope:"/driver/"}).catch(function(){})});
+  }
+  if(standalone)return;
+  var btn=document.getElementById("bInstall"),tip=document.getElementById("iosTip"),deferred=null;
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  if(ios){btn.hidden=false;btn.onclick=function(){tip.hidden=!tip.hidden};}
+  window.addEventListener("beforeinstallprompt",function(e){
+    e.preventDefault();deferred=e;btn.hidden=false;
+    btn.onclick=function(){
+      if(!deferred)return;
+      deferred.prompt();
+      deferred.userChoice.finally(function(){deferred=null;btn.hidden=true});
+    };
+  });
+  window.addEventListener("appinstalled",function(){deferred=null;btn.hidden=true;tip.hidden=true});
 })();
 </script>
 
