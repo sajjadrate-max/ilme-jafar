@@ -4,231 +4,248 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ویڈیو ڈاؤن لوڈر</title>
-<link rel="icon" href="/video/icon-192.png" type="image/png">
-<link rel="manifest" href="/video/manifest.json">
-<link rel="apple-touch-icon" href="/video/apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#0F7458">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ڈاؤن لوڈر">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@700&family=Noto+Naskh+Arabic:wght@400;600;700&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>
-/* Layout: one narrow column — install banner, then the link card; results appear inside the card. */
+/* Layout: link card on top; after a link is read, a bottom sheet (like a downloader app)
+   lists the formats with sizes and one big Download button. */
 :root{
   --bg:#EDF2EE; --surface:#FFFFFF; --fg:#14231D; --muted:#5A6B63; --line:#D3DED7;
-  --accent:#0F7458; --accent-ink:#FFFFFF; --mark:#E2A23B; --danger:#B3402F; --ok:#1E7B4A;
+  --accent:#0F7458; --accent-ink:#FFFFFF; --cta:#FFD21F; --cta-ink:#1A1400; --danger:#B3402F; --scrim:rgba(10,20,16,.55);
   --display:"Noto Nastaliq Urdu","Noto Naskh Arabic",serif;
-  --body:"Noto Naskh Arabic","Noto Nastaliq Urdu",Tahoma,sans-serif;
+  --body:"Noto Naskh Arabic",Tahoma,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E1613; --surface:#16211D; --fg:#E3EDE8; --muted:#97A9A0; --line:#2A3833;
-  --accent:#43C49B; --accent-ink:#06261C; --mark:#E8B054; --danger:#F08A78; --ok:#6FD39C; color-scheme:dark}}
+  --accent:#43C49B; --accent-ink:#06261C; --danger:#F08A78; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0E1613; --surface:#16211D; --fg:#E3EDE8; --muted:#97A9A0; --line:#2A3833;
-  --accent:#43C49B; --accent-ink:#06261C; --mark:#E8B054; --danger:#F08A78; --ok:#6FD39C; color-scheme:dark}
+  --accent:#43C49B; --accent-ink:#06261C; --danger:#F08A78; --scrim:rgba(0,0,0,.6); color-scheme:dark}
 *{box-sizing:border-box}
+html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
-.wrap{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
-header{display:flex;flex-direction:column;gap:6px}
-h1{font-family:var(--display);font-weight:700;font-size:1.9rem;line-height:2.3;margin:0;text-wrap:balance}
+  padding:20px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-size:1.8rem;line-height:2.2;margin:0}
 .lead{color:var(--muted);margin:0}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:4px;padding:2px 8px;color:var(--muted);direction:ltr}
-.chip.on{border-color:var(--accent);color:var(--accent);font-weight:500}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
-label{font-weight:600;font-size:.95rem}
-.field{display:flex;flex-direction:column;gap:6px}
-input[type=text],input[type=url],input[type=password],select{width:100%;font:inherit;font-size:1rem;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px}
-input.ltr{direction:ltr;text-align:left;font-family:var(--mono);font-size:.9rem}
-input:focus,select:focus,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.row>*{flex:1 1 140px;min-width:0}
-.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
-.seg input{position:absolute;opacity:0;pointer-events:none}
-.seg label{flex:1;text-align:center;padding:10px 6px;cursor:pointer;font-weight:600;font-size:.95rem}
-.seg input:checked+span{color:var(--accent-ink)}
-.seg label:has(input:checked){background:var(--accent);color:var(--accent-ink)}
-.seg input:focus-visible+span{text-decoration:underline}
-button{font:inherit;cursor:pointer;border-radius:10px;border:0}
-.go{background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:1.1rem;padding:13px}
-.go:disabled{opacity:.6;cursor:wait}
-.ghost{background:transparent;border:1.5px solid var(--line);color:var(--fg);padding:8px 14px;font-size:.9rem}
-.status{border-radius:10px;padding:12px 14px;font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-family:var(--mono);font-size:.75rem;border:1px solid var(--line);border-radius:4px;padding:2px 8px;color:var(--muted);direction:ltr}
+.chip.on{border-color:var(--accent);color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+label.l{font-weight:600}
+.linkbox{position:relative}
+.linkbox input{width:100%;font:inherit;font-family:var(--mono);font-size:.9rem;direction:ltr;text-align:left;color:var(--fg);background:var(--bg);
+  border:1.5px solid var(--line);border-radius:12px;padding:14px 92px 14px 14px}
+.paste{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--accent);color:var(--accent-ink);font-weight:700;padding:6px 14px;border-radius:9px}
+button{font:inherit;cursor:pointer;border:0}
+input:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--cta);outline-offset:2px}
+.go{background:var(--cta);color:var(--cta-ink);font-weight:700;font-size:1.1rem;padding:13px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:10px}
+.go:disabled{opacity:.7;cursor:wait}
+.status{border-radius:10px;padding:10px 14px;font-size:.95rem}
 .status.err{border:1.5px solid var(--danger);color:var(--danger)}
 .status.info{border:1.5px dashed var(--line);color:var(--muted)}
-.result{display:flex;flex-direction:column;gap:10px}
-.dl{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border:1.5px solid var(--ok);border-radius:10px;padding:10px 12px}
-.dl .name{font-family:var(--mono);font-size:.8rem;direction:ltr;overflow-wrap:anywhere;min-width:0;color:var(--muted)}
-.dl a{background:var(--ok);color:var(--surface);text-decoration:none;font-weight:700;border-radius:8px;padding:8px 14px;white-space:nowrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.tile{display:flex;flex-direction:column;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;text-decoration:none;color:var(--fg);font-weight:600;font-size:.9rem;text-align:center}
-.tile img{aspect-ratio:1;object-fit:cover;border-radius:6px;width:100%;background:var(--line)}
-h2{font-family:var(--display);font-size:1.4rem;line-height:2.2;margin:0}
-code,.code{font-family:var(--mono);font-size:.82rem;direction:ltr;unicode-bidi:isolate}
-.code{display:block;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:6px;overflow-x:auto;white-space:pre;text-align:left}
-.note{font-size:.9rem;color:var(--muted);border-right:3px solid var(--mark);padding-right:12px;margin:0}
-footer{font-size:.85rem;color:var(--muted);text-align:center}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;animation:r .8s linear infinite;vertical-align:middle}
+.note{font-size:.9rem;color:var(--muted);margin:0}
+footer{font-size:.82rem;color:var(--muted);text-align:center}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;animation:r .8s linear infinite}
 @keyframes r{to{transform:rotate(360deg)}}
-.install{display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--accent);border-radius:14px;padding:12px 14px}
+
+/* install banner */
+.install{display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--accent);border-radius:14px;padding:10px 12px}
 .install[hidden]{display:none}
-.install img{width:44px;height:44px;border-radius:10px;flex:none}
+.install img{width:42px;height:42px;border-radius:10px;flex:none}
 .install .txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.6}
-.install .txt small{color:var(--muted);font-size:.85rem}
-.install .btn{background:var(--accent);color:var(--accent-ink);font-weight:700;padding:9px 16px;white-space:nowrap}
-.install .x{background:transparent;color:var(--muted);font-size:1.3rem;line-height:1;padding:4px 6px}
-.ios-steps{margin:0;padding-right:20px;font-size:.9rem;color:var(--muted)}
-.paste{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--surface);border:1.5px solid var(--line);color:var(--fg);font-size:.85rem;font-weight:600;padding:5px 12px}
-.linkbox{position:relative}
-.linkbox input{padding-right:84px}
-.check{display:flex;align-items:center;gap:8px;font-size:.92rem;color:var(--muted);font-weight:400}
-.check input{width:18px;height:18px;accent-color:var(--accent)}
-.preview{display:flex;gap:12px;align-items:center}
-.preview img{width:64px;height:64px;border-radius:8px;object-fit:cover;flex:none;background:var(--line)}
-.preview .t{min-width:0;font-size:.9rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.btns{display:flex;flex-direction:column;gap:8px}
-.dlbtn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--ok);color:var(--surface);text-decoration:none;font-weight:700;border-radius:10px;padding:11px 14px}
-.dlbtn.alt{background:transparent;color:var(--ok);border:1.5px solid var(--ok)}
-.ok-msg{color:var(--ok);font-weight:600;font-size:.95rem}
+.install small{color:var(--muted);font-size:.85rem}
+.install .btn{background:var(--accent);color:var(--accent-ink);font-weight:700;padding:8px 16px;border-radius:10px;white-space:nowrap}
+.install .x{background:none;color:var(--muted);font-size:1.4rem;line-height:1;padding:4px}
+.steps{margin:0;padding-right:18px}
+
+/* bottom sheet */
+.scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:11;background:var(--surface);border-radius:22px 22px 0 0;
+  padding:10px max(20px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));
+  transform:translateY(105%);transition:transform .25s ease;max-height:88vh;overflow-y:auto;direction:ltr}
+.open .scrim{opacity:1;pointer-events:auto}
+.open .sheet{transform:none}
+.sheet-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.handle{width:48px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 4px}
+.sheet h2{font-family:system-ui,sans-serif;font-size:1.35rem;margin:0;flex:1}
+.sh-head{display:flex;align-items:center}
+.sh-x{background:none;color:var(--muted);font-size:1.6rem;line-height:1;padding:4px 8px}
+.pv{display:flex;gap:14px;align-items:center}
+.pv img{width:120px;height:80px;object-fit:cover;border-radius:8px;background:var(--line);flex:none}
+.pv .t{font-size:1rem;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;unicode-bidi:plaintext}
+.pv .d{color:var(--muted);font-size:.9rem}
+.sec{color:var(--muted);font-size:1rem;margin:6px 0 0}
+.opt{display:flex;align-items:center;gap:16px;padding:12px 2px;cursor:pointer}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .ic{width:28px;height:28px;flex:none;color:var(--fg)}
+.opt .n{flex:1;font-size:1.05rem}
+.opt .s{color:var(--muted);font-size:.95rem}
+.opt .c{width:30px;height:30px;border-radius:50%;border:2px solid var(--muted);flex:none;display:grid;place-items:center}
+.opt input:checked ~ .c{background:var(--cta);border-color:var(--cta)}
+.opt input:checked ~ .c::after{content:"";width:9px;height:15px;border:solid var(--cta-ink);border-width:0 3px 3px 0;transform:translateY(-2px) rotate(45deg)}
+.opt input:focus-visible ~ .n{text-decoration:underline}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
+.photos a{display:block;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--line)}
+.photos img{width:100%;height:100%;object-fit:cover}
+.sheet .go{margin-top:6px}
+.done{color:var(--accent);font-weight:600;text-align:center;font-family:var(--body);direction:rtl}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap" dir="rtl" lang="ur">
+<div class="wrap">
   <header>
     <h1>ویڈیو ڈاؤن لوڈر</h1>
-    <p class="lead">لنک ڈالیں، ویڈیو خود بخود آپ کے موبائل میں محفوظ ہو جائے گی۔</p>
-    <div class="chips" id="chips" aria-label="جن سائٹس سے ڈاؤن لوڈ ہوتا ہے">
+    <p class="lead">لنک ڈالیں، فارمیٹ چنیں، اور ویڈیو اپنے موبائل میں محفوظ کریں۔</p>
+    <div class="chips">
+      <span class="chip" data-p="instagram">Instagram</span>
       <span class="chip" data-p="tiktok">TikTok</span>
       <span class="chip" data-p="twitter">X / Twitter</span>
     </div>
   </header>
 
   <div class="install" id="install" hidden>
-    <img src="/video/icon-192.png" alt="">
+    <img src="icon-192.png" alt="">
     <div class="txt"><b>ایپ انسٹال کریں</b><small id="installHint">ہوم اسکرین پر لگائیں، ایک ٹچ میں کھولیں۔</small></div>
     <button class="btn" type="button" id="installBtn">انسٹال</button>
     <button class="x" type="button" id="installClose" aria-label="بند کریں">×</button>
   </div>
 
   <form class="card" id="form" novalidate>
-    <div class="field">
-      <label for="link">ویڈیو کا لنک</label>
-      <div class="linkbox">
-        <input type="url" id="link" class="ltr" placeholder="https://www.tiktok.com/@user/video/..." autocomplete="off" inputmode="url">
-        <button class="paste" type="button" id="paste">پیسٹ</button>
-      </div>
+    <label class="l" for="link">ویڈیو کا لنک</label>
+    <div class="linkbox">
+      <input type="url" id="link" placeholder="https://www.instagram.com/reel/..." autocomplete="off" inputmode="url">
+      <button class="paste" type="button" id="paste">پیسٹ</button>
     </div>
-    <div class="field">
-      <span style="font-weight:600;font-size:.95rem">کیا چاہیے؟</span>
-      <div class="seg" role="radiogroup">
-        <label><input type="radio" name="mode" value="video" checked><span>ویڈیو</span></label>
-        <label><input type="radio" name="mode" value="audio"><span>صرف آواز (MP3)</span></label>
-      </div>
-    </div>
-    <label class="check"><input type="checkbox" id="auto" checked> لنک ڈالتے ہی خود بخود ڈاؤن لوڈ شروع کریں</label>
-    <button class="go" id="go" type="submit">ڈاؤن لوڈ کریں</button>
-    <div id="out" class="result" aria-live="polite"></div>
+    <button class="go" id="go" type="submit">⬇ Download</button>
+    <div id="msg" aria-live="polite"></div>
   </form>
 
-  <p class="note">TikTok یا X کی ایپ میں ویڈیو پر <b>شیئر</b> دبائیں، <b>Copy link</b> چنیں، اور یہاں "پیسٹ" دبا دیں۔ ایپ انسٹال ہو تو Android پر شیئر کی فہرست سے سیدھا یہ ایپ بھی چن سکتے ہیں۔</p>
+  <p class="note">Instagram، TikTok یا X میں ویڈیو پر <b>شیئر</b> دبائیں، <b>Copy link</b> چنیں، پھر یہاں <b>پیسٹ</b> دبائیں۔ ایپ انسٹال ہو تو Android پر شیئر کی فہرست سے سیدھا یہ ایپ بھی چن سکتے ہیں۔</p>
+  <footer>صرف اپنی یا اجازت والی ویڈیوز ڈاؤن لوڈ کریں۔</footer>
+</div>
 
-  <footer>صرف اپنی یا اجازت والی ویڈیوز ڈاؤن لوڈ کریں، اور دوسروں کی ویڈیو ان کا نام دیے بغیر دوبارہ اپ لوڈ نہ کریں۔</footer>
+<div id="sheetRoot">
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-in" id="sheet"></div>
+  </div>
 </div>
 
 <script>
 (function(){
+  // GitHub Pages can't run server code, so that copy uses the API on ilmejafar.com.
+  const API=(/github\.io$/.test(location.hostname)||location.protocol==="file:"?"https://www.ilmejafar.com":"")+"/api/download";
   const $=id=>document.getElementById(id);
-  const store={get(k){try{return localStorage.getItem(k)||""}catch(e){return ""}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-  const P=[["tiktok",/tiktok\.com/i],["twitter",/(^|[\/.])(twitter|x)\.com\//i]];
+  const P=[["instagram",/instagram\.com|instagr\.am/i],["tiktok",/tiktok\.com/i],["twitter",/(^|[\/.])(twitter|x)\.com\//i]];
   const ERR={
     "link.invalid":"یہ لنک درست نہیں لگ رہا۔ پورا لنک دوبارہ کاپی کر کے ڈالیں۔",
-    "unsupported":"ابھی صرف TikTok اور X (Twitter) کے لنک چلتے ہیں۔",
-    "unavailable":"یہ ویڈیو نہیں ملی۔ شاید ہٹا دی گئی ہے یا پرائیویٹ ہے۔",
-    "private":"یہ ویڈیو پرائیویٹ ہے، اسے ڈاؤن لوڈ نہیں کیا جا سکتا۔",
+    "unsupported":"ابھی Instagram، TikTok اور X (Twitter) کے لنک چلتے ہیں۔",
+    "unavailable":"یہ ویڈیو نہیں ملی۔ شاید ہٹا دی گئی ہے۔",
+    "private":"یہ پوسٹ پرائیویٹ ہے یا ابھی نہیں کھل رہی۔ صرف پبلک پوسٹ ڈاؤن لوڈ ہوتی ہے۔",
     "empty":"اس پوسٹ میں کوئی ویڈیو یا تصویر نہیں ملی۔",
     "fetch.fail":"ویڈیو لانے میں مسئلہ آیا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔"
   };
-  const link=$("link"),out=$("out"),go=$("go"),auto=$("auto");
-  if(store.get("auto")==="0") auto.checked=false;
-  auto.onchange=()=>store.set("auto",auto.checked?"1":"0");
-  function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
-  function show(html){out.innerHTML=html;}
-  function findUrl(v){const m=String(v||"").match(/https?:\/\/\S+/);return m?m[0]:"";}
-  function platform(v){for(const [n,r] of P) if(r.test(v)) return n; return "";}
+  const ICON={
+    audio:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>',
+    video:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg>'
+  };
+  const link=$("link"),go=$("go"),msg=$("msg"),root=$("sheetRoot"),sheet=$("sheet");
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const findUrl=v=>{const m=String(v||"").match(/https?:\/\/\S+/);return m?m[0]:"";};
+  const platform=v=>{for(const [n,r] of P) if(r.test(v)) return n; return "";};
+  const abs=u=>/^https?:/.test(u)?u:API.replace(/\/api\/download$/,"")+u;
+  const mb=n=>n?(n/1048576).toFixed(1)+" MB":"";
   function mark(){const hit=platform(link.value);document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.p===hit));}
   link.addEventListener("input",mark);
 
-  let last="", busy=false;
-  function maybeAuto(){
-    const u=findUrl(link.value);
-    if(u && u!==last && platform(u) && !busy){ link.value=u; mark(); run(true); }
+  function openSheet(){root.classList.add("open");}
+  function closeSheet(){root.classList.remove("open");}
+  $("scrim").onclick=closeSheet;
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet();});
+
+  function save(href){const a=document.createElement("a");a.href=href;a.download="";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();}
+
+  function render(j){
+    const host=(()=>{try{return new URL(findUrl(link.value)).hostname.replace(/^www\./,"")}catch(e){return ""}})();
+    const aud=j.items.filter(i=>i.type==="audio"), vid=j.items.filter(i=>i.type==="video"), pho=j.items.filter(i=>i.type==="photo");
+    const def=vid[0]||aud[0];
+    const list=[];
+    const opt=(i,label)=>{list.push(i);return '<label class="opt"><input type="radio" name="fmt" value="'+(list.length-1)+'"'+(i===def?' checked':'')+'>'+ICON[i.type]+'<span class="n">'+label+'</span><span class="s">'+mb(i.size)+'</span><span class="c"></span></label>';};
+    let h='<div class="handle"></div><div class="sh-head"><h2 id="sheetTitle">Download</h2><button class="sh-x" type="button" id="shx" aria-label="بند کریں">×</button></div>'+
+      '<div class="pv">'+(j.thumb?'<img src="'+esc(j.thumb)+'" alt="" referrerpolicy="no-referrer">':'')+'<div><div class="t">'+esc(j.title)+'</div><div class="d">'+esc(host)+'</div></div></div>';
+    if(aud.length){h+='<p class="sec">Music</p>';aud.forEach(i=>{h+=opt(i,"Classic MP3");});}
+    if(vid.length){h+='<p class="sec">Video</p>';vid.forEach(i=>{h+=opt(i,"MP4"+(vid.length>1?(i.hd?" HD":" (چھوٹی فائل)"):""));});}
+    if(pho.length){
+      h+='<p class="sec">Photos</p><div class="photos">';
+      pho.forEach(p=>{h+='<a href="'+esc(abs(p.url))+'" download aria-label="تصویر"><img src="'+esc(p.thumb)+'" alt="" referrerpolicy="no-referrer"></a>';});
+      h+='</div>';
+    }
+    if(list.length) h+='<button class="go" type="button" id="dl">Download</button>';
+    h+='<div class="done" id="done" aria-live="polite"></div>';
+    sheet.innerHTML=h; openSheet(); $("shx").onclick=closeSheet;
+    if(list.length) $("dl").onclick=()=>{
+      const sel=sheet.querySelector('input[name=fmt]:checked');
+      save(abs(list[sel?Number(sel.value):0].url));
+      $("done").textContent="✓ ڈاؤن لوڈ شروع ہو گیا۔ نوٹیفکیشن یا Downloads فولڈر میں دیکھیں۔";
+    };
   }
+
+  let last="",busy=false;
+  async function analyze(){
+    const url=findUrl(link.value);
+    if(!url){msg.innerHTML='<div class="status err">پہلے ویڈیو کا لنک ڈالیں۔</div>';link.focus();return;}
+    if(!platform(url)){msg.innerHTML='<div class="status err">'+ERR.unsupported+'</div>';return;}
+    last=url;busy=true;msg.innerHTML="";
+    go.disabled=true;go.innerHTML='<span class="spin"></span> ویڈیو تلاش ہو رہی ہے...';
+    try{
+      const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
+      const j=await r.json().catch(()=>({error:"fetch.fail"}));
+      if(!r.ok||!j.items){msg.innerHTML='<div class="status err">'+esc(ERR[j.error]||ERR["fetch.fail"])+'</div>';return;}
+      render(j);
+    }catch(e){msg.innerHTML='<div class="status err">انٹرنیٹ سے رابطہ نہیں ہو سکا۔ دوبارہ کوشش کریں۔</div>';}
+    finally{busy=false;go.disabled=false;go.textContent="⬇ Download";}
+  }
+  function maybeAuto(){const u=findUrl(link.value);if(u&&u!==last&&platform(u)&&!busy){link.value=u;mark();analyze();}}
   link.addEventListener("paste",()=>setTimeout(maybeAuto,0));
   $("paste").onclick=async()=>{
-    try{const t=await navigator.clipboard.readText(); if(t){link.value=findUrl(t)||t.trim(); mark(); last=""; maybeAuto(); return;}}catch(e){}
-    link.focus(); show('<div class="status info">لنک والے خانے کو دبا کر رکھیں اور "Paste" چنیں۔</div>');
+    try{const t=await navigator.clipboard.readText();if(t){link.value=findUrl(t)||t.trim();mark();last="";maybeAuto();return;}}catch(e){}
+    link.focus();msg.innerHTML='<div class="status info">لنک والے خانے کو دبا کر رکھیں اور "Paste" چنیں۔</div>';
   };
+  $("form").addEventListener("submit",e=>{e.preventDefault();last="";analyze();});
 
-  function save(href){const a=document.createElement("a");a.href=href;a.download="";document.body.appendChild(a);a.click();a.remove();}
-
-  async function run(fromPaste){
-    const url=findUrl(link.value);
-    if(!url){show('<div class="status err">پہلے ویڈیو کا لنک ڈالیں۔</div>');link.focus();return;}
-    if(!platform(url)){show('<div class="status err">'+ERR.unsupported+'</div>');return;}
-    last=url; busy=true;
-    const audio=document.querySelector('input[name=mode]:checked').value==="audio";
-    go.disabled=true; go.innerHTML='<span class="spin"></span> ویڈیو تلاش ہو رہی ہے...';
-    show('<div class="status info">چند سیکنڈ انتظار کریں...</div>');
-    try{
-      const r=await fetch("/api/download",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
-      const j=await r.json().catch(()=>({error:"fetch.fail"}));
-      if(!r.ok||!j.items){show('<div class="status err">'+esc(ERR[j.error]||ERR["fetch.fail"])+'</div>');return;}
-      const vids=j.items.filter(i=>i.type==="video"), aud=j.items.find(i=>i.type==="audio"), photos=j.items.filter(i=>i.type==="photo");
-      const main=audio?(aud||vids[0]):(vids[0]||aud);
-      const href=i=>esc(i.url), attr=i=>i.direct?' target="_blank" rel="noopener"':' download';
-      let h='<div class="preview">'+(j.thumb?'<img src="'+esc(j.thumb)+'" alt="">':'')+'<div class="t">'+esc(j.title||"")+'</div></div><div class="btns">';
-      vids.forEach((v,i)=>{h+='<a class="dlbtn'+(i?' alt':'')+'" href="'+href(v)+'"'+attr(v)+'>⬇ ویڈیو ڈاؤن لوڈ'+(vids.length>1?(v.hd?' (HD)':' (چھوٹی فائل)'):'')+'</a>';});
-      if(aud) h+='<a class="dlbtn alt" href="'+href(aud)+'"'+attr(aud)+'>♪ صرف آواز (MP3)</a>';
-      h+='</div>';
-      if(photos.length){h+='<div class="grid">';photos.forEach((p,i)=>{h+='<a class="tile" href="'+href(p)+'"'+attr(p)+'>'+(p.thumb?'<img src="'+esc(p.thumb)+'" alt="">':'')+'تصویر '+(i+1)+'</a>';});h+='</div>';}
-      if(main && auto.checked && !main.direct){ save(main.url); h='<div class="ok-msg">✓ ڈاؤن لوڈ شروع ہو گیا۔ نہ ہوا ہو تو نیچے والا بٹن دبائیں۔</div>'+h; }
-      show(h);
-    }catch(err){
-      show('<div class="status err">انٹرنیٹ سے رابطہ نہیں ہو سکا۔ دوبارہ کوشش کریں۔</div>');
-    }finally{ busy=false; go.disabled=false; go.textContent="ڈاؤن لوڈ کریں"; }
-  }
-  $("form").addEventListener("submit",e=>{e.preventDefault();last="";run(false);});
-
-  // Opened via "Share" from another app (Android share target): pick the link out and start.
+  // Opened from Android's share sheet: take the shared link and start right away.
   (function(){
     const q=new URLSearchParams(location.search);
     const u=findUrl([q.get("url"),q.get("text"),q.get("title")].filter(Boolean).join(" "));
-    if(u){ link.value=u; mark(); history.replaceState(null,"",location.pathname); maybeAuto(); }
+    if(u){link.value=u;mark();history.replaceState(null,"",location.pathname);maybeAuto();}
   })();
 
   // --- Install as app ---
-  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
-    navigator.serviceWorker.register("/video/sw.js",{scope:"/video/"}).catch(()=>{});
-  }
-  const inst=$("install"), instBtn=$("installBtn"), hint=$("installHint");
+  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(()=>{});
+  const inst=$("install"),instBtn=$("installBtn"),hint=$("installHint");
   const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
   const ua=navigator.userAgent;
   const ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
   const inApp=/FBAN|FBAV|Instagram|Line\/|WhatsApp|TikTok|musical_ly|Snapchat|; wv\)/i.test(ua);
   let deferred=null;
-  if(!standalone) inst.hidden=false;   // always offer it; the button explains how when the browser gives no prompt
-  window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferred=e; hint.textContent="ہوم اسکرین پر لگائیں، ایک ٹچ میں کھولیں۔"; });
-  function steps(list){ hint.innerHTML='<ol class="ios-steps">'+list.map(x=>'<li>'+x+'</li>').join("")+'</ol>'; instBtn.hidden=true; }
+  if(!standalone) inst.hidden=false;
+  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;});
+  const steps=l=>{hint.innerHTML='<ol class="steps">'+l.map(x=>'<li>'+x+'</li>').join("")+'</ol>';instBtn.hidden=true;};
   instBtn.addEventListener("click",async()=>{
-    if(deferred){ deferred.prompt(); const c=await deferred.userChoice; deferred=null; if(c.outcome==="accepted") inst.hidden=true; return; }
-    if(inApp) return steps(['اوپر کونے میں <b>⋮</b> یا <b>…</b> دبائیں','<b>Open in browser</b> (Chrome یا Safari میں کھولیں) چنیں','وہاں دوبارہ "انسٹال" دبائیں']);
-    if(ios) return steps(['Safari میں نیچے <b>شیئر</b> ⬆️ والا بٹن دبائیں','نیچے جا کر <b>Add to Home Screen</b> چنیں','اوپر <b>Add</b> دبائیں']);
-    steps(['Chrome میں اوپر کونے میں <b>⋮</b> دبائیں','<b>Install app</b> یا <b>Add to Home screen</b> چنیں','<b>Install</b> دبائیں']);
+    if(deferred){deferred.prompt();const c=await deferred.userChoice;deferred=null;if(c.outcome==="accepted")inst.hidden=true;return;}
+    if(inApp) return steps(['اوپر کونے میں <b>⋮</b> دبائیں','<b>Open in browser</b> چنیں','وہاں دوبارہ "انسٹال" دبائیں']);
+    if(ios) return steps(['Safari میں نیچے <b>شیئر</b> ⬆️ دبائیں','<b>Add to Home Screen</b> چنیں','<b>Add</b> دبائیں']);
+    steps(['Chrome میں اوپر <b>⋮</b> دبائیں','<b>Install app</b> یا <b>Add to Home screen</b> چنیں','<b>Install</b> دبائیں']);
   });
   window.addEventListener("appinstalled",()=>{inst.hidden=true;});
   $("installClose").onclick=()=>{inst.hidden=true;};
