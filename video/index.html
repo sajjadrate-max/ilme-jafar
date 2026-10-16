@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ویڈیو ڈاؤن لوڈر</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/video/icon-192.png" type="image/png">
+<link rel="manifest" href="/video/manifest.json">
+<link rel="apple-touch-icon" href="/video/apple-touch-icon.png">
+<meta name="theme-color" content="#0F7458">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ڈاؤن لوڈر">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -78,6 +85,14 @@ footer{font-size:.85rem;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;animation:r .8s linear infinite;vertical-align:middle}
 @keyframes r{to{transform:rotate(360deg)}}
+.install{display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--accent);border-radius:14px;padding:12px 14px}
+.install[hidden]{display:none}
+.install img{width:44px;height:44px;border-radius:10px;flex:none}
+.install .txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.6}
+.install .txt small{color:var(--muted);font-size:.85rem}
+.install .btn{background:var(--accent);color:var(--accent-ink);font-weight:700;padding:9px 16px;white-space:nowrap}
+.install .x{background:transparent;color:var(--muted);font-size:1.3rem;line-height:1;padding:4px 6px}
+.ios-steps{margin:0;padding-right:20px;font-size:.9rem;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -98,6 +113,13 @@ footer{font-size:.85rem;color:var(--muted);text-align:center}
       <span class="chip" data-p="vimeo">Vimeo</span>
     </div>
   </header>
+
+  <div class="install" id="install" hidden>
+    <img src="/video/icon-192.png" alt="">
+    <div class="txt"><b>ایپ انسٹال کریں</b><small id="installHint">ہوم اسکرین پر لگائیں، ایک ٹچ میں کھولیں۔</small></div>
+    <button class="btn" type="button" id="installBtn">انسٹال</button>
+    <button class="x" type="button" id="installClose" aria-label="بند کریں">×</button>
+  </div>
 
   <form class="card" id="form" novalidate>
     <div class="field">
@@ -241,6 +263,42 @@ PORT    = 9000</span></div></li>
       show('<div class="status err">سرور سے رابطہ نہیں ہو سکا۔ انٹرنیٹ اور سرور کا پتہ چیک کریں۔</div>');
     }finally{ go.disabled=false; go.textContent="ڈاؤن لوڈ کریں"; }
   });
+  // Opened via "Share" from another app (Android share target): pick the link out.
+  (function(){
+    const q=new URLSearchParams(location.search);
+    const raw=[q.get("url"),q.get("text"),q.get("title")].filter(Boolean).join(" ");
+    const m=raw.match(/https?:\/\/\S+/);
+    if(m){ link.value=m[0]; link.dispatchEvent(new Event("input")); history.replaceState(null,"",location.pathname); }
+  })();
+
+  // --- Install as app ---
+  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register("/video/sw.js",{scope:"/video/"}).catch(()=>{});
+  }
+  const inst=$("install"), instBtn=$("installBtn"), hint=$("installHint");
+  const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  let deferred=null;
+  const dismissed=()=>store.get("instHide")==="1";
+  if(!standalone && !dismissed()){
+    if(ios){
+      hint.textContent="Safari میں نیچے شیئر کا نشان ⬆️ دبائیں، پھر \"Add to Home Screen\" چنیں۔";
+      instBtn.textContent="طریقہ"; inst.hidden=false;
+      instBtn.onclick=()=>{ hint.innerHTML='<ol class="ios-steps"><li>Safari میں نیچے <b>شیئر</b> ⬆️ والا بٹن دبائیں</li><li>نیچے جا کر <b>Add to Home Screen</b> چنیں</li><li>اوپر <b>Add</b> دبائیں</li></ol>'; instBtn.hidden=true; };
+    }
+  }
+  window.addEventListener("beforeinstallprompt",e=>{
+    e.preventDefault(); deferred=e;
+    if(!standalone && !dismissed()) inst.hidden=false;
+  });
+  instBtn.addEventListener("click",async()=>{
+    if(!deferred) return;
+    deferred.prompt();
+    const c=await deferred.userChoice; deferred=null;
+    if(c.outcome==="accepted") inst.hidden=true;
+  });
+  window.addEventListener("appinstalled",()=>{inst.hidden=true;});
+  $("installClose").onclick=()=>{inst.hidden=true;store.set("instHide","1");};
 })();
 </script>
 </body>
