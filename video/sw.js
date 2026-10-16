@@ -1,6 +1,6 @@
 // App shell cache for the video downloader. Only same-origin GETs under
 // /video/ are cached; download requests to the cobalt server pass through.
-const CACHE = "video-dl-v1";
+const CACHE = "video-dl-v2";
 const SHELL = ["/video/", "/video/manifest.json", "/video/icon-192.png", "/video/icon-512.png"];
 
 self.addEventListener("install", e => {
