@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ویڈیو ڈاؤن لوڈر</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow column, a strong "link slot" card at top, guide below as numbered steps (real sequence). */
+:root{
+  --bg:#EDF2EE; --surface:#FFFFFF; --fg:#14231D; --muted:#5A6B63; --line:#D3DED7;
+  --accent:#0F7458; --accent-ink:#FFFFFF; --mark:#E2A23B; --danger:#B3402F; --ok:#1E7B4A;
+  --display:"Noto Nastaliq Urdu","Noto Naskh Arabic",serif;
+  --body:"Noto Naskh Arabic","Noto Nastaliq Urdu",Tahoma,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1613; --surface:#16211D; --fg:#E3EDE8; --muted:#97A9A0; --line:#2A3833;
+  --accent:#43C49B; --accent-ink:#06261C; --mark:#E8B054; --danger:#F08A78; --ok:#6FD39C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1613; --surface:#16211D; --fg:#E3EDE8; --muted:#97A9A0; --line:#2A3833;
+  --accent:#43C49B; --accent-ink:#06261C; --mark:#E8B054; --danger:#F08A78; --ok:#6FD39C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header{display:flex;flex-direction:column;gap:6px}
+h1{font-family:var(--display);font-weight:700;font-size:1.9rem;line-height:2.3;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:4px;padding:2px 8px;color:var(--muted);direction:ltr}
+.chip.on{border-color:var(--accent);color:var(--accent);font-weight:500}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+label{font-weight:600;font-size:.95rem}
+.field{display:flex;flex-direction:column;gap:6px}
+input[type=text],input[type=url],input[type=password],select{width:100%;font:inherit;font-size:1rem;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px}
+input.ltr{direction:ltr;text-align:left;font-family:var(--mono);font-size:.9rem}
+input:focus,select:focus,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 140px;min-width:0}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{flex:1;text-align:center;padding:10px 6px;cursor:pointer;font-weight:600;font-size:.95rem}
+.seg input:checked+span{color:var(--accent-ink)}
+.seg label:has(input:checked){background:var(--accent);color:var(--accent-ink)}
+.seg input:focus-visible+span{text-decoration:underline}
+button{font:inherit;cursor:pointer;border-radius:10px;border:0}
+.go{background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:1.1rem;padding:13px}
+.go:disabled{opacity:.6;cursor:wait}
+.ghost{background:transparent;border:1.5px solid var(--line);color:var(--fg);padding:8px 14px;font-size:.9rem}
+.status{border-radius:10px;padding:12px 14px;font-size:.95rem}
+.status.err{border:1.5px solid var(--danger);color:var(--danger)}
+.status.info{border:1.5px dashed var(--line);color:var(--muted)}
+.result{display:flex;flex-direction:column;gap:10px}
+.dl{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border:1.5px solid var(--ok);border-radius:10px;padding:10px 12px}
+.dl .name{font-family:var(--mono);font-size:.8rem;direction:ltr;overflow-wrap:anywhere;min-width:0;color:var(--muted)}
+.dl a{background:var(--ok);color:var(--surface);text-decoration:none;font-weight:700;border-radius:8px;padding:8px 14px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.tile{display:flex;flex-direction:column;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;text-decoration:none;color:var(--fg);font-weight:600;font-size:.9rem;text-align:center}
+.tile img{aspect-ratio:1;object-fit:cover;border-radius:6px;width:100%;background:var(--line)}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font-weight:600;color:var(--muted)}
+.server-state{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mark);flex:none}
+.dot.ok{background:var(--ok)}
+h2{font-family:var(--display);font-size:1.4rem;line-height:2.2;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px}
+.steps li::before{content:counter(s,arabic-indic);width:34px;height:34px;border-radius:50%;background:var(--mark);color:#2A1A00;display:grid;place-items:center;font-weight:700}
+.steps li>div{min-width:0}
+.steps b{display:block}
+code,.code{font-family:var(--mono);font-size:.82rem;direction:ltr;unicode-bidi:isolate}
+.code{display:block;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:6px;overflow-x:auto;white-space:pre;text-align:left}
+.note{font-size:.9rem;color:var(--muted);border-right:3px solid var(--mark);padding-right:12px;margin:0}
+footer{font-size:.85rem;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;animation:r .8s linear infinite;vertical-align:middle}
+@keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap" dir="rtl" lang="ur">
+  <header>
+    <h1>ویڈیو ڈاؤن لوڈر</h1>
+    <p class="lead">لنک ڈالیں، اور ویڈیو یا آواز اپنے موبائل میں محفوظ کریں۔</p>
+    <div class="chips" id="chips" aria-label="جن سائٹس سے ڈاؤن لوڈ ہوتا ہے">
+      <span class="chip" data-p="tiktok">TikTok</span>
+      <span class="chip" data-p="youtube">YouTube</span>
+      <span class="chip" data-p="instagram">Instagram</span>
+      <span class="chip" data-p="twitter">X / Twitter</span>
+      <span class="chip" data-p="facebook">Facebook</span>
+      <span class="chip" data-p="reddit">Reddit</span>
+      <span class="chip" data-p="pinterest">Pinterest</span>
+      <span class="chip" data-p="snapchat">Snapchat</span>
+      <span class="chip" data-p="soundcloud">SoundCloud</span>
+      <span class="chip" data-p="vimeo">Vimeo</span>
+    </div>
+  </header>
+
+  <form class="card" id="form" novalidate>
+    <div class="field">
+      <label for="link">ویڈیو کا لنک</label>
+      <input type="url" id="link" class="ltr" placeholder="https://www.tiktok.com/@user/video/..." autocomplete="off" inputmode="url">
+    </div>
+    <div class="row">
+      <div class="field">
+        <span style="font-weight:600;font-size:.95rem">کیا چاہیے؟</span>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="mode" id="m-video" value="auto" checked><span>ویڈیو</span></label>
+          <label><input type="radio" name="mode" id="m-audio" value="audio"><span>صرف آواز</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="quality">کوالٹی</label>
+        <select id="quality">
+          <option value="max">سب سے بہترین</option>
+          <option value="1080" selected>1080p</option>
+          <option value="720">720p</option>
+          <option value="480">480p (کم ڈیٹا)</option>
+          <option value="360">360p</option>
+        </select>
+      </div>
+    </div>
+    <button class="go" id="go" type="submit">ڈاؤن لوڈ کریں</button>
+    <div id="out" class="result" aria-live="polite"></div>
+
+    <details id="settings">
+      <summary>سرور کی ترتیبات</summary>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <div class="server-state"><span class="dot" id="dot"></span><span id="stateText">سرور ابھی نہیں لگا</span></div>
+        <div class="field">
+          <label for="server">آپ کے سرور کا پتہ</label>
+          <input type="url" id="server" class="ltr" placeholder="https://my-cobalt.onrender.com/">
+        </div>
+        <div class="field">
+          <label for="key">API Key (اگر لگائی ہو، ورنہ خالی چھوڑیں)</label>
+          <input type="password" id="key" class="ltr" autocomplete="off">
+        </div>
+        <div class="row">
+          <button class="ghost" type="button" id="save">محفوظ کریں</button>
+          <button class="ghost" type="button" id="test">سرور چیک کریں</button>
+        </div>
+      </div>
+    </details>
+  </form>
+
+  <section class="card" id="guide">
+    <h2>سرور لگانے کا طریقہ</h2>
+    <p class="note" style="margin:0">یہ کام صرف ایک بار کرنا ہے، تقریباً دس منٹ لگیں گے۔ سرور مفت ہے۔</p>
+    <ol class="steps">
+      <li><div><b>Render پر اکاؤنٹ بنائیں</b>اپنے براؤزر میں <code>render.com</code> کھولیں اور GitHub والے اکاؤنٹ سے سائن اپ کریں۔</div></li>
+      <li><div><b>نئی Web Service بنائیں</b>اوپر <code>New +</code> دبائیں، پھر <code>Web Service</code> چنیں، اور <code>Existing Image</code> والا آپشن لیں۔</div></li>
+      <li><div><b>انجن کا نام ڈالیں</b>Image URL کے خانے میں یہ لکھیں:<span class="code">ghcr.io/imputnet/cobalt:11</span></div></li>
+      <li><div><b>نام اور پلان</b>سروس کا کوئی نام رکھیں، مثلاً <code>my-cobalt</code>۔ پلان میں <code>Free</code> چنیں۔</div></li>
+      <li><div><b>دو سیٹنگز ڈالیں</b>Environment Variables میں یہ دو لائنیں شامل کریں (اپنی سروس کا نام لگائیں، آخر میں / ضرور ہو):<span class="code">API_URL = https://my-cobalt.onrender.com/
+PORT    = 9000</span></div></li>
+      <li><div><b>Deploy دبائیں</b>چند منٹ انتظار کریں۔ جب <code>Live</code> لکھا آ جائے تو سرور تیار ہے۔</div></li>
+      <li><div><b>یہاں پتہ ڈالیں</b>اوپر "سرور کی ترتیبات" کھولیں، اپنا پتہ لکھیں، محفوظ کریں، اور "سرور چیک کریں" دبائیں۔ سبز نشان آ گیا تو سب ٹھیک ہے۔</div></li>
+    </ol>
+    <p class="note">مفت سرور 15 منٹ استعمال نہ ہو تو سو جاتا ہے۔ اس لیے پہلی بار ڈاؤن لوڈ میں تقریباً ایک منٹ لگ سکتا ہے، اس کے بعد تیز چلے گا۔</p>
+    <p class="note">YouTube کبھی کبھی سرور والے کنکشن کو روک دیتا ہے۔ اگر صرف YouTube پر خرابی آئے اور باقی سائٹس چلیں تو وجہ یہی ہے۔</p>
+  </section>
+
+  <footer>صرف اپنی یا اجازت والی ویڈیوز ڈاؤن لوڈ کریں، اور دوسروں کی ویڈیو ان کا نام دیے بغیر دوبارہ اپ لوڈ نہ کریں۔</footer>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const store={get(k){try{return localStorage.getItem(k)||""}catch(e){return ""}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+  const P=[["tiktok",/tiktok\.com/],["youtube",/youtube\.com|youtu\.be/],["instagram",/instagram\.com/],["twitter",/twitter\.com|x\.com/],["facebook",/facebook\.com|fb\.watch|fb\.com/],["reddit",/reddit\.com/],["pinterest",/pinterest\.|pin\.it/],["snapchat",/snapchat\.com/],["soundcloud",/soundcloud\.com/],["vimeo",/vimeo\.com/]];
+  const ERR={
+    "link.invalid":"یہ لنک درست نہیں لگ رہا۔ پورا لنک دوبارہ کاپی کر کے ڈالیں۔",
+    "link.unsupported":"یہ سائٹ ابھی سپورٹ نہیں ہوتی۔",
+    "service.unsupported":"یہ سائٹ ابھی سپورٹ نہیں ہوتی۔",
+    "content.video.unavailable":"یہ ویڈیو دستیاب نہیں، شاید ہٹا دی گئی ہے۔",
+    "content.video.private":"یہ ویڈیو پرائیویٹ ہے، اسے ڈاؤن لوڈ نہیں کیا جا سکتا۔",
+    "content.post.private":"یہ پوسٹ پرائیویٹ ہے، اسے ڈاؤن لوڈ نہیں کیا جا سکتا۔",
+    "content.video.age":"یہ ویڈیو عمر کی پابندی والی ہے۔",
+    "content.too_long":"ویڈیو بہت لمبی ہے۔ کوئی چھوٹی ویڈیو آزمائیں۔",
+    "fetch.fail":"سائٹ سے ویڈیو نہیں مل سکی۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+    "fetch.empty":"اس لنک میں کوئی ویڈیو نہیں ملی۔",
+    "youtube":"YouTube نے سرور کو روک دیا ہے۔ باقی سائٹس سے ڈاؤن لوڈ چلتا رہے گا۔",
+    "rate_exceeded":"بہت زیادہ درخواستیں ہو گئیں۔ ایک منٹ رک کر دوبارہ کوشش کریں۔",
+    "auth":"سرور API Key مانگ رہا ہے۔ ترتیبات میں درست Key ڈالیں۔"
+  };
+  function errText(code){
+    code=(code||"").replace(/^error\.api\./,"");
+    for(const k in ERR){ if(code.startsWith(k)) return ERR[k]; }
+    return "کوئی خرابی آ گئی ("+code+")۔ دوبارہ کوشش کریں۔";
+  }
+  const server=$("server"),key=$("key"),link=$("link"),out=$("out"),go=$("go");
+  server.value=store.get("srv"); key.value=store.get("key");
+  function base(){let s=server.value.trim(); if(s && !/^https?:\/\//.test(s)) s="https://"+s; if(s && !s.endsWith("/")) s+="/"; return s;}
+  function setState(ok,text){$("dot").className="dot"+(ok?" ok":"");$("stateText").textContent=text;}
+  if(server.value) setState(false,"سرور کا پتہ محفوظ ہے، چیک نہیں ہوا"); else $("settings").open=true;
+
+  link.addEventListener("input",()=>{
+    const v=link.value; let hit="";
+    for(const [n,r] of P) if(r.test(v)){hit=n;break;}
+    document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.p===hit));
+  });
+  $("save").onclick=()=>{server.value=base();store.set("srv",server.value);store.set("key",key.value.trim());setState(false,"محفوظ ہو گیا");};
+  $("test").onclick=async()=>{
+    const b=base(); if(!b){setState(false,"پہلے سرور کا پتہ لکھیں");return;}
+    setState(false,"چیک ہو رہا ہے... (سویا ہوا سرور جاگنے میں ایک منٹ لے سکتا ہے)");
+    try{const r=await fetch(b,{headers:{Accept:"application/json"}});const j=await r.json();
+      setState(true,"سرور چل رہا ہے"+(j.cobalt&&j.cobalt.version?" (ورژن "+j.cobalt.version+")":""));}
+    catch(e){setState(false,"سرور سے رابطہ نہیں ہوا۔ پتہ دوبارہ چیک کریں۔");}
+  };
+  function show(html){out.innerHTML=html;}
+  function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+  $("form").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const url=link.value.trim(), b=base();
+    if(!url){show('<div class="status err">پہلے ویڈیو کا لنک ڈالیں۔</div>');link.focus();return;}
+    if(!b){show('<div class="status err">پہلے سرور لگائیں اور ترتیبات میں اس کا پتہ لکھیں۔ طریقہ نیچے دیا گیا ہے۔</div>');$("settings").open=true;return;}
+    const mode=document.querySelector('input[name=mode]:checked').value;
+    const body={url,downloadMode:mode,videoQuality:$("quality").value,audioFormat:"mp3",filenameStyle:"basic"};
+    const h={"Accept":"application/json","Content-Type":"application/json"};
+    if(key.value.trim()) h.Authorization="Api-Key "+key.value.trim();
+    go.disabled=true; go.innerHTML='<span class="spin"></span> تیار ہو رہا ہے...';
+    show('<div class="status info">ویڈیو تلاش ہو رہی ہے۔ سرور سویا ہو تو ایک منٹ لگ سکتا ہے۔</div>');
+    try{
+      const r=await fetch(b,{method:"POST",headers:h,body:JSON.stringify(body)});
+      const j=await r.json();
+      if(j.status==="tunnel"||j.status==="redirect"){
+        show('<div class="dl"><span class="name">'+esc(j.filename||"file")+'</span><a href="'+esc(j.url)+'" target="_blank" rel="noopener">محفوظ کریں</a></div><div class="status info">اگر ویڈیو کھل کر چلنے لگے تو اسے دبا کر رکھیں اور "ڈاؤن لوڈ" یا "Save" چنیں۔</div>');
+      }else if(j.status==="picker"){
+        let g='<div class="status info">اس پوسٹ میں کئی چیزیں ہیں۔ جو چاہیے اسے دبائیں:</div><div class="grid">';
+        (j.picker||[]).forEach((p,i)=>{g+='<a class="tile" href="'+esc(p.url)+'" target="_blank" rel="noopener">'+(p.thumb?'<img src="'+esc(p.thumb)+'" alt="">':'')+(p.type==="photo"?"تصویر ":"ویڈیو ")+(i+1)+'</a>';});
+        if(j.audio) g+='<a class="tile" href="'+esc(j.audio)+'" target="_blank" rel="noopener">آواز</a>';
+        show(g+'</div>');
+      }else if(j.status==="error"){
+        show('<div class="status err">'+esc(errText(j.error&&j.error.code))+'</div>');
+      }else{ show('<div class="status err">سرور سے غیر متوقع جواب آیا۔ دوبارہ کوشش کریں۔</div>'); }
+    }catch(err){
+      show('<div class="status err">سرور سے رابطہ نہیں ہو سکا۔ انٹرنیٹ اور سرور کا پتہ چیک کریں۔</div>');
+    }finally{ go.disabled=false; go.textContent="ڈاؤن لوڈ کریں"; }
+  });
+})();
+</script>
+</body>
+</html>
