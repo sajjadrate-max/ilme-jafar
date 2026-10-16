@@ -43,7 +43,7 @@ function proxied(file, name) {
 }
 
 class UserError extends Error {
-  constructor(code) { super(code); this.code = code; }
+  constructor(code, detail) { super(code); this.code = code; this.detail = detail; }
 }
 
 async function tiktok(url) {
@@ -103,7 +103,7 @@ async function instagram(url) {
   const code = (u.pathname.match(/\/(?:p|reels?|tv)\/([A-Za-z0-9_-]+)/) || [])[1];
   if (!code) throw new UserError('link.invalid');
 
-  let media = null;
+  let media = null, why = 'gql:';
   try {
     const r = await fetch('https://www.instagram.com/graphql/query', {
       method: 'POST',
@@ -113,8 +113,9 @@ async function instagram(url) {
         doc_id: '8845758582119845', lsd: 'AVqbxe3J_YA'
       })
     });
-    if (r.ok) { const j = await r.json(); media = j && j.data && j.data.xdt_shortcode_media; }
-  } catch { /* fall through to the embed page */ }
+    why += r.status;
+    if (r.ok) { const j = await r.json().catch(() => null); media = j && j.data && j.data.xdt_shortcode_media; if (!media) why += '-empty'; }
+  } catch (e) { why += 'err'; /* fall through to the embed page */ }
 
   const items = [];
   let title = code, thumb;
@@ -131,7 +132,8 @@ async function instagram(url) {
   } else {
     // Fallback: the public embed page carries the media URLs for most public posts.
     const r = await fetch('https://www.instagram.com/p/' + code + '/embed/captioned/', { headers: IG_HEADERS });
-    if (!r.ok) throw new UserError(r.status === 404 ? 'unavailable' : 'fetch.fail');
+    why += ' embed:' + r.status;
+    if (!r.ok) throw new UserError(r.status === 404 ? 'unavailable' : 'ig.blocked', why);
     const html = (await r.text()).replace(/\\\\\//g, '/').replace(/\\\//g, '/').replace(/\\u0026/g, '&').replace(/&amp;/g, '&');
     const vid = (html.match(/"video_url":"(https:[^"]+)"/) || [])[1];
     const img = (html.match(/"display_url":"(https:[^"]+)"/) || html.match(/class="EmbeddedMediaImage"[^>]*src="([^"]+)"/) || [])[1];
@@ -141,7 +143,7 @@ async function instagram(url) {
     if (vid) items.push({ type: 'video', hd: true, url: proxied(vid, safeName(title, 'mp4')), file: vid, thumb: img });
     else if (img) items.push({ type: 'photo', url: proxied(img, safeName(title, 'jpg')), file: img, thumb: img });
   }
-  if (!items.length) throw new UserError('private');
+  if (!items.length) throw new UserError('ig.blocked', why + '-nomedia');
   return { title, thumb, items };
 }
 
@@ -219,8 +221,8 @@ export default async function handler(req, res) {
     await addSizes(out.items);
     res.status(200).json(out);
   } catch (e) {
-    if (e instanceof UserError) { res.status(422).json({ error: e.code }); return; }
+    if (e instanceof UserError) { res.status(422).json({ error: e.code, detail: e.detail }); return; }
     console.error('download error', e);
-    res.status(502).json({ error: 'fetch.fail' });
+    res.status(502).json({ error: 'fetch.fail', detail: String(e && e.message || e).slice(0, 80) });
   }
 }

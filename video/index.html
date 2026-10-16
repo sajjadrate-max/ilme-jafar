@@ -143,8 +143,11 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
 
 <script>
 (function(){
-  // GitHub Pages can't run server code, so that copy uses the API on ilmejafar.com.
-  const API=(/github\.io$/.test(location.hostname)||location.protocol==="file:"?"https://www.ilmejafar.com":"")+"/api/download";
+  // GitHub Pages can't run server code, so that copy uses the ilme-jafar API on Vercel.
+  // Each base is tried in turn until one answers like our API.
+  const onPages=/github\.io$/.test(location.hostname)||location.protocol==="file:";
+  const BASES=onPages?["https://www.ilmejafar.com","https://ilme-jafar.vercel.app"]:["","https://ilme-jafar.vercel.app"];
+  let base=BASES[0];
   const $=id=>document.getElementById(id);
   const P=[["instagram",/instagram\.com|instagr\.am/i],["tiktok",/tiktok\.com/i],["twitter",/(^|[\/.])(twitter|x)\.com\//i]];
   const ERR={
@@ -153,7 +156,9 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
     "unavailable":"یہ ویڈیو نہیں ملی۔ شاید ہٹا دی گئی ہے۔",
     "private":"یہ پوسٹ پرائیویٹ ہے یا ابھی نہیں کھل رہی۔ صرف پبلک پوسٹ ڈاؤن لوڈ ہوتی ہے۔",
     "empty":"اس پوسٹ میں کوئی ویڈیو یا تصویر نہیں ملی۔",
-    "fetch.fail":"ویڈیو لانے میں مسئلہ آیا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔"
+    "fetch.fail":"ویڈیو لانے میں مسئلہ آیا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+    "ig.blocked":"Instagram نے اس وقت ویڈیو دینے سے روک دیا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+    "no.api":"ڈاؤن لوڈ والا سرور (API) نہیں مل رہا۔"
   };
   const ICON={
     audio:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>',
@@ -163,7 +168,7 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
   const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const findUrl=v=>{const m=String(v||"").match(/https?:\/\/\S+/);return m?m[0]:"";};
   const platform=v=>{for(const [n,r] of P) if(r.test(v)) return n; return "";};
-  const abs=u=>/^https?:/.test(u)?u:API.replace(/\/api\/download$/,"")+u;
+  const abs=u=>/^https?:/.test(u)?u:base+u;
   const mb=n=>n?(n/1048576).toFixed(1)+" MB":"";
   function mark(){const hit=platform(link.value);document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.p===hit));}
   link.addEventListener("input",mark);
@@ -200,6 +205,9 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
     };
   }
 
+  function showErr(k,detail){
+    msg.innerHTML='<div class="status err">'+esc(ERR[k]||ERR["fetch.fail"])+(detail||k&&!ERR[k]?'<br><small dir="ltr" style="opacity:.75;font-family:var(--mono)">'+esc((ERR[k]?"":k+" ")+(detail||""))+'</small>':'')+'</div>';
+  }
   let last="",busy=false;
   async function analyze(){
     const url=findUrl(link.value);
@@ -208,11 +216,19 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
     last=url;busy=true;msg.innerHTML="";
     go.disabled=true;go.innerHTML='<span class="spin"></span> ویڈیو تلاش ہو رہی ہے...';
     try{
-      const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
-      const j=await r.json().catch(()=>({error:"fetch.fail"}));
-      if(!r.ok||!j.items){msg.innerHTML='<div class="status err">'+esc(ERR[j.error]||ERR["fetch.fail"])+'</div>';return;}
+      let j=null,code="";
+      for(const b of BASES){
+        try{
+          const r=await fetch(b+"/api/download",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
+          const t=await r.json().catch(()=>null);
+          if(t&&(t.items||t.error)){j=t;base=b;break;}   // answered like our API
+          code+=(b?new URL(b).hostname:"same")+":"+r.status+" ";
+        }catch(e){code+=(b?new URL(b).hostname:"same")+":net ";}
+      }
+      if(!j){showErr("no.api",code.trim());return;}
+      if(!j.items){showErr(j.error,j.detail);return;}
       render(j);
-    }catch(e){msg.innerHTML='<div class="status err">انٹرنیٹ سے رابطہ نہیں ہو سکا۔ دوبارہ کوشش کریں۔</div>';}
+    }catch(e){showErr("fetch.fail",String(e&&e.message||e));}
     finally{busy=false;go.disabled=false;go.textContent="⬇ Download";}
   }
   function maybeAuto(){const u=findUrl(link.value);if(u&&u!==last&&platform(u)&&!busy){link.value=u;mark();analyze();}}
