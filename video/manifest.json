@@ -1,0 +1,25 @@
+{
+  "name": "ویڈیو ڈاؤن لوڈر",
+  "short_name": "ڈاؤن لوڈر",
+  "description": "لنک ڈالیں، ویڈیو خود بخود آپ کے موبائل میں محفوظ ہو جائے گی۔",
+  "id": "/video/",
+  "start_url": "/video/",
+  "scope": "/video/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EDF2EE",
+  "theme_color": "#0F7458",
+  "lang": "ur",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/video/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/video/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/video/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "share_target": {
+    "action": "/video/",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": { "title": "title", "text": "text", "url": "url" }
+  }
+}
