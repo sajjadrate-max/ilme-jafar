@@ -247,8 +247,8 @@ async function cobalt(url) {
 
 // Facebook puts the video's direct addresses in JSON inside the post page.
 const FB_KEYS = [
-  ['browser_native_hd_url', true], ['playable_url_quality_hd', true], ['hd_src', true],
-  ['browser_native_sd_url', false], ['playable_url', false], ['sd_src', false]
+  ['browser_native_hd_url', true], ['playable_url_quality_hd', true], ['hd_src', true], ['progressive_hd', true],
+  ['browser_native_sd_url', false], ['playable_url', false], ['sd_src', false], ['progressive_sd', false], ['any_mp4', false]
 ];
 
 function fbUnescape(v) {
@@ -300,9 +300,20 @@ async function facebook(url) {
   for (const [tag, u, h] of attempts) {
     try { page = await facebookPage(u, h); } catch { why += tag + ':err '; continue; }
     why += tag + ':' + page.status + (/\/login/.test(page.finalUrl) ? '-login' : '') + ' ';
+    const text = igUnescape(page.html);   // Facebook nests escaped JSON too
     for (const [k] of FB_KEYS) {
-      const m = page.html.match(new RegExp('"' + k + '":"([^"]+)"'));
-      if (m && !found[k]) found[k] = fbUnescape(m[1]);
+      const m = text.match(new RegExp('"' + k + '":"(https:[^"]+)"'));
+      if (m && !found[k]) found[k] = m[1];
+    }
+    // Newer pages: "progressive_url":"https://...","failure_reason":null,"metadata":{"quality":"HD"}
+    for (const m of text.matchAll(/"progressive_url":"(https:[^"]+)"[^}]{0,120}?"quality":"(HD|SD)"/g)) {
+      const k = m[2] === 'HD' ? 'progressive_hd' : 'progressive_sd';
+      if (!found[k]) found[k] = m[1];
+    }
+    if (!Object.keys(found).length) {
+      // Last resort: any progressive .mp4 on Facebook's video CDN in the page.
+      const any = text.match(/https:\/\/video[^"'\s<>\\]*?\.fbcdn\.net\/[^"'\s<>\\]+?\.mp4[^"'\s<>\\]*/);
+      if (any) found.any_mp4 = any[0];
     }
     // mbasic pages link the file directly: /video_redirect/?src=<encoded mp4>
     const vr = page.html.match(/video_redirect\/\?src=([^"&]+)/);
