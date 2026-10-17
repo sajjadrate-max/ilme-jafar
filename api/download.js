@@ -93,6 +93,33 @@ const IG_HEADERS = {
   'Accept-Language': 'en-US,en;q=0.9'
 };
 
+// Instagram pages escape JSON several layers deep (\\\"video_url\\\":\\\"https:\\\/\\\/...).
+function igUnescape(h) {
+  for (let i = 0; i < 4; i++) {
+    const n = h.replace(/\\+u0026/g, '&').replace(/\\+u0025/g, '%').replace(/\\+\//g, '/').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+    if (n === h) break;
+    h = n;
+  }
+  return h.replace(/&amp;/g, '&');
+}
+
+// Instagram's GraphQL wants a csrftoken cookie that a plain page visit hands out.
+async function igSession() {
+  try {
+    const r = await fetch('https://www.instagram.com/', { headers: { ...IG_HEADERS, Accept: 'text/html' } });
+    const cookies = (r.headers.getSetCookie ? r.headers.getSetCookie() : [r.headers.get('set-cookie') || '']).join('; ');
+    const csrf = (cookies.match(/csrftoken=([^;,\s]+)/) || [])[1] || '';
+    const cookie = ['csrftoken', 'mid', 'ig_did', 'datr'].map(k => { const m = cookies.match(new RegExp(k + '=([^;,\\s]+)')); return m ? k + '=' + m[1] : ''; }).filter(Boolean).join('; ');
+    return { csrf, cookie };
+  } catch { return { csrf: '', cookie: '' }; }
+}
+
+function igMediaFrom(obj) {
+  // GraphQL answers use either data.xdt_shortcode_media or data.shortcode_media / graphql.shortcode_media.
+  const d = obj && (obj.data || obj.graphql || (obj.items && { shortcode_media: obj.items[0] }));
+  return d && (d.xdt_shortcode_media || d.shortcode_media) || null;
+}
+
 async function instagram(url) {
   let u = new URL(url);
   // Share links (instagram.com/share/...) redirect to the real /reel/<code>/ address.
@@ -103,47 +130,86 @@ async function instagram(url) {
   const code = (u.pathname.match(/\/(?:p|reels?|tv)\/([A-Za-z0-9_-]+)/) || [])[1];
   if (!code) throw new UserError('link.invalid');
 
-  let media = null, why = 'gql:';
-  try {
-    const r = await fetch('https://www.instagram.com/graphql/query', {
-      method: 'POST',
-      headers: { ...IG_HEADERS, 'Content-Type': 'application/x-www-form-urlencoded', 'X-FB-LSD': 'AVqbxe3J_YA', 'X-ASBD-ID': '129477', 'Sec-Fetch-Site': 'same-origin', Referer: 'https://www.instagram.com/reel/' + code + '/' },
-      body: new URLSearchParams({
-        variables: JSON.stringify({ shortcode: code, fetch_tagged_user_count: null, hoisted_comment_id: null, hoisted_reply_id: null }),
-        doc_id: '8845758582119845', lsd: 'AVqbxe3J_YA'
-      })
-    });
-    why += r.status;
-    if (r.ok) { const j = await r.json().catch(() => null); media = j && j.data && j.data.xdt_shortcode_media; if (!media) why += '-empty'; }
-  } catch (e) { why += 'err'; /* fall through to the embed page */ }
+  let media = null, why = '';
+  const sess = await igSession();
+  why += 'csrf:' + (sess.csrf ? 'y' : 'n');
+
+  // 1) GraphQL, a few known endpoint / query-id combinations.
+  const tries = [
+    ['https://www.instagram.com/graphql/query', '8845758582119845'],
+    ['https://www.instagram.com/api/graphql', '8845758582119845'],
+    ['https://www.instagram.com/api/graphql', '10015901848480474']
+  ];
+  for (const [endpoint, docId] of tries) {
+    if (media) break;
+    try {
+      const r = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          ...IG_HEADERS, 'Content-Type': 'application/x-www-form-urlencoded', Accept: '*/*',
+          'X-FB-LSD': 'AVqbxe3J_YA', 'X-ASBD-ID': '129477', 'X-CSRFToken': sess.csrf || 'missing',
+          'X-FB-Friendly-Name': 'PolarisPostActionLoadPostQueryQuery', 'X-Requested-With': 'XMLHttpRequest',
+          Origin: 'https://www.instagram.com', Referer: 'https://www.instagram.com/reel/' + code + '/',
+          'Sec-Fetch-Site': 'same-origin', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Dest': 'empty',
+          ...(sess.cookie ? { Cookie: sess.cookie } : {})
+        },
+        body: new URLSearchParams({
+          av: '0', __d: 'www', __user: '0', __a: '1', __req: '3', dpr: '2', __ccg: 'UNKNOWN', lsd: 'AVqbxe3J_YA', jazoest: '2957',
+          fb_api_caller_class: 'RelayModern', fb_api_req_friendly_name: 'PolarisPostActionLoadPostQueryQuery', server_timestamps: 'true',
+          variables: JSON.stringify({ shortcode: code, fetch_tagged_user_count: null, hoisted_comment_id: null, hoisted_reply_id: null }),
+          doc_id: docId
+        })
+      });
+      why += ' g' + (endpoint.includes('/api/') ? 'a' : 'q') + ':' + r.status;
+      if (r.ok) { media = igMediaFrom(await r.json().catch(() => null)); if (!media) why += '-empty'; }
+    } catch { why += ' g:err'; }
+  }
+
+  // 2) Old JSON view of the post page (works for some public posts without login).
+  if (!media) {
+    try {
+      const r = await fetch('https://www.instagram.com/p/' + code + '/?__a=1&__d=dis', { headers: { ...IG_HEADERS, Accept: 'application/json', ...(sess.cookie ? { Cookie: sess.cookie } : {}) } });
+      why += ' a1:' + r.status;
+      if (r.ok) media = igMediaFrom(await r.json().catch(() => null));
+    } catch { why += ' a1:err'; }
+  }
 
   const items = [];
   let title = code, thumb;
   if (media) {
     const cap = media.edge_media_to_caption && media.edge_media_to_caption.edges[0];
-    title = (cap && cap.node.text) || (media.owner && media.owner.username) || code;
-    thumb = media.display_url;
-    const nodes = media.edge_sidecar_to_children ? media.edge_sidecar_to_children.edges.map(e => e.node) : [media];
+    title = (cap && cap.node.text) || (media.caption && media.caption.text) || (media.owner && media.owner.username) || (media.user && media.user.username) || code;
+    thumb = media.display_url || (media.image_versions2 && media.image_versions2.candidates[0].url);
+    const nodes = media.edge_sidecar_to_children ? media.edge_sidecar_to_children.edges.map(e => e.node) : media.carousel_media || [media];
     nodes.forEach((n, i) => {
       const nm = title + (nodes.length > 1 ? ' ' + (i + 1) : '');
-      if (n.is_video && n.video_url) items.push({ type: 'video', hd: true, url: proxied(n.video_url, safeName(nm, 'mp4')), file: n.video_url, thumb: n.display_url });
-      else if (n.display_url) items.push({ type: 'photo', url: proxied(n.display_url, safeName(nm, 'jpg')), file: n.display_url, thumb: n.display_url });
+      const v = n.video_url || (n.video_versions && n.video_versions[0] && n.video_versions[0].url);
+      const img = n.display_url || (n.image_versions2 && n.image_versions2.candidates[0].url);
+      if (v) items.push({ type: 'video', hd: true, url: proxied(v, safeName(nm, 'mp4')), file: v, thumb: img });
+      else if (img) items.push({ type: 'photo', url: proxied(img, safeName(nm, 'jpg')), file: img, thumb: img });
     });
-  } else {
-    // Fallback: the public embed page carries the media URLs for most public posts.
-    const r = await fetch('https://www.instagram.com/p/' + code + '/embed/captioned/', { headers: IG_HEADERS });
-    why += ' embed:' + r.status;
-    if (!r.ok) throw new UserError(r.status === 404 ? 'unavailable' : 'ig.blocked', why);
-    const html = (await r.text()).replace(/\\\\\//g, '/').replace(/\\\//g, '/').replace(/\\u0026/g, '&').replace(/&amp;/g, '&');
-    const vid = (html.match(/"video_url":"(https:[^"]+)"/) || [])[1];
-    const img = (html.match(/"display_url":"(https:[^"]+)"/) || html.match(/class="EmbeddedMediaImage"[^>]*src="([^"]+)"/) || [])[1];
-    const user = (html.match(/"username":"([^"]+)"/) || [])[1];
-    if (user) title = user + ' ' + code;
-    thumb = img;
-    if (vid) items.push({ type: 'video', hd: true, url: proxied(vid, safeName(title, 'mp4')), file: vid, thumb: img });
-    else if (img) items.push({ type: 'photo', url: proxied(img, safeName(title, 'jpg')), file: img, thumb: img });
   }
-  if (!items.length) throw new UserError('ig.blocked', why + '-nomedia');
+
+  // 3) Public embed page; its JSON is escaped several layers deep.
+  if (!items.length) {
+    for (const path of ['/p/' + code + '/embed/captioned/', '/reel/' + code + '/embed/']) {
+      try {
+        const r = await fetch('https://www.instagram.com' + path, { headers: { ...IG_HEADERS, Accept: 'text/html' } });
+        why += ' e:' + r.status;
+        if (!r.ok) continue;
+        const html = igUnescape(await r.text());
+        const vid = (html.match(/"video_url":"(https:[^"]+)"/) || [])[1];
+        const img = (html.match(/"display_url":"(https:[^"]+)"/) || html.match(/class="EmbeddedMediaImage"[^>]*src="([^"]+)"/) || [])[1];
+        const user = (html.match(/"username":"([^"]+)"/) || [])[1];
+        if (user) title = user + ' ' + code;
+        thumb = thumb || img;
+        if (vid) { items.push({ type: 'video', hd: true, url: proxied(vid, safeName(title, 'mp4')), file: vid, thumb: img }); break; }
+        if (!/\/reels?\//.test(u.pathname) && img) { items.push({ type: 'photo', url: proxied(img, safeName(title, 'jpg')), file: img, thumb: img }); break; }
+        why += '-nomedia';
+      } catch { why += ' e:err'; }
+    }
+  }
+  if (!items.length) throw new UserError('ig.blocked', why.trim());
   return { title, thumb, items };
 }
 
