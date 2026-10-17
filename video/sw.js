@@ -1,6 +1,6 @@
 // App shell cache for the video downloader. Only same-origin GETs inside this
 // app's folder are cached; API calls and downloads always go to the network.
-const CACHE = "video-dl-v4";
+const CACHE = "video-dl-v5";
 const BASE = new URL("./", self.location).pathname;
 const SHELL = [BASE, BASE + "manifest.json", BASE + "icon-192.png", BASE + "icon-512.png"];
 

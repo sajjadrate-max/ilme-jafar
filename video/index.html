@@ -109,6 +109,9 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
 [data-view][hidden]{display:none}
 .files h2{font-family:var(--display);font-size:1.5rem;line-height:2.2;margin:0}
 .empty{color:var(--muted);text-align:center;padding:40px 10px}
+.addbtn{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px dashed var(--accent);color:var(--accent);border-radius:12px;padding:10px;font-weight:700;cursor:pointer}
+.addbtn input{position:absolute;opacity:0;width:1px;height:1px}
+.addbtn:focus-within{outline:3px solid var(--cta);outline-offset:2px}
 .fl{display:flex;flex-direction:column;gap:10px;list-style:none;margin:0;padding:0}
 .fi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;gap:12px;align-items:center}
 .fi .th{width:84px;height:84px;border-radius:10px;background:var(--line);flex:none;position:relative;overflow:hidden;border:0;padding:0;display:grid;place-items:center;color:var(--fg)}
@@ -172,8 +175,9 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
 
 <section class="wrap files" data-view="files" id="filesView" hidden>
   <h2>میری فائلیں</h2>
+  <label class="addbtn"><input type="file" id="pick" accept="video/*,audio/*,image/*" multiple>📁 فون سے ویڈیوز شامل کریں</label>
   <ul class="fl" id="fileList"></ul>
-  <p class="empty" id="noFiles">ابھی کوئی فائل ڈاؤن لوڈ نہیں ہوئی۔</p>
+  <p class="empty" id="noFiles">ابھی کوئی فائل نہیں۔ یہاں سے جو بھی ڈاؤن لوڈ کریں گے وہ خود یہاں آ جائے گا۔<br>پہلے ڈاؤن لوڈ کی ہوئی ویڈیوز فون کے Downloads فولڈر میں ہیں؛ اوپر والے بٹن سے انہیں یہاں شامل کر لیں۔</p>
 </section>
 
 <nav class="tabs" role="tablist">
@@ -280,14 +284,14 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
     function row(r){
       const pct=r.size?Math.min(100,Math.round(r.got/r.size*100)):0;
       const playable=r.status==="done";
-      const meta=r.status==="done"?mb(r.blob&&r.blob.size||r.size)+" · "+(r.type==="audio"?"MP3":r.type==="photo"?"تصویر":"MP4")
+      const meta=r.status==="done"?mb(r.blob&&r.blob.size||r.size)+" · "+(r.type==="photo"?"تصویر":(nameOf(r).split(".").pop()||"mp4").toUpperCase())
         :r.status==="fail"?"ڈاؤن لوڈ رک گیا"
         :(r.size?pct+"% · "+mb(r.got)+" / "+mb(r.size):mb(r.got)||"شروع ہو رہا ہے...");
       return '<li class="fi'+(r.status==="fail"?' fail':'')+'" data-id="'+r.id+'">'+
-        '<button class="th" type="button" data-act="play"'+(playable?'':' disabled')+' aria-label="چلائیں">'+(r.thumb?'<img src="'+esc(r.thumb)+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':'')+(playable?'<span class="pl"></span>':'')+'</button>'+
+        '<button class="th" type="button" data-act="play"'+(playable?'':' disabled')+' aria-label="چلائیں">'+((r.thumb||(r.type==="photo"&&r.blob&&blobUrl(r)))?'<img src="'+esc(r.thumb||blobUrl(r))+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':(r.type==="audio"?ICON.audio:''))+(playable?'<span class="pl"></span>':'')+'</button>'+
         '<div class="bd"><div class="tt">'+esc(r.title)+'</div><div class="mt">'+esc(meta)+'</div>'+
         (r.status==="busy"?'<div class="bar"><i style="width:'+(r.size?pct:8)+'%"></i></div>':'')+
-        '<div class="acts">'+(playable?'<button class="pri" type="button" data-act="play">▶ دیکھیں</button><button type="button" data-act="save">فون میں محفوظ</button>':'')+
+        '<div class="acts">'+(playable?'<button class="pri" type="button" data-act="play">▶ دیکھیں</button>(r.src&&r.src.charAt(0)==="?"?"":'<button type="button" data-act="save">فون میں محفوظ</button>'):'')+
         (r.status==="fail"?'<button class="pri" type="button" data-act="retry">دوبارہ</button>':'')+
         '<button type="button" data-act="del">ہٹائیں</button></div></div></li>';
     }
@@ -308,9 +312,32 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
         const reader=res.body.getReader(),parts=[];
         for(;;){const {done,value}=await reader.read();if(done)break;parts.push(value);r.got+=value.length;soon();}
         r.blob=new Blob(parts,{type:res.headers.get("content-type")||(r.type==="audio"?"audio/mpeg":"video/mp4")});
+        if(r.type==="video"){const t=await frame(r.blob);if(t)r.thumb=t;}   // remote thumbnails expire
         r.status="done";await put(r);draw();toPhone(r);toast("✓ ڈاؤن لوڈ مکمل — فون کے Downloads میں بھی محفوظ");
       }catch(e){r.status="fail";const {blob,...m}=r;await put(m);draw();}
     }
+    // First frame of a video as a small JPEG, for files that came without a thumbnail.
+    function frame(blob){
+      return new Promise(res=>{
+        const v=document.createElement("video"),u=URL.createObjectURL(blob);let done=false;
+        const fin=x=>{if(done)return;done=true;URL.revokeObjectURL(u);res(x);};
+        v.muted=true;v.playsInline=true;v.preload="auto";v.src=u;
+        v.onloadeddata=()=>{try{v.currentTime=Math.min(1,(v.duration||2)/3);}catch(e){fin("");}};
+        v.onseeked=()=>{try{const c=document.createElement("canvas"),w=200,h=Math.round(w*(v.videoHeight||1)/(v.videoWidth||1));c.width=w;c.height=h;c.getContext("2d").drawImage(v,0,0,w,h);fin(c.toDataURL("image/jpeg",.7));}catch(e){fin("");}};
+        v.onerror=()=>fin("");setTimeout(()=>fin(""),6000);
+      });
+    }
+    async function addFiles(files){
+      for(const f of files){
+        const type=/^audio/.test(f.type)?"audio":/^image/.test(f.type)?"photo":"video";
+        const r={id:Date.now()+"-"+Math.random().toString(36).slice(2,7),created:f.lastModified||Date.now(),status:"done",type,
+          title:f.name.replace(/\.[^.]+$/,""),src:"?name="+encodeURIComponent(f.name),size:f.size,got:f.size,blob:f,thumb:""};
+        if(type==="video")r.thumb=await frame(f);else if(type==="photo")r.thumb="";
+        recs.set(r.id,r);await put(r);draw();
+      }
+      if(files.length)toast("✓ "+files.length+" فائلیں شامل ہو گئیں");
+    }
+    $("pick").onchange=e=>{const fs=[...e.target.files];e.target.value="";addFiles(fs);};
     function start(o){
       const r={id:Date.now()+"-"+Math.random().toString(36).slice(2,7),created:Date.now(),got:0,status:"busy",...o};
       recs.set(r.id,r);put({...r});show("files");toast("ڈاؤن لوڈ شروع ہو گیا");run(r);
