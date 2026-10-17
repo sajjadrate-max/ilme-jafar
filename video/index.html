@@ -265,7 +265,7 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
       const sel=sheet.querySelector('input[name=fmt]:checked');
       const pick=list[sel?Number(sel.value):0];
       closeSheet();
-      DL.start({src:abs(pick.url),type:pick.type,title:j.title||host,thumb:j.thumb||pick.thumb||"",size:pick.size||0});
+      DL.start({src:abs(pick.url),direct:pick.direct||"",type:pick.type,title:j.title||host,thumb:j.thumb||pick.thumb||"",size:pick.size||0});
     };
   }
 
@@ -285,14 +285,14 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
       const pct=r.size?Math.min(100,Math.round(r.got/r.size*100)):0;
       const playable=r.status==="done";
       const meta=r.status==="done"?mb(r.blob&&r.blob.size||r.size)+" · "+(r.type==="photo"?"تصویر":(nameOf(r).split(".").pop()||"mp4").toUpperCase())
-        :r.status==="fail"?"ڈاؤن لوڈ رک گیا"
+        :r.status==="fail"?"ڈاؤن لوڈ رک گیا "+(r.why?"("+r.why+")":"")
         :(r.size?pct+"% · "+mb(r.got)+" / "+mb(r.size):mb(r.got)||"شروع ہو رہا ہے...");
       return '<li class="fi'+(r.status==="fail"?' fail':'')+'" data-id="'+r.id+'">'+
         '<button class="th" type="button" data-act="play"'+(playable?'':' disabled')+' aria-label="چلائیں">'+((r.thumb||(r.type==="photo"&&r.blob&&blobUrl(r)))?'<img src="'+esc(r.thumb||blobUrl(r))+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':(r.type==="audio"?ICON.audio:''))+(playable?'<span class="pl"></span>':'')+'</button>'+
         '<div class="bd"><div class="tt">'+esc(r.title)+'</div><div class="mt">'+esc(meta)+'</div>'+
         (r.status==="busy"?'<div class="bar"><i style="width:'+(r.size?pct:8)+'%"></i></div>':'')+
-        '<div class="acts">'+(playable?'<button class="pri" type="button" data-act="play">▶ دیکھیں</button>(r.src&&r.src.charAt(0)==="?"?"":'<button type="button" data-act="save">فون میں محفوظ</button>'):'')+
-        (r.status==="fail"?'<button class="pri" type="button" data-act="retry">دوبارہ</button>':'')+
+        '<div class="acts">'+(playable?'<button class="pri" type="button" data-act="play">▶ دیکھیں</button>'+(r.src&&r.src.charAt(0)==="?"?"":'<button type="button" data-act="save">فون میں محفوظ</button>'):'')+
+        (r.status==="fail"?'<button class="pri" type="button" data-act="retry">دوبارہ</button>'+(r.direct||r.src?'<button type="button" data-act="open">سیدھا کھولیں</button>':''):'')+
         '<button type="button" data-act="del">ہٹائیں</button></div></div></li>';
     }
     function draw(){
@@ -303,18 +303,30 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
       badge.hidden=!busy;badge.textContent=busy;
     }
     let pending=0;const soon=()=>{if(!pending)pending=requestAnimationFrame(()=>{pending=0;draw();});};
+    // One attempt: fetch with progress; a short or failed body throws with a reason.
+    async function grab(r,url,tag){
+      const res=await fetch(url,{referrerPolicy:"no-referrer"});
+      if(!res.ok||!res.body)throw new Error(tag+":http "+res.status);
+      const len=Number(res.headers.get("content-length"));if(len)r.size=len;
+      const reader=res.body.getReader(),parts=[];let got=0;r.got=0;
+      for(;;){const {done,value}=await reader.read();if(done)break;parts.push(value);got+=value.length;r.got=got;soon();}
+      if(!got||(len&&got<len))throw new Error(tag+":cut "+(got/1048576).toFixed(1)+"/"+(len/1048576).toFixed(1)+"MB");
+      return new Blob(parts,{type:res.headers.get("content-type")||(r.type==="audio"?"audio/mpeg":"video/mp4")});
+    }
     async function run(r){
-      r.status="busy";r.got=0;soon();
+      r.status="busy";r.got=0;r.why="";soon();
       try{
-        const res=await fetch(r.src);
-        if(!res.ok||!res.body)throw new Error("http "+res.status);
-        const len=Number(res.headers.get("content-length"));if(len)r.size=len;
-        const reader=res.body.getReader(),parts=[];
-        for(;;){const {done,value}=await reader.read();if(done)break;parts.push(value);r.got+=value.length;soon();}
-        r.blob=new Blob(parts,{type:res.headers.get("content-type")||(r.type==="audio"?"audio/mpeg":"video/mp4")});
+        // Straight from the CDN first (no size limits); through our API if the CDN blocks it.
+        let blob=null,why=[];
+        for(const [url,tag] of [[r.direct,"cdn"],[r.src,"api"]]){
+          if(!url||blob)continue;
+          try{blob=await grab(r,url,tag);}catch(e){why.push(String(e.message||e).replace(/^Failed to fetch$/,tag+":blocked"));}
+        }
+        if(!blob)throw new Error(why.join(" "));
+        r.blob=blob;
         if(r.type==="video"){const t=await frame(r.blob);if(t)r.thumb=t;}   // remote thumbnails expire
         r.status="done";await put(r);draw();toPhone(r);toast("✓ ڈاؤن لوڈ مکمل — فون کے Downloads میں بھی محفوظ");
-      }catch(e){r.status="fail";const {blob,...m}=r;await put(m);draw();}
+      }catch(e){r.status="fail";r.why=String(e.message||e);const {blob,...m}=r;await put(m);draw();}
     }
     // First frame of a video as a small JPEG, for files that came without a thumbnail.
     function frame(blob){
@@ -357,6 +369,7 @@ body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
       if(act==="play"&&r.status==="done")play(r);
       else if(act==="save")toPhone(r);
       else if(act==="retry")run(r);
+      else if(act==="open")window.open(r.direct||r.src,"_blank","noopener");
       else if(act==="del"){recs.delete(r.id);if(urls.has(r.id)){URL.revokeObjectURL(urls.get(r.id));urls.delete(r.id);}await tx("readwrite",s=>s.delete(r.id));draw();}
     });
     (async()=>{

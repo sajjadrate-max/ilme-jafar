@@ -225,7 +225,8 @@ async function addSizes(items) {
       if (r.ok && n > 0) it.size = n;
     } catch { /* size stays unknown */ }
   }));
-  items.forEach(it => { delete it.file; });
+  // `direct` lets the page fetch straight from the CDN when CORS allows, skipping this function.
+  items.forEach(it => { if (it.file) it.direct = it.file; delete it.file; });
 }
 
 async function cobalt(url) {
