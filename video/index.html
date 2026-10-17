@@ -108,6 +108,7 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
     <p class="lead">لنک ڈالیں، فارمیٹ چنیں، اور ویڈیو اپنے موبائل میں محفوظ کریں۔</p>
     <div class="chips">
       <span class="chip" data-p="instagram">Instagram</span>
+      <span class="chip" data-p="facebook">Facebook</span>
       <span class="chip" data-p="tiktok">TikTok</span>
       <span class="chip" data-p="twitter">X / Twitter</span>
     </div>
@@ -130,7 +131,7 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
     <div id="msg" aria-live="polite"></div>
   </form>
 
-  <p class="note">Instagram، TikTok یا X میں ویڈیو پر <b>شیئر</b> دبائیں، <b>Copy link</b> چنیں، پھر یہاں <b>پیسٹ</b> دبائیں۔ ایپ انسٹال ہو تو Android پر شیئر کی فہرست سے سیدھا یہ ایپ بھی چن سکتے ہیں۔</p>
+  <p class="note">Instagram، Facebook، TikTok یا X میں ویڈیو پر <b>شیئر</b> دبائیں، <b>Copy link</b> چنیں، پھر یہاں <b>پیسٹ</b> دبائیں۔ ایپ انسٹال ہو تو Android پر شیئر کی فہرست سے سیدھا یہ ایپ بھی چن سکتے ہیں۔</p>
   <footer>صرف اپنی یا اجازت والی ویڈیوز ڈاؤن لوڈ کریں۔</footer>
 </div>
 
@@ -149,15 +150,16 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
   const BASES=onPages?["https://www.ilmejafar.com","https://ilme-jafar.vercel.app"]:["","https://ilme-jafar.vercel.app"];
   let base=BASES[0];
   const $=id=>document.getElementById(id);
-  const P=[["instagram",/instagram\.com|instagr\.am/i],["tiktok",/tiktok\.com/i],["twitter",/(^|[\/.])(twitter|x)\.com\//i]];
+  const P=[["instagram",/instagram\.com|instagr\.am/i],["facebook",/facebook\.com|fb\.watch|fb\.com/i],["tiktok",/tiktok\.com/i],["twitter",/(^|[\/.])(twitter|x)\.com\//i]];
   const ERR={
     "link.invalid":"یہ لنک درست نہیں لگ رہا۔ پورا لنک دوبارہ کاپی کر کے ڈالیں۔",
-    "unsupported":"ابھی Instagram، TikTok اور X (Twitter) کے لنک چلتے ہیں۔",
+    "unsupported":"ابھی Instagram، Facebook، TikTok اور X (Twitter) کے لنک چلتے ہیں۔",
     "unavailable":"یہ ویڈیو نہیں ملی۔ شاید ہٹا دی گئی ہے۔",
     "private":"یہ پوسٹ پرائیویٹ ہے یا ابھی نہیں کھل رہی۔ صرف پبلک پوسٹ ڈاؤن لوڈ ہوتی ہے۔",
     "empty":"اس پوسٹ میں کوئی ویڈیو یا تصویر نہیں ملی۔",
     "fetch.fail":"ویڈیو لانے میں مسئلہ آیا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
     "ig.blocked":"Instagram نے اس وقت ویڈیو دینے سے روک دیا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+    "fb.blocked":"Facebook نے یہ ویڈیو نہیں دی۔ صرف پبلک ویڈیو ڈاؤن لوڈ ہوتی ہے، یا تھوڑی دیر بعد دوبارہ کوشش کریں۔",
     "no.api":"ڈاؤن لوڈ والا سرور (API) نہیں مل رہا۔"
   };
   const ICON={
