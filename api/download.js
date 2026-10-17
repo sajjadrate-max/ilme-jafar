@@ -300,7 +300,13 @@ async function facebook(url) {
   for (const [tag, u, h] of attempts) {
     try { page = await facebookPage(u, h); } catch { why += tag + ':err '; continue; }
     why += tag + ':' + page.status + (/\/login/.test(page.finalUrl) ? '-login' : '') + ' ';
-    const text = igUnescape(page.html);   // Facebook nests escaped JSON too
+    // Same search that worked first (raw page, one level of escaping) ...
+    for (const [k] of FB_KEYS) {
+      const m = page.html.match(new RegExp('"' + k + '":"([^"]+)"'));
+      if (m && !found[k]) found[k] = fbUnescape(m[1]);
+    }
+    // ... then the page with every layer of escaping removed.
+    const text = igUnescape(page.html);
     for (const [k] of FB_KEYS) {
       const m = text.match(new RegExp('"' + k + '":"(https:[^"]+)"'));
       if (m && !found[k]) found[k] = m[1];
