@@ -7,7 +7,7 @@
 // Supported: TikTok (via tikwm.com), X/Twitter (via api.fxtwitter.com) and public
 // Instagram posts/reels (Instagram's own web endpoints, no login) and public Facebook
 // videos/reels (read from the post page).
-// Also used cross-origin by the GitHub Pages copy at sajjadrate-max.github.io/video-downloader/.
+// Deployed with the page on Vercel (video-downloader-rho-five.vercel.app); same-origin calls.
 // If COBALT_API_URL is set, any other link is tried against that cobalt instance.
 
 import { Readable } from 'node:stream';
@@ -188,30 +188,65 @@ function fbUnescape(v) {
   try { return JSON.parse('"' + v + '"'); } catch { return v.replace(/\\\//g, '/'); }
 }
 
-async function facebookPage(url, ua) {
-  const r = await fetch(url, {
-    headers: { 'User-Agent': ua, 'Accept-Language': 'en-US,en;q=0.9', Accept: 'text/html,application/xhtml+xml', 'Sec-Fetch-Mode': 'navigate' },
-    redirect: 'follow'
-  });
+// Header sets Facebook accepts. A partial set (e.g. only Sec-Fetch-Mode) gets HTTP 400.
+const FB_BROWSER = {
+  'User-Agent': IG_HEADERS['User-Agent'],
+  Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'Upgrade-Insecure-Requests': '1',
+  'Sec-Fetch-Dest': 'document', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'none', 'Sec-Fetch-User': '?1',
+  'Sec-Ch-Ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+  'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"'
+};
+// Facebook's own link-preview crawler; public videos get og:video tags.
+const FB_CRAWLER = { 'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)', Accept: '*/*' };
+
+async function facebookPage(url, headers) {
+  const r = await fetch(url, { headers, redirect: 'follow' });
   return { status: r.status, finalUrl: r.url, html: r.ok ? await r.text() : '' };
 }
 
+// /share/v/... and fb.watch links redirect to the real /reel/ or /videos/ address.
+async function facebookCanonical(url) {
+  if (!/\/share\/|fb\.watch/.test(url)) return url;
+  for (const h of [FB_BROWSER, FB_CRAWLER]) {
+    try {
+      const r = await fetch(url, { headers: h, redirect: 'manual' });
+      const loc = r.headers.get('location');
+      if (loc && !/\/login/.test(loc)) return new URL(loc, url).href;
+    } catch { /* try the next header set */ }
+  }
+  return url;
+}
+
 async function facebook(url) {
-  const DESKTOP = IG_HEADERS['User-Agent'];
-  let why = '';
+  const real = await facebookCanonical(url);
+  const attempts = [
+    ['e', 'https://www.facebook.com/plugins/video.php?show_text=false&href=' + encodeURIComponent(real), FB_BROWSER],
+    ['d', real, FB_BROWSER],
+    ['c', real, FB_CRAWLER],
+    ['b', real.replace('://www.', '://mbasic.').replace('://m.', '://mbasic.'), { ...FB_BROWSER, 'User-Agent': UA, 'Sec-Ch-Ua-Mobile': '?1', 'Sec-Ch-Ua-Platform': '"Android"' }]
+  ];
+  let why = real !== url ? 'r ' : '';
   const found = {};
-  let page = { html: '', finalUrl: url };
-  for (const ua of [DESKTOP, UA]) {
-    page = await facebookPage(url, ua);
-    why += (why ? ' ' : '') + (ua === UA ? 'm:' : 'd:') + page.status + (/\/login/.test(page.finalUrl) ? '-login' : '');
+  let page = { html: '', finalUrl: url }, best = page;
+  for (const [tag, u, h] of attempts) {
+    try { page = await facebookPage(u, h); } catch { why += tag + ':err '; continue; }
+    why += tag + ':' + page.status + (/\/login/.test(page.finalUrl) ? '-login' : '') + ' ';
     for (const [k] of FB_KEYS) {
       const m = page.html.match(new RegExp('"' + k + '":"([^"]+)"'));
       if (m && !found[k]) found[k] = fbUnescape(m[1]);
     }
+    // mbasic pages link the file directly: /video_redirect/?src=<encoded mp4>
+    const vr = page.html.match(/video_redirect\/\?src=([^"&]+)/);
+    if (vr && !found.sd_src) found.sd_src = decodeURIComponent(vr[1].replace(/&amp;/g, '&'));
     const og = page.html.match(/<meta property="og:video(?::secure_url|:url)?" content="([^"]+)"/);
     if (og && !found.og) found.og = og[1].replace(/&amp;/g, '&');
+    if (/og:title/.test(page.html) && !/og:title/.test(best.html)) best = page;
     if (Object.keys(found).length) break;
   }
+  why = why.trim();
+  if (/og:title/.test(best.html)) page = best;
   const hd = FB_KEYS.filter(([, h]) => h).map(([k]) => found[k]).find(Boolean);
   const sd = FB_KEYS.filter(([, h]) => !h).map(([k]) => found[k]).find(Boolean) || found.og;
   if (!hd && !sd) throw new UserError('fb.blocked', why + '-nomedia');
