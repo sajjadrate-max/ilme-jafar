@@ -5,7 +5,8 @@
 //                                         so the browser saves it instead of playing it.
 //
 // Supported: TikTok (via tikwm.com), X/Twitter (via api.fxtwitter.com) and public
-// Instagram posts/reels (Instagram's own web endpoints, no login).
+// Instagram posts/reels (Instagram's own web endpoints, no login) and public Facebook
+// videos/reels (read from the post page).
 // Also used cross-origin by the GitHub Pages copy at sajjadrate-max.github.io/video-downloader/.
 // If COBALT_API_URL is set, any other link is tried against that cobalt instance.
 
@@ -178,12 +179,59 @@ async function cobalt(url) {
   throw new UserError('unavailable');
 }
 
+// Facebook puts the video's direct addresses in JSON inside the post page.
+const FB_KEYS = [
+  ['browser_native_hd_url', true], ['playable_url_quality_hd', true], ['hd_src', true],
+  ['browser_native_sd_url', false], ['playable_url', false], ['sd_src', false]
+];
+
+function fbUnescape(v) {
+  try { return JSON.parse('"' + v + '"'); } catch { return v.replace(/\\\//g, '/'); }
+}
+
+async function facebookPage(url, ua) {
+  const r = await fetch(url, {
+    headers: { 'User-Agent': ua, 'Accept-Language': 'en-US,en;q=0.9', Accept: 'text/html,application/xhtml+xml', 'Sec-Fetch-Mode': 'navigate' },
+    redirect: 'follow'
+  });
+  return { status: r.status, finalUrl: r.url, html: r.ok ? await r.text() : '' };
+}
+
+async function facebook(url) {
+  const DESKTOP = IG_HEADERS['User-Agent'];
+  let why = '';
+  const found = {};
+  let page = { html: '', finalUrl: url };
+  for (const ua of [DESKTOP, UA]) {
+    page = await facebookPage(url, ua);
+    why += (why ? ' ' : '') + (ua === UA ? 'm:' : 'd:') + page.status + (/\/login/.test(page.finalUrl) ? '-login' : '');
+    for (const [k] of FB_KEYS) {
+      const m = page.html.match(new RegExp('"' + k + '":"([^"]+)"'));
+      if (m && !found[k]) found[k] = fbUnescape(m[1]);
+    }
+    const og = page.html.match(/<meta property="og:video(?::secure_url|:url)?" content="([^"]+)"/);
+    if (og && !found.og) found.og = og[1].replace(/&amp;/g, '&');
+    if (Object.keys(found).length) break;
+  }
+  const hd = FB_KEYS.filter(([, h]) => h).map(([k]) => found[k]).find(Boolean);
+  const sd = FB_KEYS.filter(([, h]) => !h).map(([k]) => found[k]).find(Boolean) || found.og;
+  if (!hd && !sd) throw new UserError('fb.blocked', why + '-nomedia');
+  const meta = n => ((page.html.match(new RegExp('<meta property="og:' + n + '" content="([^"]*)"')) || [])[1] || '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+  const title = meta('title') || (page.html.match(/<title>([^<]*)<\/title>/) || [])[1] || 'facebook video';
+  const thumb = meta('image') || undefined;
+  const items = [];
+  if (hd) items.push({ type: 'video', hd: true, url: proxied(hd, safeName(title, 'mp4')), file: hd });
+  if (sd && sd !== hd) items.push({ type: 'video', hd: false, url: proxied(sd, safeName(title, 'mp4')), file: sd });
+  return { title, thumb, items };
+}
+
 async function resolve(url) {
   let host;
   try { host = new URL(url).hostname.replace(/^www\./, ''); } catch { throw new UserError('link.invalid'); }
   if (/(^|\.)tiktok\.com$/.test(host)) return tiktok(url);
   if (/(^|\.)(twitter\.com|x\.com|fxtwitter\.com|vxtwitter\.com)$/.test(host)) return twitter(url);
   if (/(^|\.)(instagram\.com|instagr\.am)$/.test(host)) return instagram(url);
+  if (/(^|\.)(facebook\.com|fb\.watch|fb\.com)$/.test(host)) return facebook(url);
   return cobalt(url);
 }
 
