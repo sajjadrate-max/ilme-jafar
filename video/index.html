@@ -146,8 +146,11 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
 (function(){
   // GitHub Pages can't run server code, so that copy uses the ilme-jafar API on Vercel.
   // Each base is tried in turn until one answers like our API.
+  // The first address that answers like our API wins and is remembered for next time.
+  const VERCEL=["https://ilme-jafar.vercel.app","https://ilme-jafar-ilme-jafar.vercel.app","https://ilme-jafar-git-main-ilme-jafar.vercel.app"];
   const onPages=/github\.io$/.test(location.hostname)||location.protocol==="file:";
-  const BASES=onPages?["https://www.ilmejafar.com","https://ilme-jafar.vercel.app"]:["","https://ilme-jafar.vercel.app"];
+  let saved=""; try{saved=localStorage.getItem("apiBase")||"";}catch(e){}
+  const BASES=[...new Set([saved,...(onPages?[]:[""]),...VERCEL,"https://www.ilmejafar.com"].filter(b=>b!==null&&(b!==""||!onPages)))];
   let base=BASES[0];
   const $=id=>document.getElementById(id);
   const P=[["instagram",/instagram\.com|instagr\.am/i],["facebook",/facebook\.com|fb\.watch|fb\.com/i],["tiktok",/tiktok\.com/i],["twitter",/(^|[\/.])(twitter|x)\.com\//i]];
@@ -223,11 +226,11 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
         try{
           const r=await fetch(b+"/api/download",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
           const t=await r.json().catch(()=>null);
-          if(t&&(t.items||t.error)){j=t;base=b;break;}   // answered like our API
+          if(t&&(t.items||t.error)){j=t;base=b;try{localStorage.setItem("apiBase",b);}catch(e){}break;}   // answered like our API
           code+=(b?new URL(b).hostname:"same")+":"+r.status+" ";
         }catch(e){code+=(b?new URL(b).hostname:"same")+":net ";}
       }
-      if(!j){showErr("no.api",code.trim());return;}
+      if(!j){showErr("no.api","page:"+location.host+" "+code.trim());return;}
       if(!j.items){showErr(j.error,j.detail);return;}
       render(j);
     }catch(e){showErr("fetch.fail",String(e&&e.message||e));}
