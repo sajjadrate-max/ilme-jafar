@@ -98,11 +98,46 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
 .photos img{width:100%;height:100%;object-fit:cover}
 .sheet .go{margin-top:6px}
 .done{color:var(--accent);font-weight:600;text-align:center;font-family:var(--body);direction:rtl}
+/* bottom tabs + downloads list + player */
+body{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{flex:1;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 10px;font-size:.85rem;font-weight:600;position:relative}
+.tab svg{width:26px;height:26px}
+.tab[aria-selected="true"]{color:var(--fg)}
+.badge{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:#E5484D;color:#fff;font-size:.72rem;line-height:18px;padding:0 5px;font-family:system-ui,sans-serif}
+.badge[hidden]{display:none}
+[data-view][hidden]{display:none}
+.files h2{font-family:var(--display);font-size:1.5rem;line-height:2.2;margin:0}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.fl{display:flex;flex-direction:column;gap:10px;list-style:none;margin:0;padding:0}
+.fi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;gap:12px;align-items:center}
+.fi .th{width:84px;height:84px;border-radius:10px;background:var(--line);flex:none;position:relative;overflow:hidden;border:0;padding:0;display:grid;place-items:center;color:var(--fg)}
+.fi .th img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.fi .th .pl{position:relative;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center}
+.fi .th .pl::after{content:"";border-left:12px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px}
+.fi .bd{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.fi .tt{font-size:.95rem;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;unicode-bidi:plaintext}
+.fi .mt{color:var(--muted);font-size:.82rem;unicode-bidi:plaintext;text-align:right}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.fi .acts{display:flex;gap:6px;flex-wrap:wrap}
+.fi .acts button{background:var(--bg);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:3px 10px;font-size:.82rem}
+.fi .acts .pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.fi.fail .mt{color:var(--danger)}
+.player{position:fixed;inset:0;z-index:20;background:#000;display:flex;flex-direction:column}
+.player[hidden]{display:none}
+.player .top{display:flex;align-items:center;gap:10px;padding:10px 12px;color:#fff;direction:ltr}
+.player .top b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.player .top button{background:none;color:#fff;font-size:1.7rem;line-height:1;padding:4px 8px}
+.player .stage{flex:1;display:grid;place-items:center;min-height:0}
+.player video,.player img{max-width:100%;max-height:100%}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:12;background:var(--fg);color:var(--bg);border-radius:12px;padding:10px 14px;text-align:center;font-weight:600;opacity:0;transform:translateY(10px);transition:all .2s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" data-view="home" id="homeView">
   <header>
     <h1>ویڈیو ڈاؤن لوڈر</h1>
     <p class="lead">لنک ڈالیں، فارمیٹ چنیں، اور ویڈیو اپنے موبائل میں محفوظ کریں۔</p>
@@ -134,6 +169,25 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
   <p class="note">Instagram، Facebook، TikTok یا X میں ویڈیو پر <b>شیئر</b> دبائیں، <b>Copy link</b> چنیں، پھر یہاں <b>پیسٹ</b> دبائیں۔ ایپ انسٹال ہو تو Android پر شیئر کی فہرست سے سیدھا یہ ایپ بھی چن سکتے ہیں۔</p>
   <footer>صرف اپنی یا اجازت والی ویڈیوز ڈاؤن لوڈ کریں۔</footer>
 </div>
+
+<section class="wrap files" data-view="files" id="filesView" hidden>
+  <h2>میری فائلیں</h2>
+  <ul class="fl" id="fileList"></ul>
+  <p class="empty" id="noFiles">ابھی کوئی فائل ڈاؤن لوڈ نہیں ہوئی۔</p>
+</section>
+
+<nav class="tabs" role="tablist">
+  <button class="tab" role="tab" type="button" data-tab="home" aria-selected="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>ڈاؤن لوڈ</button>
+  <button class="tab" role="tab" type="button" data-tab="files" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9v6l5-3z" fill="currentColor"/></svg>میری فائلیں<span class="badge" id="badge" hidden>0</span></button>
+</nav>
+
+<div class="player" id="player" hidden role="dialog" aria-modal="true" aria-label="پلیئر">
+  <div class="top"><b id="plTitle"></b><button type="button" id="plClose" aria-label="بند کریں">×</button></div>
+  <div class="stage" id="plStage"></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
 
 <div id="sheetRoot">
   <div class="scrim" id="scrim"></div>
@@ -205,10 +259,96 @@ footer{font-size:.82rem;color:var(--muted);text-align:center}
     sheet.innerHTML=h; openSheet(); $("shx").onclick=closeSheet;
     if(list.length) $("dl").onclick=()=>{
       const sel=sheet.querySelector('input[name=fmt]:checked');
-      save(abs(list[sel?Number(sel.value):0].url));
-      $("done").textContent="✓ ڈاؤن لوڈ شروع ہو گیا۔ نوٹیفکیشن یا Downloads فولڈر میں دیکھیں۔";
+      const pick=list[sel?Number(sel.value):0];
+      closeSheet();
+      DL.start({src:abs(pick.url),type:pick.type,title:j.title||host,thumb:j.thumb||pick.thumb||"",size:pick.size||0});
     };
   }
+
+  // --- Downloads: fetched inside the app (with progress), kept in IndexedDB so they can be
+  // watched here later, and also handed to the phone's own Downloads folder when finished.
+  const DL=(function(){
+    const list=$("fileList"),badge=$("badge"),noFiles=$("noFiles");
+    const recs=new Map(), urls=new Map();
+    let db=null;
+    const open=()=>new Promise(res=>{try{const r=indexedDB.open("vdl",1);r.onupgradeneeded=()=>r.result.createObjectStore("files",{keyPath:"id"});r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+    const tx=(mode,fn)=>new Promise(res=>{if(!db)return res(null);try{const t=db.transaction("files",mode);const q=fn(t.objectStore("files"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>res(null);}catch(e){res(null);}});
+    const put=r=>tx("readwrite",s=>s.put(r));
+    const nameOf=r=>{try{return new URL(r.src,location.href).searchParams.get("name")||"video.mp4";}catch(e){return "video.mp4";}};
+    const blobUrl=r=>{if(!r.blob)return "";if(!urls.has(r.id))urls.set(r.id,URL.createObjectURL(r.blob));return urls.get(r.id);};
+    function toPhone(r){const a=document.createElement("a");a.href=blobUrl(r);a.download=nameOf(r);document.body.appendChild(a);a.click();a.remove();}
+    function row(r){
+      const pct=r.size?Math.min(100,Math.round(r.got/r.size*100)):0;
+      const playable=r.status==="done";
+      const meta=r.status==="done"?mb(r.blob&&r.blob.size||r.size)+" · "+(r.type==="audio"?"MP3":r.type==="photo"?"تصویر":"MP4")
+        :r.status==="fail"?"ڈاؤن لوڈ رک گیا"
+        :(r.size?pct+"% · "+mb(r.got)+" / "+mb(r.size):mb(r.got)||"شروع ہو رہا ہے...");
+      return '<li class="fi'+(r.status==="fail"?' fail':'')+'" data-id="'+r.id+'">'+
+        '<button class="th" type="button" data-act="play"'+(playable?'':' disabled')+' aria-label="چلائیں">'+(r.thumb?'<img src="'+esc(r.thumb)+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':'')+(playable?'<span class="pl"></span>':'')+'</button>'+
+        '<div class="bd"><div class="tt">'+esc(r.title)+'</div><div class="mt">'+esc(meta)+'</div>'+
+        (r.status==="busy"?'<div class="bar"><i style="width:'+(r.size?pct:8)+'%"></i></div>':'')+
+        '<div class="acts">'+(playable?'<button class="pri" type="button" data-act="play">▶ دیکھیں</button><button type="button" data-act="save">فون میں محفوظ</button>':'')+
+        (r.status==="fail"?'<button class="pri" type="button" data-act="retry">دوبارہ</button>':'')+
+        '<button type="button" data-act="del">ہٹائیں</button></div></div></li>';
+    }
+    function draw(){
+      const all=[...recs.values()].sort((a,b)=>b.created-a.created);
+      list.innerHTML=all.map(row).join("");
+      noFiles.hidden=all.length>0;
+      const busy=all.filter(r=>r.status==="busy").length;
+      badge.hidden=!busy;badge.textContent=busy;
+    }
+    let pending=0;const soon=()=>{if(!pending)pending=requestAnimationFrame(()=>{pending=0;draw();});};
+    async function run(r){
+      r.status="busy";r.got=0;soon();
+      try{
+        const res=await fetch(r.src);
+        if(!res.ok||!res.body)throw new Error("http "+res.status);
+        const len=Number(res.headers.get("content-length"));if(len)r.size=len;
+        const reader=res.body.getReader(),parts=[];
+        for(;;){const {done,value}=await reader.read();if(done)break;parts.push(value);r.got+=value.length;soon();}
+        r.blob=new Blob(parts,{type:res.headers.get("content-type")||(r.type==="audio"?"audio/mpeg":"video/mp4")});
+        r.status="done";await put(r);draw();toPhone(r);toast("✓ ڈاؤن لوڈ مکمل — فون کے Downloads میں بھی محفوظ");
+      }catch(e){r.status="fail";const {blob,...m}=r;await put(m);draw();}
+    }
+    function start(o){
+      const r={id:Date.now()+"-"+Math.random().toString(36).slice(2,7),created:Date.now(),got:0,status:"busy",...o};
+      recs.set(r.id,r);put({...r});show("files");toast("ڈاؤن لوڈ شروع ہو گیا");run(r);
+    }
+    function play(r){
+      const u=blobUrl(r);$("plTitle").textContent=r.title;
+      $("plStage").innerHTML=r.type==="photo"?'<img alt="">':r.type==="audio"?'<audio controls autoplay></audio>':'<video controls autoplay playsinline></video>';
+      $("plStage").firstChild.src=u;$("player").hidden=false;
+    }
+    function closePlayer(){const m=$("plStage").firstChild;if(m&&m.pause)m.pause();$("plStage").innerHTML="";$("player").hidden=true;}
+    $("plClose").onclick=closePlayer;
+    document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("player").hidden)closePlayer();});
+    list.addEventListener("click",async e=>{
+      const b=e.target.closest("[data-act]");if(!b)return;
+      const r=recs.get(b.closest(".fi").dataset.id);if(!r)return;
+      const act=b.dataset.act;
+      if(act==="play"&&r.status==="done")play(r);
+      else if(act==="save")toPhone(r);
+      else if(act==="retry")run(r);
+      else if(act==="del"){recs.delete(r.id);if(urls.has(r.id)){URL.revokeObjectURL(urls.get(r.id));urls.delete(r.id);}await tx("readwrite",s=>s.delete(r.id));draw();}
+    });
+    (async()=>{
+      db=await open();
+      const all=await tx("readonly",s=>s.getAll())||[];
+      all.forEach(r=>{if(r.status==="busy")r.status="fail";if(!recs.has(r.id))recs.set(r.id,r);});   // closed mid-download
+      draw();
+    })();
+    return {start};
+  })();
+
+  let toastT=0;
+  function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("on"),2600);}
+  function show(v){
+    document.querySelectorAll("[data-view]").forEach(el=>el.hidden=el.dataset.view!==v);
+    document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.tab===v)));
+    scrollTo(0,0);
+  }
+  document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>show(t.dataset.tab));
 
   function showErr(k,detail){
     msg.innerHTML='<div class="status err">'+esc(ERR[k]||ERR["fetch.fail"])+(detail||k&&!ERR[k]?'<br><small dir="ltr" style="opacity:.75;font-family:var(--mono)">'+esc((ERR[k]?"":k+" ")+(detail||""))+'</small>':'')+'</div>';
