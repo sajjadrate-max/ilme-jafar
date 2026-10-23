@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>مریضوں کا کھاتہ</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1d5b4f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مریض کھاتہ">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" type="image/png" href="khata-icon-192.png">
+<link rel="apple-touch-icon" href="khata-icon-512-maskable.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<style>
+/* Layout: ایک کالم، اوپر ٹیب، نیچے کارڈ — دواخانے کے رجسٹر جیسا */
+:root{
+  --bg:#f3f1ea; --paper:#fffdf7; --ink:#1f2a27; --muted:#5f6b66; --line:#dcd7c8;
+  --accent:#1d5b4f; --accent-soft:#e1ece7; --saffron:#b8761a;
+  --good:#2f7d3e; --good-bg:#e3f1e4; --mid:#9a6a08; --mid-bg:#f7ecd3;
+  --bad:#a63a2f; --bad-bg:#f6e1dd; --idle:#5f6b66; --idle-bg:#e9e7e0;
+  --title:"Noto Nastaliq Urdu","Noto Naskh Arabic",serif;
+  --body:"Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;
+  --shadow:0 1px 2px rgba(30,40,35,.08);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141a18; --paper:#1c2421; --ink:#e8ece9; --muted:#9aa8a2; --line:#2f3a36;
+  --accent:#6cc3ad; --accent-soft:#21332e; --saffron:#e3a54a;
+  --good:#7fd08c; --good-bg:#1f3323; --mid:#e8bd5c; --mid-bg:#352c16;
+  --bad:#f08a7d; --bad-bg:#3a201c; --idle:#a9b4af; --idle-bg:#262e2b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a18; --paper:#1c2421; --ink:#e8ece9; --muted:#9aa8a2; --line:#2f3a36;
+  --accent:#6cc3ad; --accent-soft:#21332e; --saffron:#e3a54a;
+  --good:#7fd08c; --good-bg:#1f3323; --mid:#e8bd5c; --mid-bg:#352c16;
+  --bad:#f08a7d; --bad-bg:#3a201c; --idle:#a9b4af; --idle-bg:#262e2b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.8;direction:rtl}
+.wrap{max-width:820px;margin:0 auto;padding-inline:16px;padding-block:12px 60px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:8px}
+h1{font-family:var(--title);font-size:1.7rem;margin:0;line-height:2.2;color:var(--accent)}
+.sub{color:var(--muted);font-size:.9rem;margin:0}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-block:8px;border-bottom:1px solid var(--line);margin-bottom:14px}
+nav.tabs button{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 4px;cursor:pointer;font-size:.95rem}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+button,input,select,textarea{font:inherit}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--paper);border-radius:10px;padding:6px 14px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.danger{background:transparent;color:var(--bad);border-color:var(--bad)}
+.btn.sm{padding:2px 10px;font-size:.88rem}
+.btn:focus-visible,nav.tabs button:focus-visible,.row:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.bar input[type=search]{flex:1;min-width:0}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 10px}
+textarea{min-height:70px;resize:vertical}
+label{display:flex;flex-direction:column;gap:2px;font-weight:600;font-size:.92rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;box-shadow:var(--shadow)}
+.row .main{min-width:0}
+.row .name{font-weight:700;font-size:1.05rem}
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px 4px;box-shadow:var(--shadow)}
+.pcard summary{list-style:none;cursor:pointer}
+.pcard summary::-webkit-details-marker{display:none}
+.pcard summary:focus-visible{outline:3px solid var(--saffron);outline-offset:4px;border-radius:8px}
+.pcard .line{font-size:.97rem;overflow-wrap:anywhere;margin-top:2px;white-space:pre-line}
+.pcard .lbl{color:var(--muted);font-weight:700}
+.pcard .pill{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 10px;font-size:.88rem;font-weight:700;margin:2px 0}
+.pcard .tri{display:flex;justify-content:center;margin-top:4px}
+.pcard .tri span{display:inline-flex;align-items:center;justify-content:center;width:44px;height:30px;border-radius:999px;background:var(--accent);color:var(--paper);font-size:.9rem;transition:transform .2s}
+.pcard[open] .tri span{transform:rotate(180deg)}
+.pcard .more{border-top:1px dashed var(--line);margin-top:6px;padding-block:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.pcard .head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pcard .pname{font-family:var(--title);font-size:1.75rem;line-height:2.1;color:var(--accent);font-weight:700;overflow-wrap:anywhere}
+.pcard .head .chip{margin-top:12px}
+.pcard .pname .sample{font-family:var(--body);font-size:.75rem;font-weight:400;vertical-align:middle}
+.pcard dl.info{font-size:.95rem}
+.pcard .sec{margin-top:8px;font-weight:700;color:var(--muted);font-size:.88rem}
+.pcard .med{border-inline-start:3px solid var(--accent);background:var(--accent-soft);border-radius:8px;padding:4px 10px;margin-top:4px;font-size:.93rem;overflow-wrap:anywhere}
+.pcard .med .meta{color:var(--muted);font-size:.85rem}
+.pcard .fu{margin-top:4px;font-size:.93rem;overflow-wrap:anywhere}
+.medsBtn{width:100%;margin-bottom:12px}
+.picker{border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.picker .lbl2{font-weight:700;color:var(--accent)}
+.pk-row{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.pk-name{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pk-name .x{background:none;border:0;color:var(--bad);font-size:1.4rem;line-height:1;cursor:pointer;padding:0 4px}
+.pk-calc{display:grid;grid-template-columns:1fr auto 1fr auto auto;gap:6px;align-items:end;font-variant-numeric:tabular-nums}
+.pk-calc label{font-size:.8rem}
+.pk-calc span{padding-bottom:8px;color:var(--muted)}
+.pk-calc .pk-line{padding-bottom:8px;white-space:nowrap}
+.pk-sched{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:6px 0 2px}
+.pk-sched label{font-size:.78rem}
+.pk-sched select{width:100%;padding:6px 4px}
+.pk-sum{font-size:.85rem;color:var(--accent);text-align:center;margin:2px 0 4px}
+.pk-qty[readonly]{background:var(--accent-soft);font-weight:700}
+.pk-total{font-size:1rem;text-align:center;padding-top:4px}
+.pk-list{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;max-height:60vh;overflow:auto}
+.pk-list input{margin-bottom:6px}
+.pk-gh{background:var(--accent);color:var(--paper);font-weight:700;border-radius:8px;padding:4px 10px;margin:14px 0 4px}
+.pk-gh:first-child{margin-top:0}
+.pk-it{display:flex;justify-content:space-between;gap:8px;width:100%;background:none;border:0;border-bottom:1px dashed var(--line);padding:9px 6px;font:inherit;color:var(--ink);text-align:right;cursor:pointer}
+.pk-it:active{background:var(--accent-soft)}
+.pcard .clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pcard[open] .clamp{display:none}
+ul.ing{margin:4px 0;padding-inline-start:20px}
+ul.ing li{padding-block:1px;border-bottom:1px dashed var(--line)}
+label.switch{flex-direction:row;align-items:flex-start;gap:8px;color:var(--ink);font-weight:600}
+label.switch input{width:auto;margin-top:6px;transform:scale(1.3)}
+.rates{text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:.92rem;line-height:1.6}
+.profit{color:var(--good);font-weight:700;font-size:.85rem}
+.money{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.money div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:.85rem;color:var(--muted)}
+.money b{display:block;font-size:1.15rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.money .pf b{color:var(--good)}
+.period .filters{margin-bottom:8px}
+.period input,.period select{max-width:220px}
+.perhead{margin-top:8px;font-size:1rem}
+.perhead span{display:block;font-family:var(--title);color:var(--accent);font-size:1.25rem;line-height:2}
+.perhead b{font-size:1.3rem;font-variant-numeric:tabular-nums}
+.row .meta{color:var(--muted);font-size:.88rem;overflow-wrap:anywhere}
+.chip{display:inline-block;border-radius:999px;padding:0 10px;font-size:.82rem;font-weight:700;white-space:nowrap}
+.c-full{background:var(--good-bg);color:var(--good)}
+.c-some{background:var(--mid-bg);color:var(--mid)}
+.c-none{background:var(--bad-bg);color:var(--bad)}
+.c-noc,.c-pending{background:var(--idle-bg);color:var(--idle)}
+.sample{font-size:.75rem;color:var(--saffron);border:1px dashed var(--saffron);border-radius:6px;padding:0 6px;margin-inline-start:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-family:var(--title);font-size:1.2rem;margin:0 0 6px;line-height:2.1;color:var(--accent);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+dl.info{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:0}
+dl.info dt{color:var(--muted);font-weight:600}
+dl.info dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.entry{border-top:1px dashed var(--line);padding-block:8px;display:flex;justify-content:space-between;gap:10px}
+.entry:first-of-type{border-top:0}
+.entry .main{min-width:0;overflow-wrap:anywhere}
+.date{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.85rem}
+.empty{color:var(--muted);text-align:center;padding:18px;border:1px dashed var(--line);border-radius:12px}
+.back{margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:1.6rem;font-variant-numeric:tabular-nums;line-height:1.3}
+.meter{height:10px;border-radius:6px;background:var(--idle-bg);overflow:hidden;display:flex}
+.meter span{display:block;height:100%}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.filters button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:2px 12px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+th{color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;text-align:center}
+.scroll{overflow-x:auto}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);width:min(560px,calc(100vw - 24px));padding:0;direction:rtl}
+dialog::backdrop{background:rgba(10,20,16,.5)}
+dialog form{padding:16px;display:flex;flex-direction:column;gap:10px}
+dialog h3{font-family:var(--title);margin:0;line-height:2.1;color:var(--accent)}
+.actions{display:flex;gap:8px;justify-content:flex-start;flex-wrap:wrap}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:6px 16px;border-radius:999px;font-weight:600;z-index:50}
+.res-pick{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.res-pick label{flex-direction:row;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;color:var(--ink)}
+.res-pick input{width:auto}
+.note{font-size:.88rem;color:var(--muted)}
+.install{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:8px 12px;margin-bottom:12px}
+.install img{width:40px;height:40px;border-radius:10px;flex:none}
+.install .txt{flex:1;min-width:0;font-size:.9rem}
+.install .txt b{display:block;color:var(--accent)}
+.install .x{background:none;border:0;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:0 4px;line-height:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>مریضوں کا کھاتہ</h1>
+      <p class="sub">مریض، دوائیں، علاج اور فالو اپ کا مکمل ریکارڈ</p>
+    </div>
+    <a href="/" class="btn ghost sm" style="text-decoration:none;white-space:nowrap;">🏠 علم جفر ہوم</a>
+  </header>
+
+  <div class="install" id="installBar" hidden>
+    <img src="khata-icon-192.png" alt="">
+    <div class="txt"><b>ایپ انسٹال کریں</b><span id="installHint">فون کی ہوم اسکرین پر لگائیں، انٹرنیٹ کے بغیر بھی چلے گی</span></div>
+    <button class="btn sm" id="installBtn">انسٹال</button>
+    <button class="x" id="installX" aria-label="بند کریں">×</button>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="patients" aria-selected="true">مریض</button>
+    <button role="tab" data-tab="formulas" aria-selected="false">نسخے</button>
+    <button role="tab" data-tab="report" aria-selected="false">رپورٹ</button>
+  </nav>
+
+  <main id="view"></main>
+</div>
+
+<dialog id="dlg"><form id="dlgForm" method="dialog"></form></dialog>
+
+<script>
+const KEY='mareez_khata_v1';
+const RESULTS={full:'مکمل آرام آیا',some:'کچھ آرام آیا',none:'آرام نہیں آیا',noc:'رابطہ نہیں ہوا'};
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=d=>{if(!d)return'';const [y,m,dd]=d.split('-');return dd+'/'+m+'/'+y};
+
+function seed(){
+  const m1={id:uid(),name:'اکسیر ہاضم',type:'سفوف',benefits:'گیس، بدہضمی، پیٹ پھولنا، بھوک کی کمی',dose:'آدھا چمچ کھانے کے بعد پانی سے',cost:'200',price:'300',sample:true};
+  const m2={id:uid(),name:'اعصابی ملین گولی',type:'گولی',benefits:'قبض، پیٹ کی گرانی',dose:'3 گولی رات سوتے وقت',cost:'150',price:'250',sample:true};
+  const m3={id:uid(),name:'شربت بزوری',type:'شربت',benefits:'پیشاب کی جلن، گردے، ورم',dose:'2 چمچ دن میں دو بار',cost:'280',price:'400',sample:true};
+  const p1={id:uid(),name:'محمد اسلم',phone:'0300-0000000',age:'45',gender:'مرد',address:'لاہور',diseases:'معدے کی گیس، قبض',symptoms:'کھانے کے بعد پیٹ پھولتا ہے، رات کو بے چینی',notes:'',created:today(),sample:true,
+    given:[{id:uid(),date:today(),medId:m1.id,medName:m1.name,qty:'1 ڈبی',dose:m1.dose,days:'15',cost:'200',price:'300',note:''},{id:uid(),date:today(),medId:m2.id,medName:m2.name,qty:'45 گولی',dose:m2.dose,days:'15',cost:'150',price:'250',note:''}],
+    followups:[{id:uid(),date:today(),result:'full',note:'گیس بالکل ختم، قبض بھی ٹھیک'}]};
+  const p2={id:uid(),name:'شازیہ بی بی',phone:'0321-0000000',age:'38',gender:'عورت',address:'ملتان',diseases:'پیشاب کی جلن',symptoms:'پیشاب میں جلن، کمر میں ہلکا درد',notes:'',created:today(),sample:true,
+    given:[{id:uid(),date:today(),medId:m3.id,medName:m3.name,qty:'1 بوتل',dose:m3.dose,days:'10',cost:'280',price:'400',note:''}],
+    followups:[{id:uid(),date:today(),result:'some',note:'جلن کم ہے، درد باقی'}]};
+  return {meds:[m1,m2,m3],patients:[p1,p2]};
+}
+let db;
+let fresh=false;
+function load(){try{const r=localStorage.getItem(KEY);fresh=!r;db=r?JSON.parse(r):seed()}catch(e){fresh=true;db=seed()}db.meds=db.meds||[];db.patients=db.patients||[]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){toast('محفوظ نہیں ہو سکا — براؤزر اسٹوریج بند ہے')}autoSnap()}
+
+/* ---------- خودکار بیک اپ: ہر تبدیلی ایپ کے اندر دوسری جگہ (IndexedDB) بھی محفوظ، اور ہر دن کی کاپی ---------- */
+let idbP=null;
+function idb(){return idbP||(idbP=new Promise((ok,no)=>{const r=indexedDB.open('mareez_khata',1);r.onupgradeneeded=()=>r.result.createObjectStore('snaps');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}))}
+async function idbDo(mode,fn){const d=await idb();return new Promise((ok,no)=>{const t=d.transaction('snaps',mode);const r=fn(t.objectStore('snaps'));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error)})}
+const KEEP_DAYS=30;
+let snapTimer;
+function autoSnap(){clearTimeout(snapTimer);snapTimer=setTimeout(async()=>{try{
+  const rec={ts:new Date().toISOString(),data:JSON.stringify(db),n:db.patients.length};
+  await idbDo('readwrite',st=>{st.put(rec,'latest');st.put(rec,'day-'+today())});
+  const days=(await idbDo('readonly',st=>st.getAllKeys())).filter(k=>String(k).startsWith('day-')).sort();
+  if(days.length>KEEP_DAYS)await idbDo('readwrite',st=>days.slice(0,days.length-KEEP_DAYS).forEach(k=>st.delete(k)));
+}catch(e){}},1200)}
+function backupBlob(){return new Blob([JSON.stringify(db)],{type:'application/json'})}
+function downloadBackup(){const a=document.createElement('a');a.href=URL.createObjectURL(backupBlob());a.download='mareez-khata-'+today()+'.json';document.body.appendChild(a);a.click();a.remove()}
+// روزانہ بیک اپ فائل (اختیاری): دن میں پہلی بار ایپ چھونے پر Downloads میں فائل
+const AKEY='mareez_khata_autofile';
+const autoFile=()=>{try{return JSON.parse(localStorage.getItem(AKEY))||{}}catch(e){return {}}};
+const setAutoFile=v=>{try{localStorage.setItem(AKEY,JSON.stringify(v))}catch(e){}};
+document.addEventListener('pointerdown',function daily(){
+  const a=autoFile();if(a.on===false||a.last===today())return;
+  if(!db.patients.some(p=>!p.sample))return;
+  try{downloadBackup();setAutoFile({...a,last:today()});toast('آج کی بیک اپ فائل Downloads میں محفوظ ہو گئی')}catch(e){}
+},true);
+load();
+// اگر براؤزر کا ریکارڈ مٹ گیا ہو مگر خودکار بیک اپ موجود ہو تو خود واپس لے آئیں
+if(fresh)idbDo('readonly',st=>st.get('latest')).then(r=>{if(r&&r.data){const d=JSON.parse(r.data);if(Array.isArray(d.patients)&&d.patients.length){db=d;db.meds=db.meds||[];save();render();toast('پچھلا ریکارڈ خودکار بیک اپ سے واپس آ گیا')}}else autoSnap()}).catch(()=>{});else autoSnap();
+
+let state={tab:'patients',patientId:null,q:'',mq:'',filter:'all',open:new Set(),fq:'',fm:'all',per:'month',month:today().slice(0,7),year:today().slice(0,4)};
+const view=document.getElementById('view');
+
+function toast(t){const el=document.createElement('div');el.className='toast';el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2200)}
+function status(p){const f=[...(p.followups||[])].sort((a,b)=>a.date<b.date?1:-1)[0];return f?f.result:'pending'}
+function chip(r){return `<span class="chip c-${r}">${r==='pending'?'فالو اپ باقی':RESULTS[r]}</span>`}
+const num=v=>parseFloat(v)||0;
+const rs=n=>'Rs '+n.toLocaleString('en');
+// منافع صرف ان اندراجات کا جن کا خرید ریٹ لکھا ہو
+function money(given){let sale=0,cost=0,known=0;given.forEach(g=>{sale+=num(g.price);if(g.cost!==undefined&&g.cost!==''){cost+=num(g.cost);known+=num(g.price)}});return {sale,cost,profit:known-cost,hasCost:known>0||cost>0}}
+function sampleTag(x){return x.sample?'<span class="sample">نمونہ</span>':''}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;state.patientId=null;render()});
+function render(){
+  if(ensureFormulas())save();
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===(state.tab==='meds'?'patients':state.tab==='backup'?'report':state.tab)));
+  if(state.tab==='patients') state.patientId?renderPatient():renderPatients();
+  else if(state.tab==='meds') renderMeds();
+  else if(state.tab==='report') renderReport();
+  else if(state.tab==='formulas') renderFormulas();
+  else renderBackup();
+  window.scrollTo(0,0);
+}
+
+/* ---------- patients list ---------- */
+// ہر مریض کا کارڈ: بڑا نام، بیماری اور دوائیں؛ نیچے تکون دبانے سے مکمل تفصیل
+function patientCard(p){
+  const given=[...(p.given||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const f=[...(p.followups||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  const total=given.reduce((s,g)=>s+(parseFloat(g.price)||0),0);
+  const medNames=[...new Set(given.map(g=>g.medName))];
+  return `
+    <details class="pcard" data-id="${p.id}" ${state.open.has(p.id)?'open':''}>
+      <summary>
+        <div class="head"><div class="pname">${esc(p.name)}${sampleTag(p)}</div>${chip(status(p))}</div>
+        <div class="line"><span class="lbl">بیماری:</span> ${esc(p.diseases||'درج نہیں')}</div>
+        <div class="line"><span class="lbl">ادویات:</span> ${medNames.length?medNames.map(n=>`<span class="pill">${esc(n)}</span>`).join(' '):'ابھی کوئی دوا نہیں دی گئی'}</div>
+        <div class="tri" aria-hidden="true"><span>▼</span></div>
+        <span class="sr">مکمل تفصیل</span>
+      </summary>
+      <div class="more">
+        <dl class="info">
+          ${p.phone?`<dt>فون</dt><dd>${esc(p.phone)}</dd>`:''}
+          ${p.age||p.gender?`<dt>عمر / جنس</dt><dd>${esc(p.age)} ${p.gender?'· '+esc(p.gender):''}</dd>`:''}
+          ${p.address?`<dt>پتہ</dt><dd>${esc(p.address)}</dd>`:''}
+          ${p.symptoms?`<dt>علامات</dt><dd>${esc(p.symptoms)}</dd>`:''}
+          ${p.notes?`<dt>نوٹ</dt><dd>${esc(p.notes)}</dd>`:''}
+          <dt>درج تاریخ</dt><dd class="date">${fmtDate(p.created)}</dd>
+        </dl>
+        <div class="sec">دی گئی دوائیں${given.length?` · کل ${rs(total)}`:''}${money(given).hasCost?` · منافع ${rs(money(given).profit)}`:''}</div>
+        ${given.length?given.map(g=>`<div class="med"><b>${esc(g.medName)}</b>${g.qty?' · '+esc(g.qty):''}${g.price?' · Rs '+esc(g.price):''}
+          <div class="meta">${g.dose?'طریقہ: '+esc(g.dose):''}${g.days?' · '+esc(g.days)+' دن':''}${g.date?' · '+fmtDate(g.date):''}</div>${g.note?`<div class="meta">${esc(g.note)}</div>`:''}</div>`).join(''):'<div class="note">ابھی کوئی دوا نہیں دی گئی</div>'}
+        <div class="sec">آخری رابطہ</div>
+        ${f?`<div class="fu">${chip(f.result)} <span class="date">${fmtDate(f.date)}</span>${f.note?`<div>${esc(f.note)}</div>`:''}</div>`:'<div class="note">ابھی رابطہ درج نہیں</div>'}
+        <div class="actions" style="margin-top:10px"><button class="btn sm" data-open="${p.id}">بدلیں / دوا دیں / رابطہ لکھیں</button></div>
+      </div>
+    </details>`;
+}
+function renderPatients(){
+  const q=state.q.trim();
+  let list=[...db.patients].sort((a,b)=>(b.created||'').localeCompare(a.created||''));
+  if(q) list=list.filter(p=>[p.name,p.phone,p.diseases,p.symptoms,p.address].join(' ').includes(q));
+  view.innerHTML=`
+  <div class="bar">
+    <input type="search" id="pq" placeholder="نام، فون یا بیماری سے تلاش کریں" value="${esc(state.q)}">
+    <button class="btn" id="addP">+ نیا مریض</button>
+  </div>
+  <button class="btn ghost medsBtn" id="goMeds">💊 دواؤں کی فہرست (${db.meds.length})</button>
+  <div class="list">${list.length?list.map(patientCard).join(''):`<div class="empty">${q?'کوئی مریض نہیں ملا':'ابھی کوئی مریض درج نہیں — "نیا مریض" دبائیں'}</div>`}
+  </div>`;
+  const pq=document.getElementById('pq');
+  pq.oninput=()=>{state.q=pq.value;const pos=pq.selectionStart;renderPatients();const n=document.getElementById('pq');n.focus();n.setSelectionRange(pos,pos)};
+  document.getElementById('addP').onclick=()=>patientForm();
+  document.getElementById('goMeds').onclick=()=>{state.tab='meds';render()};
+  view.querySelectorAll('.pcard').forEach(d=>d.ontoggle=()=>{d.open?state.open.add(d.dataset.id):state.open.delete(d.dataset.id)});
+  view.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{state.patientId=b.dataset.open;render()});
+}
+
+/* ---------- patient detail ---------- */
+function renderPatient(){
+  const p=db.patients.find(x=>x.id===state.patientId);
+  if(!p){state.patientId=null;return render()}
+  const given=[...(p.given||[])].sort((a,b)=>b.date.localeCompare(a.date));
+  const fu=[...(p.followups||[])].sort((a,b)=>b.date.localeCompare(a.date));
+  const total=given.reduce((s,g)=>s+(parseFloat(g.price)||0),0);
+  view.innerHTML=`
+  <button class="btn ghost sm back" id="back">→ تمام مریض</button>
+  <div class="card">
+    <h2><span>${esc(p.name)}${sampleTag(p)}</span>${chip(status(p))}</h2>
+    <dl class="info">
+      ${p.phone?`<dt>فون</dt><dd>${esc(p.phone)}</dd>`:''}
+      ${p.age||p.gender?`<dt>عمر / جنس</dt><dd>${esc(p.age)} ${p.gender?'· '+esc(p.gender):''}</dd>`:''}
+      ${p.address?`<dt>پتہ</dt><dd>${esc(p.address)}</dd>`:''}
+      <dt>بیماریاں</dt><dd>${esc(p.diseases||'—')}</dd>
+      <dt>علامات</dt><dd>${esc(p.symptoms||'—')}</dd>
+      ${p.notes?`<dt>نوٹ</dt><dd>${esc(p.notes)}</dd>`:''}
+      <dt>درج تاریخ</dt><dd class="date">${fmtDate(p.created)}</dd>
+    </dl>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn ghost sm" id="editP">تفصیل بدلیں</button>
+      <button class="btn danger sm" id="delP">مریض حذف کریں</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span>دی گئی دوائیں</span><button class="btn sm" id="addG">+ دوا دیں</button></h2>
+    ${given.length?given.map(g=>`
+      <div class="entry"><div class="main">
+        <div><b>${esc(g.medName)}</b> ${g.qty?'· '+esc(g.qty):''} ${g.price?'· Rs '+esc(g.price):''}</div>
+        ${g.dose?`<div class="meta">طریقہ: ${esc(g.dose)}${g.days?' · '+esc(g.days)+' دن':''}</div>`:''}
+        ${g.note?`<div class="meta">${esc(g.note)}</div>`:''}
+        <div class="date">${fmtDate(g.date)}</div>
+      </div><div class="actions"><button class="btn ghost sm" data-eg="${g.id}">بدلیں</button></div></div>`).join('')
+      +`<div class="note" style="margin-top:6px">کل رقم: ${rs(total)}${money(given).hasCost?` · خرید ${rs(money(given).cost)} · منافع ${rs(money(given).profit)}`:''}</div>`
+      :'<div class="empty">ابھی کوئی دوا نہیں دی گئی</div>'}
+  </div>
+
+  <div class="card">
+    <h2><span>رابطہ / فالو اپ</span><button class="btn sm" id="addF">+ رابطہ لکھیں</button></h2>
+    ${fu.length?fu.map(f=>`
+      <div class="entry"><div class="main">
+        <div>${chip(f.result)}</div>
+        ${f.note?`<div>${esc(f.note)}</div>`:''}
+        <div class="date">${fmtDate(f.date)}</div>
+      </div><div class="actions"><button class="btn ghost sm" data-ef="${f.id}">بدلیں</button></div></div>`).join('')
+      :'<div class="empty">ابھی مریض سے رابطہ درج نہیں</div>'}
+  </div>`;
+  document.getElementById('back').onclick=()=>{state.patientId=null;render()};
+  document.getElementById('editP').onclick=()=>patientForm(p);
+  document.getElementById('delP').onclick=()=>confirmBox(`"${p.name}" کا سارا ریکارڈ حذف ہو جائے گا۔`,()=>{db.patients=db.patients.filter(x=>x.id!==p.id);save();state.patientId=null;render();toast('مریض حذف ہو گیا')});
+  document.getElementById('addG').onclick=()=>givenForm(p);
+  document.getElementById('addF').onclick=()=>followForm(p);
+  view.querySelectorAll('[data-eg]').forEach(b=>b.onclick=()=>givenForm(p,p.given.find(g=>g.id===b.dataset.eg)));
+  view.querySelectorAll('[data-ef]').forEach(b=>b.onclick=()=>followForm(p,p.followups.find(f=>f.id===b.dataset.ef)));
+}
+
+/* ---------- dialog helper ---------- */
+const dlg=document.getElementById('dlg'),dform=document.getElementById('dlgForm');
+function openDlg(html,onSave,onDelete){
+  dform.innerHTML=html+`<div class="actions"><button class="btn" value="save" id="dSave">محفوظ کریں</button><button class="btn ghost" value="cancel" type="button" id="dCancel">واپس</button>${onDelete?'<button class="btn danger" type="button" id="dDel">حذف کریں</button>':''}</div>`;
+  dform.onsubmit=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(dform));if(onSave(fd)!==false){dlg.close();render()}};
+  document.getElementById('dCancel').onclick=()=>dlg.close();
+  if(onDelete) document.getElementById('dDel').onclick=()=>{dlg.close();onDelete()};
+  dlg.showModal();
+  const first=dform.querySelector('input,select,textarea');if(first)first.focus();
+}
+function confirmBox(msg,yes){
+  dform.innerHTML=`<h3>کیا آپ کو یقین ہے؟</h3><p>${esc(msg)}</p><div class="actions"><button class="btn danger" type="button" id="cYes">ہاں، حذف کریں</button><button class="btn ghost" type="button" id="cNo">نہیں</button></div>`;
+  dform.onsubmit=e=>e.preventDefault();
+  document.getElementById('cYes').onclick=()=>{dlg.close();yes()};
+  document.getElementById('cNo').onclick=()=>dlg.close();
+  dlg.showModal();
+}
+
+/* ---------- forms ---------- */
+function patientForm(p){
+  const v=p||{};
+  openDlg(`<h3>${p?'مریض کی تفصیل بدلیں':'نیا مریض'}</h3>
+  <div class="grid2">
+    <label class="full">مریض کا نام *<input name="name" id="f-name" required value="${esc(v.name)}"></label>
+    <label>فون نمبر<input name="phone" id="f-phone" inputmode="tel" value="${esc(v.phone)}"></label>
+    <label>عمر<input name="age" id="f-age" inputmode="numeric" value="${esc(v.age)}"></label>
+    <label>جنس<select name="gender" id="f-gender">${['','مرد','عورت','بچہ','بچی'].map(g=>`<option ${v.gender===g?'selected':''}>${g}</option>`).join('')}</select></label>
+    <label>پتہ / شہر<input name="address" id="f-address" value="${esc(v.address)}"></label>
+    <label class="full">بیماری اور علامات<textarea name="diseases" id="f-diseases" placeholder="مثلاً: معدے کی گیس، قبض — کھانے کے بعد پیٹ پھولتا ہے">${esc([v.diseases,v.symptoms].filter(Boolean).join('\n'))}</textarea></label>
+    <div class="full picker">
+      <div class="lbl2">${p?'مزید ادویات دیں':'ادویات'}</div>
+      <button type="button" class="btn ghost" id="pk-open">+ دوا یا نسخہ چنیں</button>
+      <div id="pk-list" class="pk-list" hidden>
+        <input type="search" id="pk-q" placeholder="دوا یا نسخے کا نام تلاش کریں">
+        <div id="pk-items"></div>
+      </div>
+      <div id="pk-rows"></div>
+      <div id="pk-total" class="pk-total" hidden></div>
+    </div>
+    <label class="full">مزید نوٹ<textarea name="notes" id="f-notes">${esc(v.notes)}</textarea></label>
+  </div>`,fd=>{
+    if(!fd.name.trim()){toast('مریض کا نام لکھیں');return false}
+    fd.symptoms='';
+    const picked=pickerRows();
+    let t=p;
+    if(p){Object.assign(p,fd);delete p.sample}
+    else{t={id:uid(),created:today(),given:[],followups:[],...fd};db.patients.push(t);state.patientId=t.id}
+    t.given=t.given||[];
+    picked.forEach(r=>t.given.push({id:uid(),date:today(),medId:r.id,medName:r.name,qty:r.qty+(r.tablet?' گولی':''),dose:r.dose,days:r.days||'',cost:r.cost,price:r.price,note:''}));
+    save();toast(picked.length?`محفوظ ہو گیا · ${picked.length} دوائیں درج`:'محفوظ ہو گیا');
+  });
+  setupPicker();
+}
+/* ---------- ادویات چننے کا ڈبہ: دوا/نسخہ چنیں، تعداد لکھیں، قیمت خود بنے ---------- */
+function findItem(id){
+  const m=db.meds.find(x=>x.id===id);if(m)return {id:m.id,name:m.name,cost:m.cost||'',price:m.price||'',dose:m.dose||'',formula:false,tablet:/گولی|کیپسول|ٹیبلٹ/.test(m.type||'')};
+  const f=(db.formulas||[]).find(x=>x.id===id);if(f)return {id:f.id,name:f.name,cost:f.cost||'',price:f.price||'',dose:'',formula:true,tablet:true};
+  return null;
+}
+// ترتیب: 1 نمبر سے 6 نمبر تک کے نسخے، آخر میں باقی دوائیں
+function itemGroups(){
+  const fs=[...(db.formulas||[])].sort(fOrder);
+  const groups=['1','2','3','4','5','6'].map(k=>[`${k} نمبر · ${MIZAJ[k]}`,fs.filter(f=>f.mizaj===k).map(f=>[f.id,f.name,f.price])]);
+  groups.push(['دیگر دوائیں',[...db.meds].sort((a,b)=>a.name.localeCompare(b.name,'ur')).map(m=>[m.id,m.name,m.price])]);
+  const other=fs.filter(f=>!MIZAJ[f.mizaj]);if(other.length)groups.push(['دیگر نسخے',other.map(f=>[f.id,f.name,f.price])]);
+  return groups.filter(g=>g[1].length);
+}
+function itemOptions(sel){
+  return '<option value="">— دوا یا نسخہ چنیں —</option>'+itemGroups().map(([t,items])=>`<option disabled>──────────</option><optgroup label="◆ ${esc(t)}">${items.map(([id,n,pr])=>`<option value="${id}" ${sel===id?'selected':''}>${esc(n)}${pr?' — Rs '+esc(pr):''}</option>`).join('')}</optgroup>`).join('');
+}
+function pickerRows(){
+  return [...document.querySelectorAll('#pk-rows .pk-row')].map(r=>{const it=findItem(r.dataset.id);if(!it)return null;
+    const q=num(r.querySelector('.pk-qty').value)||0,u=num(r.querySelector('.pk-price').value);
+    const sc=pkSchedule(r);
+    if(sc){it.dose=sc.dose;it.days=sc.days}
+    return {...it,qty:String(q),price:String(Math.round(q*u*100)/100),cost:it.cost!==''?String(Math.round(q*num(it.cost)*100)/100):''}}).filter(r=>r&&num(r.qty)>0);
+}
+// گولیوں کا حساب: ایک وقت میں کتنی × دن میں کتنی بار × کتنے دن = کل گولیاں (خود نہ لکھنا پڑے)
+function pkSchedule(r){
+  const s=r.querySelector('.pk-sched');if(!s)return null;
+  const per=num(s.querySelector('.pk-per').value),times=num(s.querySelector('.pk-times').value),days=num(s.querySelector('.pk-days').value);
+  const perTxt=per===0.5?'آدھی':String(per);
+  return {per,times,days,total:Math.round(per*times*days*100)/100,dose:`${perTxt} گولی، دن میں ${times} بار (${['','صبح','صبح، شام','صبح، دوپہر، شام','ہر 6 گھنٹے بعد'][times]||''})`,days:String(days)};
+}
+function setupPicker(){
+  const openB=document.getElementById('pk-open'),list=document.getElementById('pk-list'),qi=document.getElementById('pk-q'),box=document.getElementById('pk-items'),rows=document.getElementById('pk-rows'),tot=document.getElementById('pk-total');
+  if(!openB)return;
+  const draw=()=>{const q=qi.value.trim();
+    box.innerHTML=itemGroups().map(([t,items])=>{const it=q?items.filter(x=>x[1].includes(q)):items;return it.length?`<div class="pk-gh">${esc(t)}</div>${it.map(([id,n,pr])=>`<button type="button" class="pk-it" data-pick="${id}"><span>${esc(n)}</span><span class="meta">${pr?'Rs '+esc(pr):''}</span></button>`).join('')}`:''}).join('')||'<div class="note" style="padding:8px">کچھ نہیں ملا</div>';
+    box.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{add(b.dataset.pick);list.hidden=true;openB.hidden=false;qi.value=''})};
+  openB.onclick=()=>{list.hidden=false;openB.hidden=true;draw();qi.focus()};
+  qi.oninput=draw;
+  const update=()=>{let sale=0,cost=0,hasCost=false;
+    rows.querySelectorAll('.pk-row').forEach(r=>{const sc=pkSchedule(r);if(sc){r.querySelector('.pk-qty').value=sc.total;r.querySelector('.pk-sum').innerHTML=`کل <b>${sc.total}</b> گولیاں = ${sc.per===0.5?'آدھی':sc.per} × ${sc.times} بار × ${sc.days} دن`}
+      const it=findItem(r.dataset.id);const q=num(r.querySelector('.pk-qty').value),u=num(r.querySelector('.pk-price').value);r.querySelector('.pk-line').textContent=rs(Math.round(q*u*100)/100);sale+=q*u;if(it&&it.cost!==''){cost+=q*num(it.cost);hasCost=true}});
+    sale=Math.round(sale*100)/100;cost=Math.round(cost*100)/100;
+    tot.hidden=!rows.children.length;
+    tot.innerHTML=`کل رقم: <b>${rs(sale)}</b>${hasCost?` · خرید ${rs(cost)} · <span class="profit">منافع ${rs(Math.round((sale-cost)*100)/100)}</span>`:''}`};
+  const add=id=>{const it=findItem(id);if(!it)return;
+    const ex=rows.querySelector(`[data-id="${it.id}"]`);if(ex){if(!ex.querySelector('.pk-sched')){const q=ex.querySelector('.pk-qty');q.value=num(q.value)+1}update();ex.scrollIntoView({block:'center'});return}
+    const r=document.createElement('div');r.className='pk-row';r.dataset.id=it.id;
+    const opt=(arr,def,lab)=>arr.map(v=>`<option value="${v}" ${v===def?'selected':''}>${lab(v)}</option>`).join('');
+    const sched=it.tablet?`<div class="pk-sched">
+        <label>ایک وقت میں<select class="pk-per">${opt([0.5,1,2,3,4],1,v=>v===0.5?'آدھی گولی':v+' گولی')}</select></label>
+        <label>دن میں<select class="pk-times">${opt([1,2,3,4],3,v=>v+' بار')}</select></label>
+        <label>کتنے دن<select class="pk-days">${opt([1,2,3,5,7,10,14,15,20,21,30,45,60,90],3,v=>v+' دن')}</select></label>
+      </div><div class="pk-sum"></div>`:'';
+    r.innerHTML=`<div class="pk-name"><b>${esc(it.name)}</b><button type="button" class="x" aria-label="ہٹائیں">×</button></div>${sched}
+      <div class="pk-calc"><label>${it.tablet?'کل گولیاں':'تعداد'}<input class="pk-qty" type="number" min="0" step="any" inputmode="decimal" value="1"></label><span>×</span><label>${it.tablet?'فی گولی':'ریٹ'}<input class="pk-price" type="number" min="0" step="any" inputmode="decimal" value="${esc(it.price)}" placeholder="0"></label><span>=</span><b class="pk-line"></b></div>`;
+    r.querySelector('.x').onclick=()=>{r.remove();update()};
+    r.querySelectorAll('input').forEach(i=>i.oninput=update);
+    r.querySelectorAll('select').forEach(i=>i.onchange=update);
+    if(it.tablet){const q=r.querySelector('.pk-qty');q.readOnly=true;q.title='اوپر سے خود حساب ہوتا ہے'}
+    rows.appendChild(r);update()};
+}
+function medOptions(sel){
+  return itemOptions(sel)+`<option value="__other" ${sel==='__other'?'selected':''}>دوسری دوا (نام خود لکھیں)</option>`;
+}
+function givenForm(p,g){
+  const v=g||{date:today()};
+  openDlg(`<h3>${g?'دی گئی دوا بدلیں':'مریض کو دوا دیں'}</h3>
+  <div class="grid2">
+    <label class="full">دوا<select name="medId" id="g-med">${medOptions(v.medId||(g?'__other':''))}</select></label>
+    <label class="full" id="g-other-wrap" ${v.medId||!g?'hidden':''}>دوا کا نام<input name="medName" id="g-name" value="${esc(v.medName)}"></label>
+    <label>تاریخ<input type="date" name="date" id="g-date" value="${esc(v.date)}"></label>
+    <label>مقدار<input name="qty" id="g-qty" placeholder="مثلاً 1 ڈبی، 30 گولی" value="${esc(v.qty)}"></label>
+    <label class="full">کھانے کا طریقہ / خوراک<input name="dose" id="g-dose" value="${esc(v.dose)}"></label>
+    <label>کتنے دن<input name="days" id="g-days" inputmode="numeric" value="${esc(v.days)}"></label>
+    <label>فروخت ریٹ (جو مریض سے لیا)<input name="price" id="g-price" inputmode="numeric" value="${esc(v.price)}"></label>
+    <label>خرید ریٹ (جو ملا)<input name="cost" id="g-cost" inputmode="numeric" value="${esc(v.cost)}"></label>
+    <label class="full">نوٹ<textarea name="note" id="g-note">${esc(v.note)}</textarea></label>
+  </div>`,fd=>{
+    let medName=fd.medName;
+    if(fd.medId&&fd.medId!=='__other'){const m=findItem(fd.medId);medName=m?m.name:medName}else fd.medId='';
+    if(!medName||!medName.trim()){toast('دوا چنیں یا نام لکھیں');return false}
+    // نئی دوا کا نام لکھا ہو تو اسے دواؤں کی فہرست میں بھی ڈال دیں
+    if(!fd.medId){const ex=db.meds.find(m=>m.name.trim()===medName.trim());if(ex)fd.medId=ex.id;else{const m={id:uid(),name:medName.trim(),type:'',benefits:'',dose:fd.dose||'',cost:fd.cost||'',price:fd.price||''};db.meds.push(m);fd.medId=m.id}}
+    const rec={...fd,medName};
+    if(g)Object.assign(g,rec);else p.given.push({id:uid(),...rec});
+    delete p.sample;save();toast('دوا درج ہو گئی');
+  },g?()=>confirmBox('یہ دوا کا اندراج حذف ہو جائے گا۔',()=>{p.given=p.given.filter(x=>x.id!==g.id);save();render()}):null);
+  const sel=document.getElementById('g-med'),wrap=document.getElementById('g-other-wrap');
+  sel.onchange=()=>{
+    wrap.hidden=sel.value!=='__other';
+    const m=findItem(sel.value);
+    if(m){document.getElementById('g-dose').value=m.dose||'';document.getElementById('g-price').value=m.price||'';document.getElementById('g-cost').value=m.cost||'';document.getElementById('g-name').value=m.name}
+  };
+}
+function followForm(p,f){
+  const v=f||{date:today(),result:''};
+  openDlg(`<h3>${f?'رابطہ بدلیں':'مریض سے رابطہ'}</h3>
+  <label>تاریخ<input type="date" name="date" id="fu-date" value="${esc(v.date)}"></label>
+  <div><div class="note" style="font-weight:600">نتیجہ *</div>
+  <div class="res-pick">${Object.entries(RESULTS).map(([k,t])=>`<label><input type="radio" name="result" id="fu-${k}" value="${k}" ${v.result===k?'checked':''}> ${t}</label>`).join('')}</div></div>
+  <label>مریض نے کیا بتایا<textarea name="note" id="fu-note" placeholder="مثلاً: درد کم ہے، نیند بہتر ہے">${esc(v.note)}</textarea></label>`,fd=>{
+    if(!fd.result){toast('نتیجہ چنیں');return false}
+    if(f)Object.assign(f,fd);else p.followups.push({id:uid(),...fd});
+    delete p.sample;save();toast('رابطہ درج ہو گیا');
+  },f?()=>confirmBox('یہ رابطہ حذف ہو جائے گا۔',()=>{p.followups=p.followups.filter(x=>x.id!==f.id);save();render()}):null);
+}
+function medForm(m){
+  const v=m||{};
+  openDlg(`<h3>${m?'دوا بدلیں':'نئی دوا'}</h3>
+  <div class="grid2">
+    <label class="full">دوا کا نام *<input name="name" id="m-name" required value="${esc(v.name)}"></label>
+    <label>قسم<input name="type" id="m-type" placeholder="گولی، سفوف، شربت…" value="${esc(v.type)}"></label>
+    <label>خرید ریٹ (جو ملا)<input name="cost" id="m-cost" inputmode="numeric" value="${esc(v.cost)}"></label>
+    <label>فروخت ریٹ (جو بیچنا ہے)<input name="price" id="m-price" inputmode="numeric" value="${esc(v.price)}"></label>
+    <label class="full">فوائد / کن بیماریوں میں<textarea name="benefits" id="m-benefits">${esc(v.benefits)}</textarea></label>
+    <label class="full">خوراک / طریقہ استعمال<input name="dose" id="m-dose" value="${esc(v.dose)}"></label>
+  </div>`,fd=>{
+    if(!fd.name.trim()){toast('دوا کا نام لکھیں');return false}
+    if(m){Object.assign(m,fd);delete m.sample}else db.meds.push({id:uid(),...fd});
+    save();toast('دوا محفوظ ہو گئی');
+  },m?()=>confirmBox(`"${m.name}" فہرست سے حذف ہو جائے گی (مریضوں کا پرانا ریکارڈ رہے گا)۔`,()=>{db.meds=db.meds.filter(x=>x.id!==m.id);save();render()}):null);
+}
+
+/* ---------- medicines ---------- */
+function renderMeds(){
+  const q=state.mq.trim();
+  let list=[...db.meds].sort((a,b)=>a.name.localeCompare(b.name,'ur'));
+  if(q)list=list.filter(m=>[m.name,m.benefits,m.type].join(' ').includes(q));
+  const used=id=>db.patients.filter(p=>(p.given||[]).some(g=>g.medId===id)).length;
+  view.innerHTML=`
+  <button class="btn ghost sm back" id="backM">→ تمام مریض</button>
+  <div class="bar">
+    <input type="search" id="mq" placeholder="دوا یا بیماری سے تلاش کریں" value="${esc(state.mq)}">
+    <button class="btn" id="addM">+ نئی دوا</button>
+  </div>
+  <div class="list">${list.length?list.map(m=>`
+    <div class="row" tabindex="0" data-id="${m.id}">
+      <div class="main">
+        <div class="name">${esc(m.name)}${sampleTag(m)} ${m.type?`<span class="meta">(${esc(m.type)})</span>`:''}</div>
+        ${m.benefits?`<div class="meta">فوائد: ${esc(m.benefits)}</div>`:''}
+        ${m.dose?`<div class="meta">خوراک: ${esc(m.dose)}</div>`:''}
+      </div>
+      <div class="rates">
+        <div><span class="meta">خرید</span> ${m.cost?esc(m.cost):'—'}</div>
+        <div><span class="meta">فروخت</span> <b>${m.price?esc(m.price):'—'}</b></div>
+        ${m.cost&&m.price?`<div class="profit">منافع ${rs(num(m.price)-num(m.cost))}</div>`:''}
+        <div class="meta">${used(m.id)} مریض</div>
+      </div>
+    </div>`).join(''):`<div class="empty">${q?'کوئی دوا نہیں ملی':'ابھی کوئی دوا درج نہیں'}</div>`}
+  </div>`;
+  const mq=document.getElementById('mq');
+  mq.oninput=()=>{state.mq=mq.value;const pos=mq.selectionStart;renderMeds();const n=document.getElementById('mq');n.focus();n.setSelectionRange(pos,pos)};
+  document.getElementById('backM').onclick=()=>{state.tab='patients';render()};
+  document.getElementById('addM').onclick=()=>medForm();
+  view.querySelectorAll('.row').forEach(r=>{const go=()=>medForm(db.meds.find(m=>m.id===r.dataset.id));r.onclick=go;r.onkeydown=e=>{if(e.key==='Enter')go()}});
+}
+
+
+/* ---------- نسخے (مزاج کے نمبر کے حساب سے) ---------- */
+const MIZAJ={1:'اعصابی عضلاتی',2:'عضلاتی اعصابی',3:'عضلاتی غدی',4:'غدی عضلاتی',5:'غدی اعصابی',6:'اعصابی غدی'};
+const FORMULA_SEED=[{"name": "2 ملین", "mizaj": "2", "ingredients": "کرنجوہ 1 تولہ\nآملہ 1 تولہ\nپھٹکری بریاں 2 تولہ\nہلیلہ سیاہ بریاں 4 تولہ\nکشتہ سمبل فار 1 تولہ", "benefits": "اعصابی امراض، بلغمی کھانسی، لیکوریا، جریان، سپرمز کی کمی، نزلہ، اعصابی دردیں، متلی، قے، اسہال، دست، موشن، بہنے والا دماغی شوگر", "prep": "", "dose": "", "notes": "عضلاتی اعصابی ملین کے ساتھ عضلاتی غدی اور غدی عضلاتی تک دوائی ملا سکتے ہیں۔\nاگر معدہ خراب ہو تو 2 ملین، تریاق تبخیر، جوارش جالینوس ملا کر دو تین ہفتے میں معدہ ٹھیک ہو جاتا ہے۔", "price": "", "id": "f2-1"}, {"name": "حب ہاتھی دانت", "mizaj": "2", "ingredients": "برادہ ہاتھی دانت اصلی والا 1 تولہ\nپھٹکری سفید 1 تولہ\nتخم کونچ مدبر 2 تولہ\nکائپھل 1 تولہ", "benefits": "زنانہ بانجھ پن، حمل کیلئے 95٪ رزلٹ ملا ہے۔ اس فارمولے سے عورتوں کی کافی بیماریاں ختم ہو جاتی ہیں۔ یہ vaginal system کو بالکل ٹائٹ کر دے گا۔\nاگر مرد کے جراثیم کم ہوں جیسے 35٪ ہوں اور عورت کو یہ کیپسول دے دو تو بھی حمل ہو سکتا ہے۔", "prep": "ہاتھی دانت کو چوٹ سے توڑنا اور پھر گرینڈ کر لیں۔", "dose": "500 ملی گرام سے ایک گرام کیپسول دن میں تین بار پانی کے ساتھ۔\nمینسز ختم ہوتے ہی استعمال کرا سکتے ہیں۔ دوائی 6 دن استعمال کروانے کے بعد ہمبستری کریں گے۔\nجس عورت کو حمل نہیں ہوتا صرف 6 دن استعمال کریں تو 7 دن حمل ہو جاتا ہے ان شاءاللہ۔", "notes": "طریقہ وہی ہے: پہلے مغلظ کورس، لیکوریا ٹھیک کریں، مینسز ٹھیک کریں، جنسی قوت ٹھیک کریں۔\nجب بندہ مایوس ہو جاتا ہے تو اس وقت یہ فارمولا کام کرتا ہے۔\nسب سے پہلے یہ دیکھنا ہے کہ کیا نقص ہے، کیا وجہ ہے: انڈے نہیں بن رہے، یوٹرس ڈیمج ہو، رسولی، پانی والی، پس سیل، انفیکشن، لیکوریا، ٹیوب بند، ہارمون — یہ سب مسئلے بھی ہو سکتے ہیں۔ جو پرانی عورت ہو، علاج کروا کروا کے تھک گئی ہو، تو ان سب کا علاج کرنے کے بعد بھی مسائل ہوں تو یہ فارمولا استعمال کروائیں گے۔\nجس عورت کو لیکوریا ہو اور آپ یہ فارمولا دیں تو حمل تو ہو جائے گا، لیکوریا ٹھیک ہو یا نہ ہو، لیکن بہترین طریقہ یہ ہے کہ وجہ ختم کریں۔", "price": "", "id": "f2-2"}, {"name": "2 مغلظ", "mizaj": "2", "ingredients": "تج 50 گرام\nتالمکھانہ 50 گرام\nبیج بند 50 گرام\nسمندر سوکھ 50 گرام\nتخم سریالہ 50 گرام\nتخم بھنگ 50 گرام\nکشتہ جست یا کشتہ سہ دھاتہ 15 گرام", "benefits": "کمزوری قوت باہ کو طاقت دیتا ہے، جراثیم منی کی پیدائش بڑھاتا اور گاڑھا کرتا ہے۔", "prep": "", "dose": "", "notes": "2 ملین یا بیضہ مرغ کے ساتھ ملا کر دیں تو جریان، لیکوریا کو بہت جلدی ختم کرتا ہے۔\nاحتلام، سرعت: 2 مغلظ کے ساتھ 2 ملین، تریاق تبخیر کے ساتھ ملا کر دینے سے پورے فوائد ملتے ہیں۔", "price": "", "id": "f2-3"}, {"name": "کشتہ بیضہ مرغ", "mizaj": "2", "ingredients": "کشتہ پوست بیضہ مرغ (انڈے کا چھلکا) 2 تولہ\nکشتہ سہ دھاتہ 6 ماشہ\nکشتہ صدف 3 ماشہ\nمرجان 3 ماشہ\nکشتہ فولاد 2 ماشہ", "benefits": "کیلشیم کا بہترین مرکب ہے۔ سرعت انزال، احتلام، خون بند، جریان، لیکوریا میں دوسری دوائی کے ساتھ ملا کر دیا جاتا ہے۔ رحم کی سوزش، ورم رحم، رحم میں پانی کی تھیلیاں، حاملہ خواتین میں کیلشیم کی کمی، الرجی اور چھپاکی میں بے حد مفید ہے۔", "prep": "", "dose": "", "notes": "", "price": "", "id": "f2-4"}, {"id": "f3-1", "name": "تریاق تبخیر شنگرفی", "mizaj": "3", "ingredients": "پیپلی 2 تولہ\nکشتہ شنگرف 1/2 تولہ\nکشتہ کچلہ 1/2 تولہ\nجائفل 1 تولہ\nلونگ 2 تولہ\nدارچینی 1 تولہ\nعاقرقرحا 1 تولہ\nفلفل دراز 2 تولہ\nزنجبیل 2 تولہ", "benefits": "بھوک کی کمی، ریاح معدہ، خلیوں کی کمی، انتشار جیسی علامت۔ ریاحی بلڈ پریشر ہائی کیلئے بہترین دوا ہے۔", "prep": "پہلے دارچینی اور شنگرف باریک پیس لیں، پھر باقی چیزیں، بعد میں ایک گھنٹہ کھرل کریں۔", "dose": "⚠️ بچوں اور بوڑھوں کو ہرگز نہیں دینا چاہیے۔ نوجوانوں کیلئے استعمال کروائیں۔", "notes": "خون کی کمی میں حب فولادی کے ساتھ، شربت اکسیر جگر کے ساتھ۔\nانتشار کی کمی میں مقوی خاص ملا کر۔\nبندش حیض میں مفید النساء کے ساتھ۔\nاعصابی موٹاپا میں حب صابر کے ساتھ۔\nاگر کسی کے ہاتھ کمزور ہوں تو شنگرفی، ہاضم، 3 ملین کے ساتھ دینے سے مضبوط ہو جاتے ہیں۔", "price": ""}, {"id": "f3-2", "name": "مقوی خاص جدید", "mizaj": "3", "ingredients": "رائی 12 تولہ\nلال مرچ 4 تولہ\nاجوائن دیسی 4 تولہ\nحرمل 4 تولہ\nکشتہ کچلہ 4 تولہ\nکشتہ فولاد 4 تولہ\nکشتہ سمبل فار 2 ماشہ", "benefits": "ہیضہ، ریاحی دردیں، گنٹھیا، تحجر مفاصل، اعصابی کمزوری، اعصابی دردیں، لو بلڈ پریشر، تبخیر معدہ، خون کی کمی، قے، چکر اور متلی، جنسی خواہش کی کمی، ضعف باہ میں بے حد مفید ہے۔", "prep": "", "dose": "خوراک 500mg\nسردی زیادہ لگنے کی صورت میں صرف مقوی خاص ایک گولی رات کے وقت۔", "notes": "تریاق تبخیر، 4 ملین، حب اکسیر جدید اور تمام 3، 4 نمبر مرکبات حسب ضرورت ملائے جا سکتے ہیں۔\nہیضہ کی صورت میں 4 ملین کے ساتھ ملا دی جاتی ہے۔\nتحجر مفاصل (جوڑوں میں پتھراؤ) کی صورت میں مقوی خاص، حب صابر، 4 ملین ملا دیں۔\nبلڈ پریشر لو کی صورت میں حب سنگ دانہ کے ساتھ۔\nریاح لیس دار کی زیادتی سے معدہ خرابی میں تریاق تبخیر، 4 ملین کے ساتھ۔", "price": ""}, {"id": "f4-1", "name": "4 ملین جدید", "mizaj": "4", "ingredients": "تیز پات 100 گرام\nبکائن 100 گرام\nتارا میرا 100 گرام\nرائی 100 گرام\nبابچی 100 گرام\nاجوائن دیسی 100 گرام\nگندھک 400 گرام", "benefits": "گیس، قبض، یورک ایسڈ، کولیسٹرول، خارش، چنبل، گلٹی، رسولی، احتلام، خواتین کے چہرے پر بال، رحم کی کمزوری۔ تیزابیت کا بہترین علاج ہے۔\nاکسیر جدید کے ساتھ ملانے سے مصفیٰ خون ہے؛ داغ دھبے، چھائیاں اور تیزابیت کے سیاہ داغ ختم کرتی ہے۔", "prep": "", "dose": "خارش کیلئے (بیرونی): اس میں دگنا تیل سرسوں ملا کر لگائیں۔ اگر خارش پرانی ہو تو نصف تیل اور نصف آک کے پتوں کا پانی لگاتے ہیں۔", "notes": "خارش میں اکسیر جدید کے ساتھ ملائیں۔\nمعدہ اور بلڈ پریشر لو میں تریاق تبخیر کے ساتھ۔\nتحجر مفاصل میں حب مقوی خاص کے ساتھ۔\nیہ دوا بعض اوقات اعصابی دوائی کے ساتھ ملا کر استعمال کی جاتی ہے، مثلاً اعصابی غدی یا اعصابی عضلاتی ملین کے استعمال سے جب خون میں تیزی سے ٹھنڈک پیدا ہوتی ہے تو مریض کمزور ہونے کی وجہ سے برداشت نہیں کر سکتا، اس کے نتیجے میں جوڑوں میں دردیں اور انتہائی کمزوری محسوس ہونے لگتی ہے۔ ایسے حالات میں ایک گولی 4 ملین ملا کر اعصابی دوائیں دی جائیں تو کسی قسم کا نیا مسئلہ پیدا نہیں ہوگا۔", "cost": "", "price": ""}, {"id": "f4-2", "name": "جوارش کمونی", "mizaj": "4", "ingredients": "سونٹھ 75 گرام\nبرگ سداب 100 گرام\nخولنجاں 75 گرام\nفلفل سیاہ 75 گرام\nدارچینی 80 گرام\nاجوائن دیسی 25 گرام\nزیرہ سفید 100 گرام\nکشتہ ابرک 15 گرام\nکشتہ کچلہ 15 گرام\nسرکہ انگوری حسب ضرورت", "benefits": "معدہ کی ریاح، گیس۔ تبخیر کے ساتھ ملا کر دینے سے گیس کا اخراج فوراً ختم ہوتا ہے اور گیس بننا بند ہو جاتا ہے۔\nبلڈ پریشر لو کیلئے۔\nاختناق الرحم: عورتوں کو بھی سارا مسئلہ گیس ریاح کے دباؤ سے ہوتا ہے۔", "prep": "زیرہ کو دو دن سرکہ میں بھگو دیں تاکہ زیرہ سرکہ میں ڈوب کر اسے جذب کر لے۔ دو دن بعد خشک کر کے تمام دوائیں باریک کر لیں۔ آخر میں کشتہ بالکل باریک غبار بنا کر اچھی طرح مکس کریں۔", "dose": "", "notes": "معدے کیلئے اکیلی بھی دے سکتے ہیں، اور دوسری دوائی کے ساتھ ملانے سے فوائد کئی گنا بڑھ جاتے ہیں۔", "cost": "", "price": ""}, {"id": "f4-3", "name": "ٹیسٹ ٹورون", "mizaj": "4", "ingredients": "لونگ 20 گرام\nمالکنگنی اصلی تازہ 100 گرام\nتخم کونچ مدبر 100 گرام\nاسگندھ ناگوری 100 گرام\nجنسنگ بوٹی 100 گرام\nبدھاری کند 100 گرام\nجائفل 50 گرام\nکشتہ ابرک 25 گرام", "benefits": "ٹیسٹوسٹیرون یعنی مادہ مذی بڑھانے کیلئے۔ مزاج غدی عضلاتی ہے۔\nوٹامن ڈی کی کمی، جریان، سرعت انزال، ذکاوت حس، مذی کیلئے بھی، نگاہ کی کمزوری۔ خون بنتا رہتا ہے؛ مادہ مذی، مادہ منی اور جسم کی نشوونما قائم رہتی ہے؛ چہرے پر جھریاں نہیں پڑتیں؛ جوش ولولہ پیدا ہوتا ہے۔\nیہی مادہ مذی جریان اور ذکاوت حس کی طرح جسم سے نکل کر اسے ناکارہ کرتا ہے۔\nجراثیم کی حرکت کم ہے یا حرکت نہیں ہے، اس کیلئے بھی مفید ہے۔", "prep": "پہلے پاؤڈر بنا کر پھر کشتہ مکس کر لیں۔", "dose": "500 ملی گرام سے 1000 ملی گرام تک دودھ یا پانی کے ساتھ۔", "notes": "ٹیسٹ ٹورون کو بڑھانے کیلئے:\nپہلے نمبر پر ہے مادہ مذی کی اہمیت، دوسرے نمبر پر مادہ منی کی اہمیت، تیسرے نمبر پر مادہ ودی کی اہمیت۔\n\nمادہ منی کی تعریف: وہ گاڑھا سفید پانی ہے جو شہوت سے نکلے اور اس کے نکلنے سے انسان کی شہوت ختم ہو جاتی ہے۔ اس کے نکلنے سے غسل فرض ہو جاتا ہے۔\n\nمادہ ودی کی تعریف: وہ سفید پانی جو پیشاب سے پہلے اور پیشاب کے بعد نکلتا ہے اور کبھی غسل جنابت کے بعد نکلتا ہے۔ اس سے وضو ٹوٹ جاتا ہے اور کپڑے ناپاک ہو جاتے ہیں لیکن غسل فرض نہیں ہوتا۔\n\nمادہ مذی کی تعریف: وہ سفید رقیق (پتلا) پانی جو ملاعبت (بیوی سے کھیلنے / دل لگی) کے وقت نکلتا ہے۔ مادہ مذی کو ہی ٹیسٹ ٹورون کہتے ہیں۔\n\nمادہ مذی پیشاب کی نالی کو چکنا کرنے والا مادہ ہے۔ زندگی اس کے اوپر کھڑی ہے؛ منی ختم ہو گئی کوئی بات نہیں، یہ مادہ مذی ختم ہو گا تو انسان اندر سے ختم ہو جاتا ہے۔ اگر مذی ختم ہو جائے تو منی بننا بند ہو جاتی ہے، وہ بندہ نامرد ہو جاتا ہے اور اسے ایزوسپرمیا ہو جاتا ہے۔\n\nاسی مادے کی وجہ سے جوش، ولولہ، پھرتی، چستی اور کام کرنے کو دل کرتا ہے۔ انسان کی جوانی، مضبوطی، جرأت، جوش ولولہ، کام کرنے کی صلاحیت اور خاص کر اس میں شوق اسی مادے کی زیادتی سے پیدا ہوتا ہے۔ جب یہ مادہ پیدا ہوتا ہے تو جسم میں قوتیں آ جاتی ہیں، آنکھیں بالکل توانا ہو جاتی ہیں، چہرہ ہشاش بشاش اور خوبصورت نظر آتا ہے؛ جس میں ترقی ہو سکتی ہے اس پر فوکس کرتا ہے۔ یہ سارے کام مادہ مذی پر ہوتے ہیں۔ جریان، احتلام میں بھی 90٪ یہی مادہ خارج ہوتا ہے۔\n\nاگر یہی مادہ بار بار اٹھتے بیٹھتے سرعت انزال، ذکاوت حس یا جریان کی وجہ سے خارج ہو، یا بار بار ہینڈ پریکٹس کی وجہ سے — وجہ کوئی بھی ہو — بار بار اخراج سے انسان کی جوانی، جوش ولولہ سب ختم ہوتا ہے، جسم میں ویکنس ہو جاتی ہے اور جسم ناکارہ ہو جاتا ہے۔\n\nاگر یہی مادہ درست طریقے سے بنتا رہے تو منی صحیح بنتی رہتی ہے۔ اگر یہ مادہ ختم ہو جائے تو منی آہستہ آہستہ کم ہوتے ہوتے پھر ایک وقت آتا ہے کہ منی بننا بند ہو جاتی ہے۔ اس کو مضبوط رکھنا ضروری ہے۔ یہی وہ مادہ ہے جس (کی کمی) سے عضو تناسل کی سختی ختم ہو جاتی ہے۔ سیمن اور چیز ہے، اس کا سیمن سے کوئی تعلق نہیں؛ یہ نالی کو چکنا کرنے کیلئے جسم سے خارج ہوتا ہے۔ سب سے زیادہ حرارت کی وجہ یہی مادہ ہوتا ہے۔ یہ مادہ ختم ہو جائے تو کپورے کام کرنا چھوڑ دیتے ہیں اور گردہ، مثانہ، دل، جگر، دماغ سب اعضاء کمزور ہو جاتے ہیں۔ یہ ایک شائننگ والی پالش ہے جو پورے جسم کو درست رکھتی ہے اور اسی کی وجہ سے اعضاء مضبوط رہتے ہیں۔\n\nجس عورت یا مرد میں یہ مادہ ختم ہو جائے یا کم ہو اور جوڑوں کا درد لگ جائے تو گنٹھیا تیزی سے ہو جاتا ہے اور ٹھیک نہیں ہوتا؛ جب تک یہ مادہ پورا نہ کیا جائے مریض ٹھیک نہیں ہوتا۔ اگر یہ مادہ جسم میں صحیح بنتا رہے تو سیمن بھی بنتے رہتے ہیں۔ اگر یہ مادہ پورا ہو تو 90 فیصد بیماری نہیں لگتی، ہاضمہ درست رہتا ہے۔\n\nاگر ہاضمہ خراب ہو تو یہ مادہ نکلتا رہتا ہے، پھر بیماری لگ جاتی ہے اور مادہ پھر بھی نکلتا رہتا ہے۔\n\nآپ جس کو بھی، کسی بھی بیماری کی دوائی دیں تو یہ مادہ بڑھانے کی دوائی بھی لازمی دیں، مریض جلد ٹھیک ہو گا۔\n\nیہ مادہ (ٹیسٹ ٹورون) جسم کو زندہ رکھتا ہے۔ بڑھاپے کی مین نشانی چہرے پر جھریاں پڑنا ہے، جھریاں پڑنے کی مین وجہ ضعف جگر ہے، اور ضعف جگر اس وقت زیادہ ہو جاتا ہے جب وہ ٹیسٹ ٹورون نہیں بناتا۔ بالوں کی سفیدی کی مین وجہ بھی یہی ہے۔ اگر ٹیسٹ ٹورون پورا کریں گے تو عضو تناسل لمبا اور موٹا بھی ہو جاتا ہے۔", "cost": "", "price": ""}, {"id": "f4-4", "name": "اکسیر جدید", "mizaj": "4", "ingredients": "رسکپور 6 گرام\nدار چکنا 6 گرام\nہڑتال ورقیہ 6 گرام\nپارہ 6 گرام\nگندھک 100 گرام\nاجوائن دیسی 300 گرام\nرائی 300 گرام", "benefits": "ہماری سب سے سرتاج دوائی۔ مصفیٰ خون، خارش، پھوڑے پھنسیاں۔\nزخم بھرنے کیلئے، سوزش۔\nعرق النساء جس میں ٹانگ کے پٹھوں میں کھچاؤ اور دردیں ہوں۔", "prep": "پہلے پارہ اور گندھک کی کجلی بنائیں، پھر تینوں چیزیں ملا کر کھرل کریں، بعد میں باقی دوائیں ملائیں۔", "dose": "بیرونی استعمال: تیل یا ویزلین میں ملا کر لگائیں۔\nپھوڑے جو پیپ کی صورت اختیار کر چکے ہوں اور کسی صورت آرام نہ آتا ہو تو یہ دوائی کھانے کیلئے اعصابی عضلاتی دوائی کے ساتھ ملا کر استعمال کر سکتے ہیں۔", "notes": "عرق النساء میں اکسیر جدید، حب شفاء کے ساتھ ملا کر ایک سے دو ہفتے میں مکمل آرام ہو جاتا ہے۔", "cost": "", "price": ""}, {"id": "f4-5", "name": "ضعف باہ بڑھاپا", "mizaj": "4", "ingredients": "پارہ 1 تولہ\nگندھک 2 تولہ\n(ان دونوں کی کجلی 3 تولہ، پھر:)\nلونگ 1 تولہ\nجائفل 1 تولہ\nتخم دھتورہ 1 تولہ\nکشتہ ہڑتال ورقیہ 1 تولہ", "benefits": "بڑی عمر کے مرد کو ٹائٹ کر دے گا، چہرہ سرخ، طاقت بھی آئے گی، بالکل فٹ ہو جائے گا۔", "prep": "پارہ اور گندھک دونوں چیزوں کو 8 گھنٹے کھرل کریں۔ سورج کی روشنی میں رکھیں تو چمک نہیں ہونی چاہیے؛ انتہائی کالے رنگ کا مرکب بنے گا۔ یہ تین تولہ دوائی ہے، پھر لونگ، جائفل، تخم دھتورہ اور کشتہ ہڑتال ورقیہ ملا کر سب چیزوں کو مکس کریں اور 125mg کے کیپسول بنائیں۔", "dose": "صبح، دوپہر، شام ایک کیپسول، ایک کپ دودھ کے ساتھ + مغلظ کے دو۔", "notes": "یہ فارمولا استاد محترم نے پرسنل پر لکھوایا تھا۔", "cost": "", "price": ""}, {"id": "f4-6", "name": "مریم بوٹی", "mizaj": "4", "ingredients": "مریم بوٹی", "benefits": "خواتین کے لیے مشہور فوائد:\n1. نارمل ڈیلیوری میں آسانی: روایتی طور پر زچگی میں آسانی کے لیے استعمال کی جاتی ہے۔\n2. رحم (یوٹرس) کی مضبوطی میں معاون سمجھی جاتی ہے۔\n3. ماہواری کو ریگولر کرنے میں مددگار سمجھی جاتی ہے۔\n4. ہارمونز کو متوازن کرنے میں مفید سمجھی جاتی ہے۔\n5. بانجھ پن میں معاون: بعض علاقوں میں بانجھ پن کے مسائل کے لیے استعمال کی جاتی ہے۔\n6. دردِ زہ (لیبر پین) کو کم کرنے میں مددگار سمجھی جاتی ہے۔\n7. ماہواری کے درد اور بے آرامی کو کم کرنے میں مددگار سمجھی جاتی ہے۔\n8. خون کی صفائی اور خواتین کے نظام میں جراثیم ختم کرنے میں مددگار سمجھی جاتی ہے۔\n9. ہاضمہ بہتر بنانے اور معدے کی تکالیف کم کرنے میں مددگار سمجھی جاتی ہے۔\n10. دودھ پلانے والی ماؤں کے لیے: دودھ کی پیداوار بڑھانے کے لیے بھی استعمال کی جاتی ہے۔", "prep": "", "dose": "مقدار: ایک گرام صبح، شام۔ استعمال کی مقدار ہمیشہ کم رکھیں اور مسلسل زیادہ عرصہ استعمال نہ کریں۔\nبانجھ پن کے لیے: ماہواری ختم ہونے کے بعد استعمال شروع کیا جاتا ہے؛ بعض خواتین 7 دن تک استعمال کرتی ہیں تاکہ جسم ہارمونل طور پر بہتر ردعمل دے سکے۔\nزچگی کے لیے: زیادہ تر ڈلیوری کے قریب یا خاص دنوں میں استعمال کرائی جاتی ہے۔", "notes": "⚠️ اہم احتیاط:\nحمل کے شروع کے مہینوں میں ہرگز استعمال نہ کریں۔\nبغیر ماہر کے مشورے کے زیادہ مقدار خطرناک ہو سکتی ہے۔\nحاملہ خواتین کو استعمال سے پہلے ڈاکٹر یا ماہر طبیب سے مشورہ بہت ضروری ہے، کیونکہ ہر عورت کا جسم مختلف ہوتا ہے اور بعض بوٹیاں حمل کے دوران نقصان دہ ہوتی ہیں۔\nغذائی اجزاء: اس میں کیلشیم، میگنیشیم، پوٹاشیم اور آئرن پایا جاتا ہے۔", "cost": "", "price": ""}, {"id": "f5-1", "name": "اعصابی کھانسی", "mizaj": "5", "ingredients": "تخم پیاز 50 گرام\nدارچینی 50 گرام\nکاکڑاسنگی 100 گرام", "benefits": "کھانسی", "prep": "", "dose": "کیپسول 1000mg\nبچوں کیلئے آدھا گرام شہد 🍯 میں ملا کر دیں۔", "notes": "", "cost": "", "price": ""}, {"id": "f5-2", "name": "اکسیر ورم جدید", "mizaj": "5", "ingredients": "اکسیر ورم 200 گرام\n6 تریاق 200 گرام\n5 اکسیر 100 گرام", "benefits": "رحم کی سوزش، ورم، درد حیض، بے قاعدگی ایام، پانی کی تھیلیاں، جلن دار لیکوریا، کمر درد، رحم کی خارش میں بے حد مفید ہے۔\nٹی بی، السر معدہ، کینسر، ورم جگر، سوزش غدد، شریانوں کی تنگی، کثرت حیض، ہائی بلڈ پریشر؛ جہاں پر جراثیم دیکھیں، گہری چوٹ میں بھی استعمال کر سکتے ہیں۔\nآتشکی، بواسیر اور سوزاکی زہر، رسولیاں، گلٹیاں، کینسر، کینسر کے زخم، گندے زخم، بواسیر کے زخم، ناسور، کولیسٹرول، ورم معدہ، ورم امعاء جیسے امراض کا شافی علاج ہے۔\nتپ دق، دمہ، بخار، وجع المفاصل، درد و کمی حیض؛ خواتین کی بند نالیوں (ٹیوب) کے کھولنے کیلئے مؤثر ہے۔\nپیشاب کی کمی، پیشاب کی جلن، پیشاب کی بندش اور ہائی بلڈ پریشر کیلئے مفید ہے۔\nپس سیل (انفیکشن)، پیشاب کی نالی سے پیپ آنا۔", "prep": "اکسیر ورم بنانے کا نسخہ:\nہلدی 30 گرام\nملٹھی 30 گرام\nسونف 30 گرام\nریوند خطائی 90 گرام\nکشتہ ہڑتال ورقیہ 15 گرام\n(اکسیر ورم اکیلا بھی دے سکتے ہیں: خوراک 500mg)\n\nپھر اکسیر ورم، 6 تریاق اور 5 اکسیر تینوں مکس کر کے 1000mg کیپسول بنا کر دیں۔", "dose": "", "notes": "گردہ مثانہ میں حب سنگ دانہ کے ساتھ ملانے سے پتھری ریزہ ریزہ ہو کر نکلتی ہے۔\nاعصابی اور عضلاتی ادویات کو ملانا نہیں ہے۔", "cost": "", "price": "", "v": 4}, {"id": "f5-4", "name": "5 اکسیر", "mizaj": "5", "ingredients": "سونٹھ 4 تولہ\nکالی مرچ 3 تولہ\nنوشادر ٹھیکری 3 تولہ\nکشتہ ہڑتال ورقیہ 1 تولہ", "benefits": "ہارٹ اٹیک، درد دل، شریانیں سکڑ گئی ہوں، قبض، یورک ایسڈ کے درد، ٹائیفائیڈ فیور، رسولیاں، گلٹیاں، کینسر، جلدی امراض کی بے حد مفید دوا ہے۔", "prep": "پہلے ہڑتال کو اچھی طرح باریک کریں، بعد میں سب مکس کریں۔ زردی مائل ہو جائے تو تیار ہو گیا ہے۔", "dose": "خوراک 250mg", "notes": "سردی کا موسم ہو تو 6 تریاق ملائیں اور اگر گرمی کا موسم ہو تو 1 ملین ملائیں۔\nاکسیر ورم جدید کا جز ہے۔", "cost": "", "price": "", "v": 2}, {"id": "f6-1", "name": "6 تریاق", "mizaj": "6", "ingredients": "آک کا رس آدھا کلو\nخالص ہلدی ایک کلو\nکشتہ ہڑتال ورقیہ 10 تولہ", "benefits": "ٹی بی، السر معدہ، کینسر، ورم جگر، سوزش غدد، شریانوں کی تنگی، کثرت حیض، ہائی بلڈ پریشر؛ جہاں پر جراثیم دیکھیں، گہری چوٹ میں بھی استعمال کر سکتے ہیں۔\nآتشکی، بواسیر اور سوزاکی زہر، رسولیاں، گلٹیاں، کینسر، کینسر کے زخم، گندے زخم، بواسیر کے زخم، ناسور، کولیسٹرول، ورم معدہ، ورم امعاء جیسے امراض کا شافی علاج ہے۔\nتپ دق، دمہ، بخار، وجع المفاصل، درد و کمی حیض؛ خواتین کی بند نالیوں (ٹیوب) کے کھولنے کیلئے مؤثر ہے۔\nیہ ایٹم بم بن گیا، تین دن میں کام کرنے والا۔", "prep": "آک کا پورا پودا لے لیں، اس کا رس نکالنا ہے۔ اسے کسی اسپیلر والے کو دیں، وہ رس نکال دے گا؛ اس سے دودھ، پانی اور سبز رنگ کا رس بھی نکلے گا — سب رس سبز رنگ کا ہو گا۔\nآک کا رس اور ہلدی اچھی طرح مکس کریں۔ اب یہ دھوپ میں خشک کریں گے — آگ پر خشک نہیں کرنا، فوائد ختم ہو جائیں گے۔\nپھر باریک پیس لیں، پھر کشتہ اچھی طرح مکس کر لیں۔", "dose": "خوراک 500mg کیپسول", "notes": "اکسیر ورم جدید کا جز ہے۔ سردی کے موسم میں 5 اکسیر کے ساتھ۔\nالرجی، چھپاکی میں حب شفاء کے ساتھ۔", "cost": "", "price": "", "v": 3}, {"id": "f1-1", "name": "1 ملین جدید", "mizaj": "1", "ingredients": "ملٹھی 50 گرام\nریوند خطائی 50 گرام\nگلاب کی پتیاں 50 گرام\nمیٹھا سوڈا 50 گرام", "benefits": "پیشاب کی مقدار (کمی)، پیشاب کی جلن، پیشاب کی بندش، ہائی بلڈ پریشر کیلئے مفید ہے۔\nگردہ مثانہ میں حب سنگ دانہ کے ساتھ ملانے سے پتھری ریزہ ریزہ ہو کر نکلتی ہے۔", "prep": "", "dose": "خوراک 500mg", "notes": "یہ فارمولا استاد محترم نے پرسنل پر بتایا تھا۔\nگرمی کے موسم میں 5 اکسیر کے ساتھ (6 تریاق کی جگہ)۔\nاگر 1 ملین نہ ہو تو اعصابی کھار کام کرے گی۔ اگر اعصابی کھار بھی نہ ہو تو یہ فارمولا اچھا کام کرتا ہے:\nسوہاگہ بریاں + قلمی شورہ مدبر + میٹھا سوڈا + ست ملٹھی + ریوند خطائی + سجی کھار\nاعصابی اور عضلاتی ادویات کو ملانا نہیں ہے۔\n\nاعصابی عضلاتی ملین کا نسخہ:\nقلمی شورہ خالص 1 تولہ\nجوکھار 1 تولہ\nنوشادر ٹھیکری 1 تولہ\nکاسنی 1 تولہ\nگل سرخ 3 تولہ\n\nاعصابی کھار کا نسخہ:\nمیٹھا سوڈا\nسوہاگہ بریاں\nبڑی الائچی\nسجی کھار\nریوند خطائی\n(سب برابر وزن)\nخوراک: 500mg کیپسول\nفوائد: پیشاب کی مقدار (کمی)، پیشاب کی جلن، پیشاب کی بندش۔ لو بلڈ پریشر کیلئے۔ گردہ مثانہ میں حب سنگ دانہ کے ساتھ ملانے سے پتھری ریزہ ریزہ ہو کر نکلتی ہے۔", "cost": "", "price": "", "v": 4}, {"id": "f5-5", "name": "اعصابی بخار", "mizaj": "5", "ingredients": "نمک 100 گرام\nاجوائن دیسی 300 گرام\nکشتہ گئو دنتی 10 گرام", "benefits": "سردی لگنے والے تمام بخار، اعصابی اور عضلاتی اعصابی کیلئے۔", "prep": "سب چیزوں کو پیس کر کیپسول بنائیں۔", "dose": "", "notes": "یہ فارمولا استاد محترم نے دوبارہ اپڈیٹ کر کے پرسنل پر لکھوایا تھا۔", "cost": "", "price": ""}, {"id": "f5-6", "name": "اعصابی سوزش بخار نیو", "mizaj": "5", "ingredients": "ہریڑ بریاں 30\nگندھک آملہ سار 30\nآملہ خشک 20", "benefits": "نبض موٹی، چھوٹی، گہرائی میں، لیکن بخار کی شدت سے دھڑکن تیز ہو گی۔ پیشاب مقدار میں زیادہ۔", "prep": "", "dose": "", "notes": "", "cost": "", "price": ""}, {"id": "f5-7", "name": "5 ملین", "mizaj": "5", "ingredients": "سونٹھ 2 تولہ\nنوشادر ٹھیکری 2 تولہ\nکالی مرچ 2 تولہ\nسنامکی 6 تولہ", "benefits": "آنتوں کی سوزش، سوزاک، پیشاب کی جلن، ہیپاٹائٹس، رحم کے ورم کا علاج، بلڈ پریشر لو۔\nمادے خون میں رک جاتے ہیں تو ایسے موقع پر غدد ناقلہ میں تحریک پیدا کر کے خون سے مادے گردوں کے ذریعے نکالتی ہے، ان کے قوام کو پتلا کر کے ان کی گردش رواں کرتی ہے۔ 5 ملین مسہل کا کام بھی کرتی ہے، خون سے مادوں کا اخراج شروع کر دیتی ہے۔", "prep": "", "dose": "", "notes": "ہیپاٹائٹس کی صورت میں 6 تریاق، 1 ملین، 5 مسہل سب ایک ساتھ ملا کر دیں۔\nبلڈ پریشر لو کی صورت میں 5 ہاضم کے ساتھ۔\nقبض کی صورت میں 5 مسہل کے ساتھ۔\nعورتوں میں بیضے نہ بنتے ہوں تو 4 ملین کے ساتھ۔\nپاؤں کی جلن میں حب سنگ دانہ کے ساتھ۔\nغدی موٹاپا میں 1 ملین، شربت بزوری کے ساتھ۔\nتمام جسم کے ورم میں اعصابی کھار اور عرق بزوری کے ساتھ۔\nاس کے علاوہ تمام اعصابی غدی اور اعصابی عضلاتی دوائیں ملائی جا سکتی ہیں۔ عضلاتی اعصابی اور عضلاتی غدی دوائی نہیں ملانی۔", "cost": "", "price": ""}, {"id": "f5-8", "name": "5 ہاضم جدید", "mizaj": "5", "ingredients": "کچری 125 گرام\nسنامکی 125 گرام\nکالی مرچ 100 گرام\nسونٹھ 100 گرام\nسوئے 100 گرام\nاجوائن دیسی 100 گرام\nسونف 100 گرام\nجنگلی پودینہ 100 گرام\nالسی کے بیج 100 گرام", "benefits": "یہ فارمولا 5 ہاضم سے زیادہ پاور فل ہے۔\nتبخیر معدہ، گیس، ریاح۔ بھوک نہ لگتی ہو تو اکیلا یا جوارش کمونی کے ساتھ۔", "prep": "", "dose": "ایک گرام کیپسول دن میں دو سے تین بار۔", "notes": "تمام اعصابی غدی اور اعصابی عضلاتی دوائیوں کے ساتھ ملا کر استعمال کرتے ہیں، مثلاً:\nہیپاٹائٹس میں 6 تریاق، 1 ملین کے ساتھ۔\nسوزش اور دردوں میں 5 مسہل اور حب شفاء کے ساتھ۔\nبغیر نمک والا نسخہ بلڈ پریشر ہائی کیلئے حب شفاء کے ساتھ۔\nغدی شوگر، ہیپاٹائٹس میں اعصابی دوائی کے ساتھ ملا سکتے ہیں۔\n5 ملین کی جگہ استعمال کر سکتے ہیں۔", "cost": "", "price": ""}, {"id": "f5-9", "name": "حب سنگ دانہ مرغ", "mizaj": "5", "ingredients": "کشتہ سنگ سر ماہی 1 تولہ\nکشتہ سنگ یہود 1 تولہ\nسنگ دانہ مرغ 1 تولہ\nمیٹھا سوڈا 1 تولہ\nقلمی شورہ مدبر 1 تولہ\nکچری 2 تولہ", "benefits": "ہیپاٹائٹس، ہاضمہ، پتھری: گردہ، مثانہ، پتہ اور جگر میں بھی پتھری ہوتی ہے (ڈاکٹر کہتے ہیں یہ تو کینسر ہے لیکن یہ پتھری ہوتی ہے) — سب پتھریوں کیلئے۔\nجراثیم کش: فارماکوپیا میں جو پتھری والا فارمولا ہے یہ اس سے زیادہ تیز ہے۔ جسم میں جہاں پر بھی گند پھنسا ہوا ہو گا یہ نکالے گا۔ ہیپاٹائٹس کے جو جراثیم رہ جاتے ہیں وہ اس سے نکل جاتے ہیں۔\nبلڈ پریشر لو، تبخیر معدہ، گیس، ریاح۔ نظام ہضم بھی درست کرتا ہے۔\nخاص طور پر پتھری کیلئے بنایا گیا ہے، اس لیے اسے جوشاندہ پتھری توڑ کے ساتھ استعمال کرتے ہیں تو فوائد دگنے ہو جاتے ہیں۔ 4 دن میں پتھری ٹوٹ کر خارج ہونا شروع ہو جائے گی، 8 دن میں پتھری ختم ہو جائے گی۔", "prep": "پہلے کچری کو اچھی طرح پیس لیں، پھر باقی سب چیزیں ڈالیں۔ سنگ یہود اور سنگ دانہ کو پہلے الگ تیار کرنے کے بعد ڈالنا ہے:\n\nکشتہ سنگ یہود بنانے کا طریقہ:\nسنگ یہود پانی سے اچھی طرح صاف کر لیں۔ سنگ یہود کو توڑیں تو اندر سے شیشہ نکلتا ہے، دوائی میں صرف شیشہ ڈالیں گے۔ شیشہ الگ کرنے کیلئے سنگ یہود آدھا کلو لے کر سیدھے توے پر ترتیب سے بچھا دیں، اوپر گنبد ٹائپ کا توا رکھ دیں۔ اب تیز آگ لگائیں؛ شور اور پٹاخے نکلنا شروع ہوں گے اور پتھر اڑیں گے، اوپر توا رکھا ہونے سے پتھر باہر نہیں آئیں گے۔ تقریباً 30-40 منٹ بعد جب شور اور پٹاخے بند ہو جائیں تو آگ بند کر دیں۔ اب شیشہ الگ ہو گا اور کچرا الگ؛ جو شیشہ تھا وہ سفیدی مائل کشتہ بن گیا ہے۔ کشتہ لے کر گرینڈ کر کے میدہ بنا لیں۔\n\nسنگ دانہ مرغ بنانے کا طریقہ:\nسنگ دانہ یعنی مرغی کے پوٹے کی جھلی۔ 5 کلو پانی میں ایک دو ڈھکن سرکہ اور 20 گرام نمک ڈال کر سنگ دانہ آدھا کلو ڈال دیں۔ آدھے گھنٹے کیلئے رکھ دیں، پھر ہاتھ سے مسل کر نچوڑ لیں اور اخبار پر پھیلا کر دھوپ میں سکھا لیں۔ اس کا حجم زیادہ ہوتا ہے۔\n\nکشتہ سنگ سر ماہی بنانے کا طریقہ:\nسنگ سر ماہی کو توے پر ہلکا سا فرائی کریں — بغیر پانی، بغیر گھی، کوئی چیز نہیں ڈالنی۔ اتنا فرائی کرنا ہے جیسے دو انڈے بنتے ہیں۔ پھر ساری چیزیں گرینڈ کر لیں۔", "dose": "سب چیزوں کا ایک کیپسول 1000mg، اور ساتھ یہ فارمولے: 5 ملین + 1 ملین + جوشاندہ پتھری توڑ۔\nپتھری کیلئے 1000 ملی گرام، اور ہیپاٹائٹس کے رہ جانے والے جراثیم کیلئے 500 ملی گرام دیں۔", "notes": "ساتھ اکسیر جدید پھوڑے پھنسیوں کیلئے مفید ہے۔\nبلڈ پریشر لو، تبخیر معدہ، گیس، ریاح، ہیپاٹائٹس میں اعصابی دوائی کے ساتھ ملا کر دے سکتے ہیں۔", "cost": "", "price": ""}, {"id": "f5-11", "name": "اکسیر بدیاں", "mizaj": "5", "ingredients": "ہلدی خالص\nملٹھی\nسونف\n(تینوں برابر وزن)", "benefits": "کھانسی، نزلہ، زکام، آنتوں کے ورم و سوزش، پھیپھڑوں کے ورم و سوزش، معدہ کی سوزش، گردہ، سوزاک، الرجی، سانس کی الرجی، پیشاب میں جلن۔", "prep": "", "dose": "دن میں تین بار۔", "notes": "", "cost": "", "price": ""}, {"id": "f6-3", "name": "حب شفاء جدید", "mizaj": "6", "ingredients": "سورنجان شیریں 1 تولہ\nدھتورہ 1/2 تولہ\nاجوائن خراسانی 1/2 تولہ\nچھوٹی چندن 1 تولہ\nگوند کیکر 1 تولہ\nکالی مرچ 1 تولہ\nبچھناک بغیر مدبر 1 گرام", "benefits": "ہائی بلڈ پریشر، دردیں۔\nجو سر درد صبح کو ہو اس کیلئے حب شفاء کافی ہے۔\nسر درد، دمہ خشک، دل، پھیپھڑے، دماغ کے اندر پردے میں ورم (سرسام) کیلئے مفید ہے۔", "prep": "", "dose": "ایک گرام صبح، دوپہر، شام۔", "notes": "پرانے اور پیچیدہ مریض کو جب حب شفاء کے ساتھ 1 ملین، خمیرہ گاؤ زبان اور جوارش شاہی ملا کر دیتے ہیں تو فوراً اثر ہوتا ہے۔\nالرجی، چھپاکی میں 6 تریاق ساتھ ملا کر دیتے ہیں۔\nکمر درد میں 1 ملین ملا کر دیتے ہیں۔ ان دوائیوں کے ساتھ 5 روغن مفاصل پر لگوانے کیلئے بھی دیا جاتا ہے۔\nبخار میں 5 ہاضم ساتھ ملا کر۔", "cost": "", "price": ""}, {"id": "f6-4", "name": "میل مغلظ", "mizaj": "6", "ingredients": "سمندر سوکھ 100 گرام\nسنگھاڑہ 100 گرام\nاسگندھ ناگوری 100 گرام\nستاور 100 گرام\nکونچ کے بیج مدبر 100 گرام\nتودری سفید 100 گرام\nموصلی سفید 100 گرام\nبہمن سفید 100 گرام\nبیداری کند 100 گرام\nکشتہ قلعی 20 گرام", "benefits": "میل جراثیم بنیں گے، اور نفس کو لمبا اور موٹا کرنے کیلئے بہترین کام کرتا ہے۔ جسم کو طاقت، جوان، جوش اور گرم رکھتا ہے اور نفس کو لمبا، موٹا اور تازہ کر دیتا ہے۔\nجراثیم کی حرکت کم ہے یا حرکت نہیں ہے تو اس کیلئے بھی بہترین ہے۔\nوٹامن ڈی کی کمی کیلئے: ان سب کے اندر وٹامن ڈی اور کشتہ جست موجود ہوتا ہے۔", "prep": "", "dose": "ایک چمچ یا 1 گرام صبح، دوپہر، شام۔\n3 ہفتے تک کورس۔", "notes": "وٹامن ڈی کیلئے کسی بھی تحریک والے کو دے سکتے ہیں، لیکن تیزابیت نہ ہو۔", "cost": "", "price": ""}, {"id": "f6-5", "name": "6 مغلظ جدید", "mizaj": "6", "ingredients": "بند بیج 50 گرام\nکونچ کے بیج 50 گرام\nبہمن سرخ 50 گرام\nبہمن سفید 50 گرام\nاسگندھ ناگوری 50 گرام\nناگرموتھا 50 گرام\nہارون 50 گرام\nبھنگ کے بیج 50 گرام\nجائفل 50 گرام\nتل سفید 50 گرام\nترپھلا 50 گرام\nخشخاش 50 گرام\nالسی 50 گرام\nبنولہ 50 گرام\nپھول مکھانے 50 گرام\nموصلی سفید 50 گرام\nستاور 50 گرام\nشقاقل مصری 50 گرام\nجنسنگ بوٹی 50 گرام\nاونٹ کٹارا 50 گرام", "benefits": "جریان، لیکوریا، سرعت انزال، ذکاوت حس۔ ملٹی وٹامن، انرجی بوسٹر، پاور فل۔\nقد کو لمبا کرتا ہے: حالانکہ 25 سال والے کے قد نہیں بڑھتے، لیکن یہ 28 والے اور اوپر والوں کے قد بڑھاتا ہے۔\nشادی شدہ افراد کی قوت بڑھانے کیلئے۔ کینسر والے مریض کیلئے انرجی بوسٹر ہے۔\nکمزوری قوت باہ کو طاقت دیتا ہے، اعصاب کو طاقت دیتا ہے، جراثیم منی کی پیدائش بڑھاتا اور گاڑھا کرتا ہے۔\nفالج، لیکوریا، خون کی کمی، پٹھوں کا اکڑاؤ اور کھچاؤ؛ سرعت انزال کی خاص دوا ہے۔ جراثیم کی کمی دو ہفتے میں پوری ہو جاتی ہے۔", "prep": "", "dose": "ایک چمچ صبح، شام۔\n5 ہاضم + جوارش کمونی کھانے سے پہلے، اور یہ مغلظ کھانے کے 4 گھنٹے بعد۔", "notes": "اس فارمولے کو میں نے خود تبدیل کیا ہے: ملٹی وٹامنز جدید اور مغلظ جدید دونوں کو ملایا ہے۔ اصل میں یہ فارمولا اعصابی غدی نہیں، یہ معتدل فارمولا ہے جو ہر موسم میں کام آتا ہے۔\nمغلظ اور انرجی بوسٹر یعنی ملٹی وٹامن۔ یہ اعصابی غدی مغلظ سے زیادہ طاقتور ہے۔ یہ مغلظ 60 سے 70 فیصد بیماری کو ختم کرے گا، لیکن دوسری دواؤں کے ساتھ ملا کر دینا ہے۔ دوسری دواؤں کے ساتھ دینے سے جلدی مزاج تبدیل ہو جاتا ہے — اتنی جلدی مزاج تبدیل نہیں ہوتا، اس سے ہو جائے گا۔\nجیسے غدی اعصابی مزاج بہت اچھا مزاج ہے: غدی اعصابی مزاج والی دوائی دو سے تین ماہ استعمال کروائیں تو پھر ساری زندگی پرمننٹ غدی اعصابی رہے گا۔ جیسے غدی اعصابی اکسیر صرف ایک ٹائم اس دوائی کے ساتھ تین ماہ تک — اب مزاج پرمننٹ غدی اعصابی رہے گا۔\nجریان، احتلام، سرعت میں اس کے اثرات کو بڑھانے کیلئے: 6 تریاق + 1 ملین + جوارش شاہی + خمیرہ گاؤ زبان۔ اگر ساتھ ہڈیوں کی یخنی دے دیں تو بے پناہ اضافہ ہو کر منی گاڑھی ہو جاتی ہے۔", "cost": "", "price": ""}, {"id": "f1-4", "name": "1 اکسیر (نعم البدل)", "mizaj": "1", "ingredients": "گندہ بیروزہ 100 گرام\nگوگل 100 گرام\nرال سفید 100 گرام\nببول پھلی 100 گرام\nپھٹکری سفید بریاں 100 گرام\nکوکنار 100 گرام\nکشتہ قلعی 40 گرام", "benefits": "سب سے بہترین فارمولا ہے۔ مغلظ منی، ذکاوت حس، سرعت انزال، سپرمز کیلئے، جریان، لیکوریا کیلئے مفید ہے۔", "prep": "رال سفید: لائٹ گرین کلر والی لیں۔\nببول پھلی یا کیکر کی کچی پھلی: ببول پھلی اچھی ملے تو ٹھیک ہے، اکثر خراب اور کیڑے والی ملتی ہے۔ اگر ٹھیک نہ ملے تو کیکر کی کچی پھلی ملا لیں — جس میں بیج نہ ہوں۔ چھوٹے چھوٹے ٹکڑے کاٹ کر باقی ادویات کے ساتھ گرینڈ کریں گے تو یہ بھی باقی ادویات میں پاؤڈر بن جائے گی، یا دھوپ میں سکھا کر بھی ڈال سکتے ہیں۔\nگندہ بیروزہ دیکھ کر لیں: گندہ بیروزہ ہی ہونا چاہیے۔ ایک ٹانکے لگانے والا بیروزہ ہوتا ہے، یہ وہ والا نہیں ہے۔\n\nگندہ بیروزہ کو صاف کرنے کا طریقہ:\nایک برتن لے کر پانی ڈالیں — جیسے گندہ بیروزہ 100 گرام ہو تو پانی تین چار سو گرام۔ برتن کے اوپر کوئی کھلے منہ والا کپڑا یا آٹے والا خالی بورا باندھیں۔ بورے یا کپڑے پر بیروزہ پتلا پتلا رکھیں، درمیان میں بھاپ نکلنے کی جگہ بھی رکھیں۔ پھر ہلکی آگ دیں تاکہ بھاپ لگے۔ بیروزہ ٹپک ٹپک کر اسی پانی میں جمع ہو گا؛ جو گندگی لگی ہو گی وہ کپڑے پر رہ جائے گی اور بیروزہ نیچے پانی میں چلا جائے گا۔ اب گندہ بیروزہ صاف ہو گیا، دوبارہ صاف کرنے کی ضرورت نہیں۔\nپھر پانی نتھار لیں اور دھوپ میں خشک کر لیں۔ ٹھنڈا ہونے کے بعد باقی سب ادویات مکس کر کے باریک پیس کر محفوظ کر لیں۔", "dose": "ایک سے ڈیڑھ گرام دن میں تین بار۔", "notes": "", "cost": "", "price": ""}];
+// نئے شامل کیے گئے نسخے پرانے صارفین کو بھی مل جائیں، مگر حذف کیا ہوا نسخہ واپس نہ آئے
+function ensureFormulas(){
+  let changed=false;
+  if(!Array.isArray(db.formulas)){db.formulas=[];changed=true}
+  if(!Array.isArray(db.formulaSeeds)){db.formulaSeeds=db.formulas.length?['f2-1','f2-2','f2-3','f2-4']:[];changed=true}
+  // ہٹائے گئے نسخے: اکسیر ورم، جوشاندہ پتھری توڑ، حب شفاء، اکسیر ورم (اب اکسیر ورم جدید کے اندر)
+  const REMOVED=['f5-3','f5-10','f6-2','f5-12','f1-3','f1-2'];
+  if(db.formulas.some(x=>REMOVED.includes(x.id))){db.formulas=db.formulas.filter(x=>!REMOVED.includes(x.id));changed=true}
+  // نسخے کا نیا متن آئے (v بڑھے) تو متن بدل دیں، قیمتیں وہی رہیں
+  FORMULA_SEED.forEach(f=>{const x=db.formulas.find(y=>y.id===f.id);if(x&&f.v&&(x.v||1)<f.v){Object.assign(x,{...f,cost:x.cost,price:x.price});changed=true}});
+  FORMULA_SEED.forEach(f=>{if(!db.formulaSeeds.includes(f.id)){db.formulaSeeds.push(f.id);if(!db.formulas.some(x=>x.id===f.id))db.formulas.push({...f});changed=true}});
+  // ترتیب: حب سنگ دانہ مرغ 5 نمبر میں سب سے اوپر، 5 اکسیر اور اکسیر ورم جدید سب سے نیچے
+  // نیچے کی ترتیب: اکسیر ورم جدید، پھر 5 اکسیر
+  if((db.orderV||0)<2){const set=(id,o)=>{const x=db.formulas.find(y=>y.id===id);if(x)x.ord=o};set('f5-9',0);set('f5-2',900);set('f5-12',901);set('f5-4',902);db.orderV=2;changed=true}
+  // 1 نمبر: 1 ملین جدید سب سے اوپر، پھر اعصابی عضلاتی ملین
+  if((db.orderV||0)<3){const set=(id,o)=>{const x=db.formulas.find(y=>y.id===id);if(x)x.ord=o};set('f1-1',0);set('f1-3',1);db.orderV=3;changed=true}
+  return changed;
+}
+// ہر نمبر کے اندر ترتیب: پہلے ord (اگر ہو)، پھر نام
+const fOrder=(a,b)=>(a.ord??500)-(b.ord??500)||a.name.localeCompare(b.name,'ur');
+const mzLabel=m=>MIZAJ[m]?`${m} نمبر · ${MIZAJ[m]}`:'مزاج درج نہیں';
+function formulaCard(f){
+  const ing=(f.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  const sec=(t,v)=>v&&v.trim()?`<div class="sec">${t}</div><div class="fu" style="white-space:pre-wrap">${esc(v)}</div>`:'';
+  return `
+    <details class="pcard" data-id="${f.id}" ${state.open.has(f.id)?'open':''}>
+      <summary>
+        <div class="head"><div class="pname">${esc(f.name)}</div><span class="chip c-full">${mzLabel(f.mizaj)}</span></div>
+        <div class="line"><span class="lbl">ایک گولی:</span> خرید ${f.cost?'<b>Rs '+esc(f.cost)+'</b>':'—'} · فروخت ${f.price?'<b>Rs '+esc(f.price)+'</b>':'—'}${f.cost&&f.price?` · <span class="profit">منافع ${rs(num(f.price)-num(f.cost))}</span>`:''}</div>
+        ${f.benefits?`<div class="line clamp"><span class="lbl">فوائد:</span> ${esc(f.benefits)}</div>`:''}
+        <div class="tri" aria-hidden="true"><span>▼</span></div>
+        <span class="sr">مکمل نسخہ</span>
+      </summary>
+      <div class="more">
+        <div class="sec">اجزا</div>
+        ${ing.length?`<ul class="ing">${ing.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<div class="note">اجزا درج نہیں</div>'}
+        ${sec('فوائد',f.benefits)}${sec('تیاری',f.prep)}${sec('خوراک / طریقہ',f.dose)}${sec('نوٹ',f.notes)}
+        <div class="sec">ایک گولی کی قیمت (روپے)</div>
+        <div class="grid2" style="margin-top:4px">
+          <label>خرید ریٹ<input inputmode="decimal" data-cost="${f.id}" value="${esc(f.cost)}" placeholder="مثلاً 5"></label>
+          <label>فروخت ریٹ<input inputmode="decimal" data-price="${f.id}" value="${esc(f.price)}" placeholder="مثلاً 10"></label>
+        </div>
+        <div class="actions" style="margin-top:6px"><button class="btn sm" data-psave="${f.id}">قیمت محفوظ کریں</button></div>
+        <div class="actions" style="margin-top:10px"><button class="btn ghost sm" data-fedit="${f.id}">نسخہ بدلیں</button></div>
+      </div>
+    </details>`;
+}
+function renderFormulas(){
+  const q=state.fq.trim();
+  let list=[...db.formulas].sort((a,b)=>(a.mizaj||'9').localeCompare(b.mizaj||'9')||fOrder(a,b));
+  if(state.fm!=='all')list=list.filter(f=>f.mizaj===state.fm);
+  if(q)list=list.filter(f=>[f.name,f.ingredients,f.benefits,f.notes].join(' ').includes(q));
+  view.innerHTML=`
+  <div class="bar">
+    <input type="search" id="fq" placeholder="نسخہ، جز یا بیماری سے تلاش کریں" value="${esc(state.fq)}">
+    <button class="btn" id="addF2">+ نیا نسخہ</button>
+  </div>
+  <div class="filters">${['all','1','2','3','4','5','6'].map(k=>`<button data-fm="${k}" aria-pressed="${state.fm===k}">${k==='all'?'سب':k+' نمبر'}</button>`).join('')}</div>
+  ${state.fm!=='all'?`<p class="note">${mzLabel(state.fm)}</p>`:''}
+  <div class="list">${list.length?list.map(formulaCard).join(''):`<div class="empty">${q?'کوئی نسخہ نہیں ملا':'اس نمبر میں ابھی کوئی نسخہ نہیں'}</div>`}</div>`;
+  const fq=document.getElementById('fq');
+  fq.oninput=()=>{state.fq=fq.value;const pos=fq.selectionStart;renderFormulas();const n=document.getElementById('fq');n.focus();n.setSelectionRange(pos,pos)};
+  document.getElementById('addF2').onclick=()=>formulaForm();
+  view.querySelectorAll('[data-fm]').forEach(b=>b.onclick=()=>{state.fm=b.dataset.fm;renderFormulas()});
+  view.querySelectorAll('.pcard').forEach(d=>d.ontoggle=()=>{d.open?state.open.add(d.dataset.id):state.open.delete(d.dataset.id)});
+  view.querySelectorAll('[data-psave]').forEach(b=>b.onclick=()=>{const f=db.formulas.find(x=>x.id===b.dataset.psave);f.cost=view.querySelector(`[data-cost="${f.id}"]`).value.trim();f.price=view.querySelector(`[data-price="${f.id}"]`).value.trim();save();toast('قیمت محفوظ ہو گئی');renderFormulas()});
+  view.querySelectorAll('[data-fedit]').forEach(b=>b.onclick=()=>formulaForm(db.formulas.find(x=>x.id===b.dataset.fedit)));
+}
+function formulaForm(f){
+  const v=f||{mizaj:state.fm!=='all'?state.fm:'2'};
+  openDlg(`<h3>${f?'نسخہ بدلیں':'نیا نسخہ'}</h3>
+  <div class="grid2">
+    <label class="full">نسخے کا نام *<input name="name" id="x-name" required value="${esc(v.name)}"></label>
+    <label>مزاج نمبر<select name="mizaj" id="x-mizaj">${Object.entries(MIZAJ).map(([k,t])=>`<option value="${k}" ${v.mizaj===k?'selected':''}>${k} نمبر — ${t}</option>`).join('')}</select></label>
+    <label>ایک گولی — خرید ریٹ<input name="cost" id="x-cost" inputmode="decimal" value="${esc(v.cost)}"></label>
+    <label>ایک گولی — فروخت ریٹ<input name="price" id="x-price" inputmode="decimal" value="${esc(v.price)}"></label>
+    <label class="full">اجزا (ہر جز الگ لائن میں)<textarea name="ingredients" id="x-ing" style="min-height:120px" placeholder="کرنجوہ 1 تولہ">${esc(v.ingredients)}</textarea></label>
+    <label class="full">فوائد / کن بیماریوں میں<textarea name="benefits" id="x-ben">${esc(v.benefits)}</textarea></label>
+    <label class="full">تیاری<textarea name="prep" id="x-prep">${esc(v.prep)}</textarea></label>
+    <label class="full">خوراک / طریقہ<textarea name="dose" id="x-dose">${esc(v.dose)}</textarea></label>
+    <label class="full">نوٹ<textarea name="notes" id="x-notes">${esc(v.notes)}</textarea></label>
+  </div>`,fd=>{
+    if(!fd.name.trim()){toast('نسخے کا نام لکھیں');return false}
+    if(f)Object.assign(f,fd);else{const n={id:uid(),...fd};db.formulas.push(n);state.open.add(n.id)}
+    save();toast('نسخہ محفوظ ہو گیا');
+  },f?()=>confirmBox(`"${f.name}" کا نسخہ حذف ہو جائے گا۔`,()=>{db.formulas=db.formulas.filter(x=>x.id!==f.id);save();render()}):null);
+}
+
+/* ---------- report ---------- */
+function renderReport(){
+  const keys=['full','some','none','pending'];
+  const cnt={full:0,some:0,none:0,noc:0,pending:0};
+  // مدت: سب / مہینہ / سال — اس مدت میں جن مریضوں کو دوا دی گئی
+  const MONTHS=['جنوری','فروری','مارچ','اپریل','مئی','جون','جولائی','اگست','ستمبر','اکتوبر','نومبر','دسمبر'];
+  const pre=state.per==='month'?state.month:state.per==='year'?state.year:'';
+  const inPer=d=>!pre||(d||'').startsWith(pre);
+  const pats=pre?db.patients.filter(p=>(p.given||[]).some(g=>inPer(g.date))):db.patients;
+  pats.forEach(p=>cnt[status(p)]++);
+  const tot=pats.length||1;
+  const perLabel=state.per==='month'?(MONTHS[+state.month.slice(5)-1]||'')+' '+state.month.slice(0,4):state.per==='year'?'سال '+state.year:'شروع سے اب تک';
+  const years=[...new Set([today().slice(0,4),...db.patients.flatMap(p=>(p.given||[]).map(g=>(g.date||'').slice(0,4)))].filter(Boolean))].sort().reverse();
+  // سال چنا ہو تو ہر مہینے کا حساب
+  const monthRows=state.per==='year'?MONTHS.map((n,i)=>{const mp=state.year+'-'+String(i+1).padStart(2,'0');const ps=db.patients.filter(p=>(p.given||[]).some(g=>(g.date||'').startsWith(mp)));const c={full:0,some:0,none:0,other:0};ps.forEach(p=>{const s=status(p);if(c[s]!==undefined)c[s]++;else c.other++});const m=money(db.patients.flatMap(p=>(p.given||[]).filter(g=>(g.date||'').startsWith(mp))));return {n,count:ps.length,c,m}}):[];
+  const colors={full:'var(--good)',some:'var(--mid)',none:'var(--bad)',noc:'var(--idle)',pending:'var(--idle)'};
+  const label=k=>k==='pending'?'فالو اپ باقی':RESULTS[k];
+  let list=pats.filter(p=>state.filter==='all'||status(p)===state.filter||(state.filter==='pending'&&status(p)==='noc'));
+  // medicine effectiveness
+  const medStats={};
+  pats.forEach(p=>{const s=status(p);const names=new Set((p.given||[]).filter(g=>inPer(g.date)).map(g=>g.medName));names.forEach(n=>{medStats[n]=medStats[n]||{full:0,some:0,none:0,other:0};if(s==='full'||s==='some'||s==='none')medStats[n][s]++;else medStats[n].other++})});
+  const medRows=Object.entries(medStats).sort((a,b)=>(b[1].full+b[1].some)-(a[1].full+a[1].some));
+  const allGiven=db.patients.flatMap(p=>(p.given||[]).filter(g=>inPer(g.date)));const mny=money(allGiven);
+  view.innerHTML=`
+  <div class="card period">
+    <div class="filters">${[['month','مہینہ'],['year','سال'],['all','سب']].map(([k,t])=>`<button data-per="${k}" aria-pressed="${state.per===k}">${t}</button>`).join('')}</div>
+    ${state.per==='month'?`<input type="month" id="perMonth" value="${state.month}">`:''}
+    ${state.per==='year'?`<select id="perYear">${years.map(y=>`<option ${y===state.year?'selected':''}>${y}</option>`).join('')}</select>`:''}
+    <div class="perhead"><span>${perLabel}</span><b>${pats.length}</b> مریضوں نے دوا لی · <b style="color:var(--good)">${cnt.full+cnt.some}</b> کو آرام آیا</div>
+  </div>
+  <div class="money">
+    <div>کل فروخت<b>${rs(mny.sale)}</b></div>
+    <div>کل خرید<b>${rs(mny.cost)}</b></div>
+    <div class="pf">کل منافع<b>${rs(mny.profit)}</b></div>
+  </div>
+  <div class="stats">
+    ${keys.map(k=>`<div class="stat c-${k}"><b>${k==='pending'?cnt.pending+cnt.noc:cnt[k]}</b>${label(k)}</div>`).join('')}
+  </div>
+  <div class="meter" aria-label="نتائج کا تناسب">${['full','some','none'].map(k=>`<span style="width:${cnt[k]/tot*100}%;background:${colors[k]}"></span>`).join('')}</div>
+  <p class="note">${perLabel}: ${pats.length} مریض · ہر مریض کا آخری رابطہ گنا گیا ہے</p>
+${state.per==='year'?`
+  <div class="card">
+    <h2><span>${esc(state.year)} — مہینہ وار</span></h2>
+    <div class="scroll"><table><thead><tr><th>مہینہ</th><th>مریض</th><th>مکمل آرام</th><th>کچھ آرام</th><th>آرام نہیں</th><th>باقی</th><th>فروخت</th><th>منافع</th></tr></thead><tbody>
+    ${monthRows.map(r=>`<tr${r.count?'':' style="color:var(--muted)"'}><td>${r.n}</td><td class="n"><b>${r.count}</b></td><td class="n" style="color:var(--good)">${r.c.full}</td><td class="n" style="color:var(--mid)">${r.c.some}</td><td class="n" style="color:var(--bad)">${r.c.none}</td><td class="n">${r.c.other}</td><td class="n">${r.m.sale.toLocaleString('en')}</td><td class="n" style="color:var(--good)">${r.m.profit.toLocaleString('en')}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`:''}
+
+  <div class="card">
+    <h2><span>مریض بلحاظ نتیجہ</span></h2>
+    <div class="filters">${['all',...keys].map(k=>`<button data-f="${k}" aria-pressed="${state.filter===k}">${k==='all'?'سب':label(k)}</button>`).join('')}</div>
+    <div class="list">${list.length?list.map(p=>{const f=[...p.followups].sort((a,b)=>b.date.localeCompare(a.date))[0];return `
+      <div class="row" tabindex="0" data-id="${p.id}"><div class="main">
+        <div class="name">${esc(p.name)}${sampleTag(p)}</div>
+        <div class="meta">${esc(p.diseases||'')}</div>
+        <div class="meta">دوا: ${esc([...new Set(p.given.map(g=>g.medName))].join('، ')||'—')}</div>
+        ${f&&f.note?`<div class="meta">"${esc(f.note)}" · ${fmtDate(f.date)}</div>`:''}
+      </div>${chip(status(p))}</div>`}).join(''):'<div class="empty">اس حصے میں کوئی مریض نہیں</div>'}</div>
+  </div>
+
+  <div class="card">
+    <h2><span>کس دوا سے کتنوں کو آرام آیا</span></h2>
+    ${medRows.length?`<div class="scroll"><table><thead><tr><th>دوا</th><th>مکمل آرام</th><th>کچھ آرام</th><th>آرام نہیں</th><th>باقی</th></tr></thead><tbody>
+    ${medRows.map(([n,s])=>`<tr><td>${esc(n)}</td><td class="n" style="color:var(--good)">${s.full}</td><td class="n" style="color:var(--mid)">${s.some}</td><td class="n" style="color:var(--bad)">${s.none}</td><td class="n">${s.other}</td></tr>`).join('')}
+    </tbody></table></div>`:'<div class="empty">ابھی کسی مریض کو دوا نہیں دی گئی</div>'}
+  </div>
+  <p class="note" style="text-align:center;margin-top:18px"><button class="btn ghost sm" id="goBk">بیک اپ فائل لیں / واپس لائیں</button></p>`;
+  view.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{state.filter=b.dataset.f;renderReport()});
+  document.getElementById('goBk').onclick=()=>{state.tab='backup';render()};
+  view.querySelectorAll('[data-per]').forEach(b=>b.onclick=()=>{state.per=b.dataset.per;renderReport()});
+  const pm=document.getElementById('perMonth');if(pm)pm.onchange=()=>{if(pm.value){state.month=pm.value;renderReport()}};
+  const py=document.getElementById('perYear');if(py)py.onchange=()=>{state.year=py.value;renderReport()};
+  view.querySelectorAll('.row').forEach(r=>{const go=()=>{state.tab='patients';state.patientId=r.dataset.id;render()};r.onclick=go;r.onkeydown=e=>{if(e.key==='Enter')go()}});
+}
+
+/* ---------- backup ---------- */
+function renderBackup(){
+  const hasSample=db.meds.some(m=>m.sample)||db.patients.some(p=>p.sample);
+  view.innerHTML=`
+  <button class="btn ghost sm back" id="backR">→ رپورٹ</button>
+  <div class="card">
+    <h2><span>بیک اپ لیں</span></h2>
+    <div class="actions">
+      <button class="btn" id="dl">بیک اپ فائل ڈاؤن لوڈ کریں</button>
+      <button class="btn ghost" id="sh">Drive / واٹس ایپ پر بھیجیں</button>
+      <button class="btn ghost" id="cp">بیک اپ کاپی کریں</button>
+    </div>
+    <p class="note">کاپی کیا ہوا متن واٹس ایپ پر خود کو بھیج کر بھی محفوظ کر سکتے ہیں۔</p>
+    <textarea id="bk" readonly style="min-height:90px;direction:ltr;font-size:.75rem" hidden></textarea>
+  </div>
+  <div class="card">
+    <h2><span>بیک اپ واپس لائیں</span></h2>
+    <label>بیک اپ فائل چنیں<input type="file" id="fi" accept=".json,application/json,text/plain"></label>
+    <label style="margin-top:8px">یا بیک اپ متن یہاں پیسٹ کریں<textarea id="pastebk" style="direction:ltr;font-size:.75rem"></textarea></label>
+    <div class="actions" style="margin-top:8px"><button class="btn" id="restore">بیک اپ واپس لائیں</button></div>
+    <p class="note">موجودہ ڈیٹا کی جگہ بیک اپ والا ڈیٹا آ جائے گا۔</p>
+  </div>
+  ${hasSample?`<div class="card"><h2><span>نمونہ ریکارڈ</span></h2><p>شروع میں سمجھانے کے لیے کچھ نمونہ مریض اور دوائیں ڈالی گئی ہیں۔</p><button class="btn danger" id="clrS">نمونہ ریکارڈ ہٹائیں</button></div>`:''}`;
+  document.getElementById('backR').onclick=()=>{state.tab='report';render()};
+  const json=()=>JSON.stringify(db);
+  document.getElementById('dl').onclick=()=>{try{downloadBackup();toast('بیک اپ فائل بن گئی')}catch(e){toast('ڈاؤن لوڈ نہیں ہوا — کاپی والا طریقہ استعمال کریں')}};
+  document.getElementById('sh').onclick=async()=>{const f=new File([backupBlob()],'mareez-khata-'+today()+'.json',{type:'application/json'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'مریضوں کا کھاتہ — بیک اپ'})}catch(e){}}else{downloadBackup();toast('یہ فون شیئر نہیں کرتا — فائل ڈاؤن لوڈ ہو گئی')}};
+  const restore=txt=>{try{const d=JSON.parse(txt);if(!Array.isArray(d.patients)||!Array.isArray(d.meds))throw 0;confirmBox('موجودہ سارا ڈیٹا بیک اپ سے بدل جائے گا۔',()=>{db=d;save();toast('بیک اپ واپس آ گیا');state.tab='patients';render()})}catch(e){toast('یہ درست بیک اپ نہیں ہے')}};
+  document.getElementById('restore').onclick=()=>{const f=document.getElementById('fi').files[0];const t=document.getElementById('pastebk').value.trim();if(f){const r=new FileReader();r.onload=()=>restore(r.result);r.readAsText(f)}else if(t)restore(t);else toast('پہلے فائل چنیں یا متن پیسٹ کریں')};
+  const c=document.getElementById('clrS');if(c)c.onclick=()=>confirmBox('تمام نمونہ مریض اور نمونہ دوائیں حذف ہو جائیں گی۔ آپ کا اپنا ریکارڈ رہے گا۔',()=>{db.meds=db.meds.filter(m=>!m.sample);db.patients=db.patients.filter(p=>!p.sample);save();render();toast('نمونہ ریکارڈ ہٹ گیا')});
+}
+
+render();
+
+/* ---------- ایپ انسٹال ---------- */
+(function(){
+  const bar=document.getElementById('installBar'),btn=document.getElementById('installBtn'),hint=document.getElementById('installHint');
+  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const DKEY='mareez_khata_install_hidden';
+  const dismissed=()=>{try{return Date.now()-(+localStorage.getItem(DKEY)||0)<7*864e5}catch(e){return false}};
+  let deferred=null;
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+  // انسٹال ایپ میں براؤزر ڈیٹا خود سے نہ مٹائے
+  if(navigator.storage&&navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+  if(standalone) return;
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.hidden=false;if(!dismissed())bar.hidden=false});
+  btn.onclick=async()=>{
+    if(!deferred){toast('براؤزر کے مینو ⋮ سے "Add to Home screen" دبائیں');return}
+    deferred.prompt();const r=await deferred.userChoice;deferred=null;
+    if(r.outcome==='accepted')bar.hidden=true;
+  };
+  document.getElementById('installX').onclick=()=>{bar.hidden=true;try{localStorage.setItem(DKEY,Date.now())}catch(e){}};
+  window.addEventListener('appinstalled',()=>{bar.hidden=true;toast('ایپ انسٹال ہو گئی — ہوم اسکرین سے کھولیں')});
+  // آئی فون پر خودکار انسٹال نہیں، طریقہ بتائیں
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!dismissed()){
+    hint.textContent='نیچے Share ⬆️ دبائیں، پھر "Add to Home Screen" چنیں';btn.hidden=true;bar.hidden=false;
+  }
+})();
+</script>
+</body>
+</html>
