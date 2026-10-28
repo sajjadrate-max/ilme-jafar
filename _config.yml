@@ -3,3 +3,4 @@ plugins: []
 exclude:
   - Gemfile
   - Gemfile.lock
+  - android-herbal

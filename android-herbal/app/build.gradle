@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.ilmejafar.herbal'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.ilmejafar.herbal'
+        minSdk 21
+        targetSdk 34
+        versionCode ((System.getenv('VERSION_CODE') ?: '1') as int)
+        versionName "1.0.${System.getenv('VERSION_CODE') ?: '1'}"
+    }
+
+    // مستقل کلید GitHub Secrets سے آتی ہے تاکہ نئی APK پرانی ایپ کے اوپر انسٹال ہو سکے؛
+    // کلید نہ ہو تو debug کلید سے سائن ہوتی ہے
+    def keystorePath = System.getenv('HERBAL_KEYSTORE_PATH')
+    def hasReleaseKey = keystorePath && file(keystorePath).exists()
+
+    signingConfigs {
+        if (hasReleaseKey) {
+            release {
+                storeFile file(keystorePath)
+                storePassword System.getenv('HERBAL_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('HERBAL_KEY_ALIAS') ?: 'herbal'
+                keyPassword System.getenv('HERBAL_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig hasReleaseKey ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
