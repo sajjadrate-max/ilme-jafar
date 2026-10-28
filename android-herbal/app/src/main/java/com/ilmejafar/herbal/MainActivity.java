@@ -17,8 +17,8 @@ import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
 
-    private static final String START_URL = "https://www.ilmejafar.com/herbal/";
-    private static final String SITE_HOST = "ilmejafar.com";
+    private static final String START_URL = "https://myherbalpk.com/";
+    private static final String[] SITE_HOSTS = {"myherbalpk.com", "ilmejafar.com"};
     private static final int FILE_CHOOSER_REQUEST = 1001;
 
     private WebView webView;
@@ -87,9 +87,10 @@ public class MainActivity extends Activity {
     private boolean handleUrl(Uri uri) {
         String scheme = uri.getScheme();
         String host = uri.getHost();
-        if (("https".equals(scheme) || "http".equals(scheme)) && host != null
-                && (host.equals(SITE_HOST) || host.endsWith("." + SITE_HOST))) {
-            return false;
+        if (("https".equals(scheme) || "http".equals(scheme)) && host != null) {
+            for (String site : SITE_HOSTS) {
+                if (host.equals(site) || host.endsWith("." + site)) return false;
+            }
         }
         openExternal(uri);
         return true;
