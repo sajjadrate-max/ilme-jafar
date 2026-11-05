@@ -890,15 +890,24 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       <div class="abjad-row"><input class="abjad-input" type="time" id="housesTob" style="flex:1;"></div>
 
       <label class="abjad-label">۳. شہرِ پیدائش</label>
-      <div class="abjad-row" style="gap:8px;">
-        <input class="abjad-input" type="text" id="housesCityInput" placeholder="شہر کا نام لکھیں (دنیا کا کوئی بھی شہر)…" autocomplete="off" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupHousesCity();}">
-        <button type="button" class="q-btn" style="width:auto;padding:0 16px;" onclick="lookupHousesCity()">🔎 تلاش</button>
-      </div>
-      <div id="housesCityStatus" style="font-size:11px;color:rgba(250,247,240,.5);margin:4px 2px 8px;"></div>
+      <select class="abjad-input day-select" id="housesPkCity" style="margin-bottom:8px;" onchange="selectPkCity()">
+        <option value="">-- پاکستان کے شہر میں سے منتخب کریں --</option>
+      </select>
+      <div id="housesCityStatus" style="font-size:11px;color:rgba(250,247,240,.5);margin:-2px 2px 8px;"></div>
       <input type="hidden" id="housesLat">
       <input type="hidden" id="housesLon">
       <input type="hidden" id="housesTz">
       <input type="hidden" id="housesCityLabel">
+
+      <div style="text-align:left;margin:-4px 0 8px;">
+        <a href="javascript:void(0)" onclick="toggleHousesOtherCity()" style="font-size:11px;color:rgba(232,200,122,.8);text-decoration:underline;">شہر پاکستان میں نہیں؟ یہاں تلاش کریں</a>
+      </div>
+      <div id="housesOtherCity" class="hidden" style="margin-bottom:8px;">
+        <div class="abjad-row" style="gap:8px;">
+          <input class="abjad-input" type="text" id="housesCityInput" placeholder="شہر کا نام لکھیں (دنیا کا کوئی بھی شہر)…" autocomplete="off" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupHousesCity();}">
+          <button type="button" class="q-btn" style="width:auto;padding:0 16px;" onclick="lookupHousesCity()">🔎 تلاش</button>
+        </div>
+      </div>
 
       <div style="text-align:left;margin:-4px 0 8px;">
         <a href="javascript:void(0)" onclick="toggleHousesManual()" style="font-size:11px;color:rgba(232,200,122,.8);text-decoration:underline;">شہر نہیں ملا؟ کوآرڈینیٹس خود درج کریں</a>
@@ -2447,6 +2456,8 @@ window.addEventListener('DOMContentLoaded',function(){
   var sel=document.getElementById('langSelect');
   if(sel) sel.value=s;
   applyLang(s);
+
+  populatePkCities();
 });
 
 /* == NAVIGATION == */
@@ -3278,6 +3289,100 @@ var HOUSE_MEANINGS=[
   {title:'گیارہواں گھر — آمدنی',desc:'دوست احباب، امیدیں اور خواہشات کی تکمیل۔ بڑے بہن بھائی کی امیدیں، چھوٹی بیماریاں، داماد، بہو، والد سے فائدہ لینا چاہنے والے لوگ اور مشورہ دینے والے؛ خواہش اور رزق؛ بہنوئی؛ سماجی سرگرمیاں؛ مہنگے زیورات اور سامان؛ بہو؛ ہسپتال سے ڈسچارج ہونا؛ ترمیم و اصلاح؛ جذباتی وابستگی؛ ناجائز تعلق؛ تعلقات کی پسندیدگی؛ چاپلوسی؛ مشکلات سے آزادی؛ دوستی اور دوستوں سے فائدہ؛ کاروبار میں منافع؛ قرض لینا؛ ذہانت؛ شاہانہ/لگژری سواری؛ دوستوں میں عزت؛ امید اور آمدنی؛ دایاں کان اور ٹانگیں؛ زیورات سے محبت اور بال؛ چچا، پھوپھی اور چاچی؛ خوشی اور خواہش کی تسکین؛ بہو کا شوہر؛ اور بڑا بھائی، بڑی بہن۔'},
   {title:'بارہواں گھر — نقصانات',desc:'اخراجات، تنہائی، روحانی ترقی اور بیرون ملک سے تعلق، خواب، اور پوشیدہ دشمن — اسے نجات یا آزادی کا گھر بھی کہا جاتا ہے۔ حسد، نظر بندی، جادو؛ بیوی کا گھر؛ بیوی کی بیماری؛ ذہن کا کام نہ کرنا؛ اختلاف؛ ہر قسم کی بدنصیبی؛ قتل؛ خفیہ/پوشیدہ کام؛ قید — حقیقی یا نفسیاتی احساسِ قید؛ قرض کا خاتمہ؛ نافرمانی اور بری عادات؛ ذہنی پریشانی اور خواب؛ مشکل تجربات؛ نجات اور اخراجات؛ پاؤں؛ بیرونِ ملک ہجرت اور امیگریشن؛ ہسپتال میں داخلہ اور رخصتی؛ بیماریوں پر خرچ؛ ہر قسم کی رکاوٹ؛ ملازمت کا خاتمہ؛ آزادی اور اپنی حدود کا علم؛ بدنصیبی سے پیدا ہونے والا نقصان؛ دوستوں کا نقصان؛ نرسنگ ہومز؛ مشکل وقت میں نئی مہارت سیکھنا؛ ظلم و ستم اور غربت؛ عمل/نقشہ اور مشاعرہ؛ قرض کی ادائیگی؛ سکون بخش جگہ؛ خفیہ دشمن اور بغاوت؛ مختصر وقت کی عزت اور اس کا چلا جانا؛ شریکِ حیات کی بیماری؛ گناہ، تنہائی اور شک؛ تعطیلات؛ اور جسمانی زخم پہنچانے والے حادثات۔'}
 ];
+/* == PAKISTAN CITIES (offline, no AI lookup needed) — lat/lon approx city-centre, tz is always UTC+5 (no DST) == */
+var PK_CITIES=[
+  {group:'پنجاب',cities:[
+    ['لاہور',31.5497,74.3436],['راولپنڈی',33.5651,73.0169],['فیصل آباد',31.4504,73.1350],['ملتان',30.1575,71.5249],
+    ['گوجرانوالہ',32.1877,74.1945],['سیالکوٹ',32.4945,74.5229],['بہاولپور',29.3956,71.6833],['سرگودھا',32.0836,72.6711],
+    ['شیخوپورہ',31.7131,73.9783],['جھنگ',31.2781,72.3317],['رحیم یار خان',28.4202,70.2952],['گجرات',32.5740,74.0789],
+    ['قصور',31.1180,74.4467],['ساہیوال',30.6682,73.1114],['اوکاڑہ',30.8081,73.4467],['واہ کینٹ',33.7701,72.7467],
+    ['ڈیرہ غازی خان',30.0561,70.6342],['میانوالی',32.5839,71.5371],['مظفر گڑھ',30.0703,71.1933],['خانیوال',30.3011,71.9323],
+    ['حافظ آباد',32.0710,73.6880],['کوٹ ادو',30.4700,70.9647],['جہلم',32.9425,73.7257],['اٹک',33.7667,72.3667],
+    ['وہاڑی',30.0333,72.3500],['نارووال',32.1014,74.8788],['چنیوٹ',31.7200,72.9800],['کامونکی',32.0975,74.2278],
+    ['بورے والا',30.1639,72.6611],['ٹوبہ ٹیک سنگھ',30.9709,72.4839],['خانپور',28.6453,70.6567],['حاصل پور',29.6900,72.5500],
+    ['چشتیاں',29.8000,72.8667],['ڈسکہ',32.3267,74.3500],['منڈی بہاؤالدین',32.5861,73.4917],['پاکپتن',30.3417,73.3861],
+    ['جڑانوالہ',31.3333,73.4167],['شورکوٹ',30.8294,72.1358],['لیہ',30.9667,70.9333],['بھکر',31.6286,71.0653],
+    ['مریدکے',31.8028,74.2583],['ننکانہ صاحب',31.4500,73.7000],['چکوال',32.9328,72.8630],['ٹیکسلا',33.7461,72.7850],
+    ['بھلوال',32.2667,72.9000],['عارف والا',30.2917,73.0667],['گوجرہ',31.1497,72.6836],['ہارون آباد',29.5633,73.1364],
+    ['جتوئی',29.5100,70.8500],['کہروڑ پکا',29.9436,71.9381],['دنیاپور',29.8044,71.7589],['ڈنگہ',32.6333,73.7667],
+    ['پتوکی',31.0167,73.8500],['پنڈی بھٹیاں',31.8906,73.2714],['پیر محل',30.7389,72.4186],['سمبڑیال',32.4833,74.3500],
+    ['وزیرآباد',32.4422,74.1247],['خوشاب',32.2956,72.3528],['لودھراں',29.5375,71.6308],['میاں چنوں',30.4389,72.3550],
+    ['احمد پور شرقیہ',29.1486,71.2611]
+  ]},
+  {group:'سندھ',cities:[
+    ['کراچی',24.8607,67.0011],['حیدرآباد',25.3960,68.3578],['سکھر',27.7052,68.8574],['لاڑکانہ',27.5590,68.2123],
+    ['نواب شاہ',26.2442,68.4100],['میرپور خاص',25.5269,69.0111],['جیکب آباد',28.2817,68.4375],['شکارپور',27.9556,68.6381],
+    ['خیرپور',27.5295,68.7592],['دادو',26.7311,67.7761],['ٹنڈو الہ یار',25.4608,68.7183],['ٹنڈو آدم',25.7636,68.6611],
+    ['بدین',24.6558,68.8378],['ٹھٹھہ',24.7461,67.9239],['عمرکوٹ',25.3614,69.7361],['گھوٹکی',28.0092,69.3147],
+    ['کشمور',28.4328,69.5847],['نوشہروفیروز',26.8419,68.1247],['حالہ',25.8083,68.4203],['مورو',26.6683,68.0011],
+    ['سانگھڑ',26.0464,68.9475],['مٹیاری',25.6000,68.4500],['جامشورو',25.4300,68.2800],['کوٹری',25.3667,68.3083],
+    ['مٹھی',24.7333,69.8000]
+  ]},
+  {group:'خیبر پختونخوا',cities:[
+    ['پشاور',34.0151,71.5249],['مردان',34.1986,72.0404],['مینگورہ (سوات)',34.7717,72.3622],['کوہاٹ',33.5833,71.4500],
+    ['ایبٹ آباد',34.1463,73.2114],['ڈیرہ اسماعیل خان',31.8314,70.9019],['بنوں',32.9881,70.6047],['سوابی',34.1203,72.4683],
+    ['چارسدہ',34.1453,71.7361],['نوشہرہ',34.0150,71.9750],['مانسہرہ',34.3333,73.2000],['ہری پور',33.9950,72.9336],
+    ['چترال',35.8511,71.7864],['بٹگرام',34.6667,73.0333],['بونیر (دگر)',34.5167,72.4667],['ٹانک',32.2167,70.3833],
+    ['لکی مروت',32.6083,70.9114],['کرک',33.1167,71.0947],['ہنگو',33.5325,71.0586],['شانگلہ (الپوری)',34.8511,72.6572],
+    ['تیمرگرہ (لوئر دیر)',34.8306,71.8392],['دیر بالا',35.2089,71.8744],['مالاکنڈ',34.5667,71.9333],['پاراچنار',33.9000,70.0833]
+  ]},
+  {group:'بلوچستان',cities:[
+    ['کوئٹہ',30.1798,66.9750],['گوادر',25.1264,62.3225],['خضدار',27.8081,66.6128],['تربت',26.0036,63.0514],
+    ['سبی',29.5433,67.8769],['ژوب',31.3411,69.4481],['چمن',30.9167,66.4500],['لورالائی',30.3706,68.5983],
+    ['ڈیرہ بگٹی',29.0333,69.1500],['حب',25.0144,66.9681],['نوشکی',29.5522,66.0219],['پسنی',25.2631,63.4697],
+    ['مستونگ',29.7983,66.8450],['قلات',29.0247,66.5889],['اوستہ محمد',28.1775,68.0447],['پنجگور',26.9711,64.0961],
+    ['دالبندین',28.8867,64.4089],['ڈیرہ اللہ یار',28.5833,68.3167]
+  ]},
+  {group:'آزاد کشمیر',cities:[
+    ['مظفرآباد',34.3700,73.4711],['میرپور',33.1478,73.7508],['راولاکوٹ',33.8575,73.7586],['کوٹلی',33.5169,73.9025],
+    ['بھمبر',32.9767,74.0789]
+  ]},
+  {group:'گلگت بلتستان',cities:[
+    ['گلگت',35.9203,74.3081],['سکردو',35.2971,75.6333],['ہنزہ',36.3167,74.6500],['چلاس',35.4167,74.1000]
+  ]},
+  {group:'وفاقی دارالحکومت',cities:[
+    ['اسلام آباد',33.6844,73.0479]
+  ]}
+];
+function populatePkCities(){
+  var sel=document.getElementById('housesPkCity');
+  if(!sel||sel.options.length>1) return;
+  PK_CITIES.forEach(function(g){
+    var og=document.createElement('optgroup');
+    og.label=g.group;
+    g.cities.forEach(function(c){
+      var opt=document.createElement('option');
+      opt.value=c[1]+','+c[2]+',5';
+      opt.textContent=c[0];
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+function selectPkCity(){
+  var sel=document.getElementById('housesPkCity');
+  if(!sel.value) return;
+  var p=sel.value.split(',');
+  var name=sel.options[sel.selectedIndex].textContent;
+  document.getElementById('housesLat').value=p[0];
+  document.getElementById('housesLon').value=p[1];
+  document.getElementById('housesTz').value=p[2];
+  document.getElementById('housesCityLabel').value=name+'، پاکستان';
+  document.getElementById('housesCityStatus').textContent='📍 '+name+'، پاکستان | ٹائم زون: UTC +5';
+}
+function toggleHousesOtherCity(){
+  var d=document.getElementById('housesOtherCity');
+  d.classList.toggle('hidden');
+  if(!d.classList.contains('hidden')){
+    var sel=document.getElementById('housesPkCity');
+    sel.value='';
+    document.getElementById('housesLat').value='';
+    document.getElementById('housesLon').value='';
+    document.getElementById('housesTz').value='';
+    document.getElementById('housesCityLabel').value='';
+    document.getElementById('housesCityStatus').textContent='';
+  }
+}
 function toggleHousesManual(){
   var m=document.getElementById('housesManual');
   m.classList.toggle('hidden');
@@ -3319,7 +3424,7 @@ function runHouses(){
     lon=parseFloat(document.getElementById('housesLon').value);
     tz=parseFloat(document.getElementById('housesTz').value);
     cityLabel=document.getElementById('housesCityLabel').value;
-    if(isNaN(lat)||isNaN(lon)){alert('براہ کرم فہرست سے ایک شہر منتخب کریں (ٹائپ کر کے تجویز پر کلک کریں)');return;}
+    if(isNaN(lat)||isNaN(lon)){alert('براہ کرم اوپر فہرست سے اپنا شہر منتخب کریں، یا شہر پاکستان میں نہ ہو تو نیچے لنک سے تلاش کریں');return;}
     if(isNaN(tz)){alert('ٹائم زون ابھی معلوم ہو رہا ہے، چند ثانیے بعد دوبارہ کوشش کریں — یا نیچے لنک سے دستی درج کریں');return;}
   }
   var dp=dobVal.split('-');
