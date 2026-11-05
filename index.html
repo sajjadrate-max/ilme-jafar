@@ -40,6 +40,8 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9829612219556114" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -898,6 +900,14 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       <input type="hidden" id="housesLon">
       <input type="hidden" id="housesTz">
       <input type="hidden" id="housesCityLabel">
+
+      <div style="text-align:left;margin:-4px 0 8px;">
+        <a href="javascript:void(0)" onclick="toggleHousesMap()" style="font-size:11px;color:rgba(232,200,122,.8);text-decoration:underline;">یا نقشے پر اپنی جائے پیدائش کے قریب کلک کریں</a>
+      </div>
+      <div id="housesMapWrap" class="hidden" style="margin-bottom:8px;">
+        <div id="housesMap" style="height:280px;border-radius:9px;overflow:hidden;border:1.5px solid rgba(26,50,88,.25);"></div>
+        <div style="font-size:10.5px;color:rgba(250,247,240,.45);margin:4px 2px 0;">نقشے پر اپنی جائے پیدائش کے قریب جگہ پر کلک کریں — قریب ترین شہر خودبخود اوپر منتخب ہو جائے گا</div>
+      </div>
 
       <div style="text-align:left;margin:-4px 0 8px;">
         <a href="javascript:void(0)" onclick="toggleHousesOtherCity()" style="font-size:11px;color:rgba(232,200,122,.8);text-decoration:underline;">شہر پاکستان میں نہیں؟ یہاں تلاش کریں</a>
@@ -3369,6 +3379,46 @@ function selectPkCity(){
   document.getElementById('housesTz').value=p[2];
   document.getElementById('housesCityLabel').value=name+'، پاکستان';
   document.getElementById('housesCityStatus').textContent='📍 '+name+'، پاکستان | ٹائم زون: UTC +5';
+}
+function pkDist(lat1,lon1,lat2,lon2){
+  var R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+  var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+  return 2*R*Math.asin(Math.sqrt(a));
+}
+function findNearestPkCity(lat,lon){
+  var best=null,bestD=Infinity;
+  PK_CITIES.forEach(function(g){
+    g.cities.forEach(function(c){
+      var d=pkDist(lat,lon,c[1],c[2]);
+      if(d<bestD){bestD=d;best=c;}
+    });
+  });
+  return {city:best,dist:bestD};
+}
+var housesMapInstance=null,housesMapMarker=null;
+function toggleHousesMap(){
+  var w=document.getElementById('housesMapWrap');
+  w.classList.toggle('hidden');
+  if(!w.classList.contains('hidden')) initHousesMap();
+}
+function initHousesMap(){
+  if(housesMapInstance){ setTimeout(function(){housesMapInstance.invalidateSize();},100); return; }
+  if(typeof L==='undefined') return;
+  housesMapInstance=L.map('housesMap',{zoomControl:true}).setView([30.3753,69.3451],5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(housesMapInstance);
+  housesMapInstance.on('click',function(e){ onHousesMapClick(e.latlng.lat,e.latlng.lng); });
+  setTimeout(function(){housesMapInstance.invalidateSize();},150);
+}
+function onHousesMapClick(lat,lon){
+  var res=findNearestPkCity(lat,lon);
+  if(!res.city) return;
+  var c=res.city;
+  if(housesMapMarker) housesMapInstance.removeLayer(housesMapMarker);
+  housesMapMarker=L.marker([c[1],c[2]]).addTo(housesMapInstance);
+  var sel=document.getElementById('housesPkCity');
+  sel.value=c[1]+','+c[2]+',5';
+  selectPkCity();
+  document.getElementById('housesCityStatus').textContent='📍 '+c[0]+'، پاکستان (قریب ترین شہر، تقریباً '+Math.round(res.dist)+' کلومیٹر دور) | ٹائم زون: UTC +5';
 }
 function toggleHousesOtherCity(){
   var d=document.getElementById('housesOtherCity');
