@@ -476,15 +476,6 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
     </div>
 
     <div class="btn-unit">
-      <button class="home-btn" onclick="showPg('dateDiag')" style="border-color:rgba(201,168,76,.6);background:linear-gradient(135deg,#1a3258,#0a1628);">
-        <span class="home-btn-icon">📆</span>
-        <span class="home-btn-title">علم جفر آثار — نام اور آج کی تاریخ سے</span>
-        <span class="home-btn-sub">مسئلہ جسمانی ہے یا روحانی — آج کی اسلامی تاریخ کی بنیاد پر</span>
-      </button>
-      <p class="home-btn-desc"><b style="color:#c9a84c;">🔹 یہ طریقہ کیا ہے؟</b> یہ بھی 4 پر تقسیم والا ہی طریقہ ہے، فرق صرف یہ ہے کہ ہفتے کے دن کی بجائے <b>آج کی اسلامی (ہجری) تاریخ کے اعداد</b> استعمال ہوتے ہیں — اسی لیے نتیجہ روزانہ بدل سکتا ہے۔</p>
-    </div>
-
-    <div class="btn-unit">
       <button class="home-btn" onclick="showPg('taq5')">
         <span class="home-btn-icon">➗</span>
         <span class="home-btn-title" data-i18n="taq5Title">علم جفر آثار — 5 پر تقسیم</span>
@@ -849,38 +840,6 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       <div id="calcSteps" style="font-size:14px;color:#faf7f0;line-height:2.5;"></div>
     </div>
     <div id="resBox" style="border-radius:14px;padding:22px;"></div>
-  </div>
-</div>
-
-<!-- DATE-BASED DIAGNOSIS PAGE (name + mother's name + today's Hijri date) -->
-<div id="pg-dateDiag" class="main-wrap hidden">
-  <button class="back-btn" onclick="showPg('home')">← واپس</button>
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon">📆</div>
-      <div><div class="card-title">علم جفر آثار — نام اور آج کی تاریخ سے</div><div class="card-sub">نام، والدہ کا نام اور آج کی اسلامی تاریخ کے اعداد سے مسئلے کا تعین</div></div>
-    </div>
-    <div style="padding:20px;direction:rtl;">
-      <label class="abjad-label">۱. سائل کا نام</label>
-      <div class="abjad-row"><input class="abjad-input" id="dd1" placeholder="مثال: محمد علی" oninput="updDateDiag()"><div class="abjad-num" id="ddn1">0</div></div>
-      <label class="abjad-label">۲. والدہ کا نام</label>
-      <div class="abjad-row"><input class="abjad-input" id="dd2" placeholder="مثال: عائشہ" oninput="updDateDiag()"><div class="abjad-num" id="ddn2">0</div></div>
-      <label class="abjad-label">۳. آج کی اسلامی تاریخ</label>
-      <div class="abjad-row" style="margin-bottom:14px;"><div class="abjad-num" id="ddHijriLabel" style="flex:1;text-align:center;">...</div><div class="abjad-num" id="ddn3">0</div></div>
-      <div class="total-box">
-        <div class="total-label">مجموعہ ابجد</div>
-        <div class="total-num" id="ddTotNum">0</div>
-        <div class="total-sub" id="ddTotSub">(0 + 0 + 0)</div>
-      </div>
-      <button class="q-btn" onclick="runDateDiag()">← نتیجہ نکالیں</button>
-    </div>
-  </div>
-  <div id="ddResult" class="hidden" style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
-    <div class="dk-card" style="text-align:center;">
-      <div class="dk-title">حساب کا طریقہ</div>
-      <div id="ddCalcSteps" style="font-size:14px;color:#faf7f0;line-height:2.5;"></div>
-    </div>
-    <div id="ddResBox" style="border-radius:14px;padding:22px;"></div>
   </div>
 </div>
 
@@ -2510,11 +2469,10 @@ window.addEventListener('DOMContentLoaded',function(){
   applyLang(s);
 
   populatePkCities();
-  updDateDiag();
 });
 
 /* == NAVIGATION == */
-var PAGES=['home','akhbar','asar','dateDiag','ismAzam','nujoom','houses','adad','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','babyname','about','disclaimer','privacy','terms','contact'];
+var PAGES=['home','akhbar','asar','ismAzam','nujoom','houses','adad','picker','taq3','taq5','taq6','taq7','taq8','taq9','taq10','taq12','taq28','matching','babyname','about','disclaimer','privacy','terms','contact'];
 var homeScrollY = 0;
 function showPg(p, fromPopState){
   var current = PAGES.find(function(x){var el=document.getElementById('pg-'+x);return el && !el.classList.contains('hidden');});
@@ -2550,37 +2508,6 @@ function updAsar(){
   document.getElementById('totSub').textContent='('+n1+' + '+n2+' + '+n3+' + '+n4+')';
 }
 
-/* Local, offline (no-AI) traditional interpretation table for Divide-by-4.
-   Keyed by the remainder (باقی) of tot % 4. Each entry gives the
-   "نوعیت" (nature of the matter) explanation and two matching wazifas,
-   based on the traditional four-elements (آتش/آب/خاک/ہوا) framework. */
-var ASAR4_TABLE={
-  1:{
-    element:'آتش (آگ)',
-    nt:'باقی عدد 1 عنصرِ آتش کی نشاندہی کرتا ہے، جو گرمی، سوزش، اشتعال اور جلد بازی سے جڑا ہے۔ اس لیے آپ کا مسئلہ زیادہ تر جسمانی نوعیت کا ہو سکتا ہے — جیسے بخار، سوزش، خون کی گرمی، یا غصے اور بےچینی کی کیفیت۔ بعض اوقات یہ کسی کی حسد بھری نظر یا جلن کا بھی اشارہ ہو سکتا ہے، اس لیے ٹھنڈک اور سکون پیدا کرنے والے اعمال زیادہ مفید ثابت ہوں گے۔',
-    waz1:'یا سلام — 131 بار — مسلسل 7 دن',
-    waz2:'سورۃ الفلق — 11 بار — ہر نماز کے بعد'
-  },
-  2:{
-    element:'آب (پانی)',
-    nt:'باقی عدد 2 عنصرِ آب کی نشاندہی کرتا ہے، جو نرمی، جذبات، محبت اور روانی سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر جذباتی یا دلی نوعیت کا ہو سکتا ہے — جیسے غم، اداسی، رشتوں میں کھنچاؤ، یا دل کی بےچینی۔ بعض اوقات یہ کسی روحانی بےسکونی کی طرف بھی اشارہ کرتا ہے، اس لیے دل کو سکون دینے والے اذکار خاص طور پر مفید ہوں گے۔',
-    waz1:'یا ودود — 1000 بار — مسلسل 3 دن',
-    waz2:'درود شریف — 100 بار — روزانہ'
-  },
-  3:{
-    element:'خاک (مٹی)',
-    nt:'باقی عدد 3 عنصرِ خاک کی نشاندہی کرتا ہے، جو استحکام، رزق، مال اور جسمانی مضبوطی سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر مالی، کاروباری یا رزق سے متعلق ہو سکتا ہے، یا جسمانی کمزوری اور تھکاوٹ کی صورت میں بھی ظاہر ہو سکتا ہے۔ بعض اوقات یہ زمین، گھر یا جائیداد سے جڑے معاملے کی بھی نشاندہی کرتا ہے۔',
-    waz1:'یا رزاق — 308 بار — مسلسل 7 دن',
-    waz2:'یا فتاح — 489 بار — مسلسل 3 دن'
-  },
-  0:{
-    element:'ہوا (فضا)',
-    nt:'باقی عدد 0 عنصرِ ہوا کی نشاندہی کرتا ہے، جو خیالات، وسوسے، ذہنی الجھن اور روحانی اثرات سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر ذہنی پریشانی، وسوسوں، یا کسی روحانی اثر (جیسے نظرِ بد یا سحر کے شبہ) کی طرف اشارہ کر سکتا ہے۔ بعض اوقات یہ فیصلہ کرنے میں مشکل یا ذہنی انتشار کی صورت میں بھی ظاہر ہوتا ہے۔',
-    waz1:'یا حفیظ — 998 بار — مسلسل 7 دن',
-    waz2:'آیت الکرسی — 1 بار — ہر فرض نماز کے بعد'
-  }
-};
-
 /* == ASAR RESULT == */
 function runAsar(){
   var n1=abjad(document.getElementById('f1').value),n2=abjad(document.getElementById('f2').value),n3=parseInt(document.getElementById('f3').value)||0,n4=abjad(document.getElementById('f4').value);
@@ -2613,85 +2540,41 @@ function runAsar(){
   var rb=document.getElementById('resBox');
   rb.style.padding='0';
 
+  /* Local, offline (no-AI) traditional interpretation table for Divide-by-4.
+     Keyed by the remainder (باقی) of tot % 4. Each entry gives the
+     "نوعیت" (nature of the matter) explanation and two matching wazifas,
+     based on the traditional four-elements (آتش/آب/خاک/ہوا) framework. */
+  var ASAR4_TABLE={
+    1:{
+      element:'آتش (آگ)',
+      nt:'باقی عدد 1 عنصرِ آتش کی نشاندہی کرتا ہے، جو گرمی، سوزش، اشتعال اور جلد بازی سے جڑا ہے۔ اس لیے آپ کا مسئلہ زیادہ تر جسمانی نوعیت کا ہو سکتا ہے — جیسے بخار، سوزش، خون کی گرمی، یا غصے اور بےچینی کی کیفیت۔ بعض اوقات یہ کسی کی حسد بھری نظر یا جلن کا بھی اشارہ ہو سکتا ہے، اس لیے ٹھنڈک اور سکون پیدا کرنے والے اعمال زیادہ مفید ثابت ہوں گے۔',
+      waz1:'یا سلام — 131 بار — مسلسل 7 دن',
+      waz2:'سورۃ الفلق — 11 بار — ہر نماز کے بعد'
+    },
+    2:{
+      element:'آب (پانی)',
+      nt:'باقی عدد 2 عنصرِ آب کی نشاندہی کرتا ہے، جو نرمی، جذبات، محبت اور روانی سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر جذباتی یا دلی نوعیت کا ہو سکتا ہے — جیسے غم، اداسی، رشتوں میں کھنچاؤ، یا دل کی بےچینی۔ بعض اوقات یہ کسی روحانی بےسکونی کی طرف بھی اشارہ کرتا ہے، اس لیے دل کو سکون دینے والے اذکار خاص طور پر مفید ہوں گے۔',
+      waz1:'یا ودود — 1000 بار — مسلسل 3 دن',
+      waz2:'درود شریف — 100 بار — روزانہ'
+    },
+    3:{
+      element:'خاک (مٹی)',
+      nt:'باقی عدد 3 عنصرِ خاک کی نشاندہی کرتا ہے، جو استحکام، رزق، مال اور جسمانی مضبوطی سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر مالی، کاروباری یا رزق سے متعلق ہو سکتا ہے، یا جسمانی کمزوری اور تھکاوٹ کی صورت میں بھی ظاہر ہو سکتا ہے۔ بعض اوقات یہ زمین، گھر یا جائیداد سے جڑے معاملے کی بھی نشاندہی کرتا ہے۔',
+      waz1:'یا رزاق — 308 بار — مسلسل 7 دن',
+      waz2:'یا فتاح — 489 بار — مسلسل 3 دن'
+    },
+    0:{
+      element:'ہوا (فضا)',
+      nt:'باقی عدد 0 عنصرِ ہوا کی نشاندہی کرتا ہے، جو خیالات، وسوسے، ذہنی الجھن اور روحانی اثرات سے جڑا ہے۔ آپ کا مسئلہ زیادہ تر ذہنی پریشانی، وسوسوں، یا کسی روحانی اثر (جیسے نظرِ بد یا سحر کے شبہ) کی طرف اشارہ کر سکتا ہے۔ بعض اوقات یہ فیصلہ کرنے میں مشکل یا ذہنی انتشار کی صورت میں بھی ظاہر ہوتا ہے۔',
+      waz1:'یا حفیظ — 998 بار — مسلسل 7 دن',
+      waz2:'آیت الکرسی — 1 بار — ہر فرض نماز کے بعد'
+    }
+  };
+
   var info=ASAR4_TABLE[rem];
   var nt=info.nt + (q? '\n\nآپ کے سوال ("'+q+'") کا جواب بھی اسی نوعیت کی روشنی میں سمجھا جائے — یعنی اوپر بیان کردہ وجہ اور کیفیت آپ کے سوال سے براہِ راست متعلق ہے۔' : '');
   var rh='• وظیفہ نمبر 1: '+info.waz1+'\n• وظیفہ نمبر 2: '+info.waz2;
 
-  rb.innerHTML='';
-  var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';rb.appendChild(sl);
-  var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;rb.appendChild(rt);
-  var rbx=document.createElement('div');rbx.className='rohani-box green';rbx.innerHTML='<div class="rohani-box-label">🤲 روحانی حل</div><div class="rohani-box-text" style="white-space:pre-line;">'+rh+'</div>';rb.appendChild(rbx);
-}
-
-/* == DATE-BASED DIAGNOSIS (name + mother's name + today's Hijri date), same 4-way
-   table as ASAR4_TABLE above, except the day-of-week number is replaced by the
-   digit-sum of today's Hijri date — so the result can change day to day. == */
-var HIJRI_MONTHS=['محرم','صفر','ربیع الاول','ربیع الثانی','جمادی الاول','جمادی الثانی','رجب','شعبان','رمضان','شوال','ذوالقعدہ','ذوالحجہ'];
-function getHijriToday(){
-  try{
-    var fmt=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'});
-    var parts=fmt.formatToParts(new Date());
-    var day=0,month=0,year=0;
-    parts.forEach(function(p){
-      if(p.type==='day')day=parseInt(p.value,10);
-      if(p.type==='month')month=parseInt(p.value,10);
-      if(p.type==='year')year=parseInt(p.value,10);
-    });
-    if(!day||!month||!year) return null;
-    return {day:day,month:month,year:year};
-  }catch(e){ return null; }
-}
-function hijriDigitSum(h){
-  return (String(h.day)+String(h.month)+String(h.year)).split('').reduce(function(s,ch){return s+parseInt(ch,10);},0);
-}
-function hijriStr(h){ return h.day+' '+(HIJRI_MONTHS[h.month-1]||h.month)+' '+h.year+'ھ'; }
-function updDateDiag(){
-  var n1=abjad(document.getElementById('dd1').value);
-  var n2=abjad(document.getElementById('dd2').value);
-  document.getElementById('ddn1').textContent=n1;
-  document.getElementById('ddn2').textContent=n2;
-  var h=getHijriToday();
-  var n3=h?hijriDigitSum(h):0;
-  document.getElementById('ddn3').textContent=n3;
-  document.getElementById('ddHijriLabel').textContent=h?hijriStr(h):'دستیاب نہیں';
-  var tot=n1+n2+n3;
-  document.getElementById('ddTotNum').textContent=tot;
-  document.getElementById('ddTotSub').textContent='('+n1+' + '+n2+' + '+n3+')';
-}
-function runDateDiag(){
-  var n1=abjad(document.getElementById('dd1').value),n2=abjad(document.getElementById('dd2').value);
-  var h=getHijriToday();
-  if(!h){alert('معذرت، آپ کا براؤزر اسلامی تاریخ خودکار نہیں نکال سکا — براہ کرم "4 پر تقسیم" والا طریقہ استعمال کریں۔');return;}
-  var n3=hijriDigitSum(h);
-  var tot=n1+n2+n3;
-  if(tot===0){alert('نام اور والدہ کا نام لکھیں');return;}
-  var rem=tot%4;
-  var quot=Math.floor(tot/4);
-  var hs=hijriStr(h);
-
-  document.getElementById('ddCalcSteps').innerHTML=
-    '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:16px;">'+
-    '<div style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:10px 16px;text-align:center;min-width:90px;">'+
-    '<div style="font-size:10px;color:rgba(201,168,76,.55);margin-bottom:4px;">سائل کا نام</div>'+
-    '<div style="font-size:22px;font-weight:700;color:#c9a84c;font-family:Amiri,serif;">'+n1+'</div></div>'+
-    '<div style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:10px 16px;text-align:center;min-width:90px;">'+
-    '<div style="font-size:10px;color:rgba(201,168,76,.55);margin-bottom:4px;">والدہ کا نام</div>'+
-    '<div style="font-size:22px;font-weight:700;color:#c9a84c;font-family:Amiri,serif;">'+n2+'</div></div>'+
-    '<div style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px;">'+
-    '<div style="font-size:10px;color:rgba(201,168,76,.55);margin-bottom:4px;">آج ('+hs+')</div>'+
-    '<div style="font-size:22px;font-weight:700;color:#c9a84c;font-family:Amiri,serif;">'+n3+'</div></div>'+
-    '</div>'+
-    '<div style="font-size:16px;color:#faf7f0;line-height:2;">مجموعہ: '+n1+' + '+n2+' + '+n3+' = <span style="color:#e8c87a;font-weight:700;font-size:20px;">'+tot+'</span></div>'+
-    '<div style="font-size:16px;color:#faf7f0;margin-top:4px;">'+tot+' ÷ 4 = '+quot+' باقی <span style="color:#e8c87a;font-weight:700;font-size:28px;">'+rem+'</span></div>';
-
-  var dr=document.getElementById('ddResult');dr.classList.remove('hidden');dr.style.display='flex';
-  dr.scrollIntoView({behavior:'smooth',block:'start'});
-
-  var rb=document.getElementById('ddResBox');
-  rb.style.padding='0';
-  var info=ASAR4_TABLE[rem];
-  var nt=info.nt+'\n\nیہ نتیجہ آج ('+hs+') کی تاریخ کی بنیاد پر نکالا گیا ہے — چونکہ تاریخ روزانہ بدلتی ہے، اس لیے کسی اور دن یہی نام دوبارہ لکھنے پر نتیجہ مختلف بھی آ سکتا ہے۔';
-  var rh='• وظیفہ نمبر 1: '+info.waz1+'\n• وظیفہ نمبر 2: '+info.waz2;
   rb.innerHTML='';
   var sl=document.createElement('div');sl.className='section-label';sl.textContent='جفر کا نتیجہ';rb.appendChild(sl);
   var rt=document.createElement('div');rt.className='result-text';rt.style.whiteSpace='pre-line';rt.textContent=nt;rb.appendChild(rt);
