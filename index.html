@@ -962,7 +962,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
       <label class="abjad-label">۱. اپنا نام</label>
       <div class="abjad-row"><input class="abjad-input" type="text" id="adadName" placeholder="اپنا نام لکھیں" style="flex:1;"></div>
 
-      <label class="abjad-label">۲. تاریخِ پیدائش</label>
+      <label class="abjad-label">۲. تاریخِ پیدائش <span style="font-weight:400;opacity:.7;">(اختیاری — یاد نہ ہو تو خالی چھوڑ سکتے ہیں)</span></label>
       <div class="abjad-row"><input class="abjad-input" type="date" id="adadDob" style="flex:1;"></div>
 
       <button class="q-btn" onclick="runAdad()">← نتیجہ نکالیں</button>
@@ -3579,14 +3579,17 @@ function reduceNum(n){
 function runAdad(){
   var name=document.getElementById('adadName').value.trim();
   var dobVal=document.getElementById('adadDob').value;
-  if(!name||!dobVal){alert('براہ کرم نام اور تاریخِ پیدائش دونوں درج کریں');return;}
-  var dp=dobVal.split('-');
-  var year=parseInt(dp[0],10),month=parseInt(dp[1],10),day=parseInt(dp[2],10);
+  if(!name){alert('براہ کرم کم از کم اپنا نام درج کریں');return;}
 
-  var mulank=reduceNum(day);
-  var digitSum=0;
-  (String(day)+String(month)+String(year)).split('').forEach(function(ch){ digitSum+=parseInt(ch,10); });
-  var bhagyank=reduceNum(digitSum);
+  var mulank=null,bhagyank=null;
+  if(dobVal){
+    var dp=dobVal.split('-');
+    var year=parseInt(dp[0],10),month=parseInt(dp[1],10),day=parseInt(dp[2],10);
+    mulank=reduceNum(day);
+    var digitSum=0;
+    (String(day)+String(month)+String(year)).split('').forEach(function(ch){ digitSum+=parseInt(ch,10); });
+    bhagyank=reduceNum(digitSum);
+  }
   var nameAbjad=abjad(name);
   var nameNum=reduceNum(nameAbjad);
 
@@ -3607,9 +3610,12 @@ function runAdad(){
       '</div></div>';
   }
   var html='';
-  html+=rowHtml('ذاتی نمبر (مولانک — تاریخِ پیدائش کے دن سے)',mulank);
-  html+=rowHtml('تقدیر کا نمبر (بھاگیانک — مکمل تاریخِ پیدائش سے)',bhagyank);
+  if(mulank!==null) html+=rowHtml('ذاتی نمبر (مولانک — تاریخِ پیدائش کے دن سے)',mulank);
+  if(bhagyank!==null) html+=rowHtml('تقدیر کا نمبر (بھاگیانک — مکمل تاریخِ پیدائش سے)',bhagyank);
   html+=rowHtml('نام کا عدد (ابجد سے)',nameNum);
+  if(mulank===null){
+    html+='<div style="font-size:11.5px;color:rgba(250,247,240,.6);direction:rtl;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:9px;padding:10px 14px;margin-bottom:8px;">ℹ️ تاریخِ پیدائش درج نہیں کی گئی، اس لیے صرف نام کا عدد دکھایا گیا ہے۔ تاریخ یاد آ جائے تو وہ بھی درج کر کے دوبارہ نتیجہ نکال لیں — ذاتی نمبر (مولانک) اور تقدیر کا نمبر (بھاگیانک) بھی مل جائیں گے۔</div>';
+  }
   document.getElementById('adadBody').innerHTML=html;
   runAdadAI(mulank,bhagyank,nameNum);
 }
@@ -3624,10 +3630,16 @@ function runAdadAI(mulank,bhagyank,nameNum){
 
   ab.innerHTML='<div style="background:linear-gradient(135deg,#122040,#0a1628);border-radius:14px;padding:28px;text-align:center;direction:rtl;border:1px solid rgba(201,168,76,.2);"><div style="font-size:36px;margin-bottom:12px;">🔮</div><div style="font-size:15px;font-weight:700;color:#c9a84c;margin-bottom:6px;">علم الاعداد کی روشنی میں تفصیلی تجزیہ جاری ہے</div><div style="font-size:12px;color:rgba(201,168,76,.4);margin-bottom:16px;">جواب تیار ہو رہا ہے...</div><div class="loading-dots" style="margin:0 auto;"><span></span><span></span><span></span></div></div>';
 
+  var numLines=[];
+  if(mulank!==null) numLines.push('ذاتی نمبر (مولانک): '+mulank+' — حاکم سیارہ: '+ADAD_DATA[mulank].planet);
+  if(bhagyank!==null) numLines.push('تقدیر کا نمبر (بھاگیانک): '+bhagyank+' — حاکم سیارہ: '+ADAD_DATA[bhagyank].planet);
+  numLines.push('نام کا عدد: '+nameNum+' — حاکم سیارہ: '+ADAD_DATA[nameNum].planet);
+  var haveAll=(mulank!==null&&bhagyank!==null);
+
   var gPrompt='آپ علم الاعداد (نیومرولوجی) کے ماہر روحانی عالم ہیں۔ آپ کا کام صرف اردو میں مختصر اور مفید جواب دینا ہے۔\n\n'+
-    'ذاتی نمبر (مولانک): '+mulank+' — حاکم سیارہ: '+ADAD_DATA[mulank].planet+'\nتقدیر کا نمبر (بھاگیانک): '+bhagyank+' — حاکم سیارہ: '+ADAD_DATA[bhagyank].planet+'\nنام کا عدد: '+nameNum+' — حاکم سیارہ: '+ADAD_DATA[nameNum].planet+'\n\n'+
+    numLines.join('\n')+'\n\n'+
     'ہدایات:\n1. صرف اردو زبان میں لکھیں\n2. قرآنی آیت صرف تب لکھیں جب آپ کو یقین ہو، ورنہ نہ لکھیں\n3. وظیفہ اس format میں دیں: سورۃ/دعا — بار/تعداد — دن\n4. جواب مختصر اور واضح ہو\n\n'+
-    '===جفر کا نتیجہ===\nان تینوں اعداد (ذاتی، تقدیر، نام) کے باہمی تعلق اور مجموعی اثر کی روشنی میں شخصیت اور زندگی کے رجحانات پر 4-5 جملوں میں تجزیہ دیں۔ اگر اعداد آپس میں ہم آہنگ نہ ہوں تو اس کا اثر بھی بتائیں۔\n\n'+
+    '===جفر کا نتیجہ===\n'+(haveAll?'ان تینوں اعداد (ذاتی، تقدیر، نام) کے باہمی تعلق اور مجموعی اثر کی روشنی میں':'اوپر دیے گئے عدد/اعداد کی روشنی میں')+' شخصیت اور زندگی کے رجحانات پر 4-5 جملوں میں تجزیہ دیں۔'+(haveAll?' اگر اعداد آپس میں ہم آہنگ نہ ہوں تو اس کا اثر بھی بتائیں۔':'')+'\n\n'+
     '===روحانی حل===\nاعداد کے اثرات متوازن رکھنے کے لیے دو مخصوص وظیفے دیں اس format میں:\n• وظیفہ نمبر 1: [نام] — [تعداد] — [مدت]\n• وظیفہ نمبر 2: [نام] — [تعداد] — [مدت]';
 
   fetch("/api/openai",{
