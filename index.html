@@ -964,6 +964,7 @@ body{background:#0d1c38;background-image:radial-gradient(ellipse 120% 70% at 50%
 
       <label class="abjad-label">۲. تاریخِ پیدائش <span style="font-weight:400;opacity:.7;">(اختیاری — یاد نہ ہو تو خالی چھوڑ سکتے ہیں)</span></label>
       <div class="abjad-row"><input class="abjad-input" type="date" id="adadDob" style="flex:1;"></div>
+      <div style="font-size:11px;color:rgba(232,200,122,.75);margin:-2px 2px 8px;">⚠️ صرف اپنی اصل تاریخِ پیدائش لکھیں — آج کی تاریخ یا کوئی اندازہ لگا کر نہ لکھیں، ورنہ ذاتی نمبر اور تقدیر کا نمبر غلط نکلے گا۔ یاد نہ ہو تو خالی چھوڑ دیں۔</div>
 
       <button class="q-btn" onclick="runAdad()">← نتیجہ نکالیں</button>
     </div>
@@ -3581,6 +3582,10 @@ function runAdad(){
   var dobVal=document.getElementById('adadDob').value;
   if(!name){alert('براہ کرم کم از کم اپنا نام درج کریں');return;}
 
+  var todayStr=(function(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})();
+  if(dobVal===todayStr){
+    if(!confirm('آپ نے آج کی تاریخ درج کی ہے — اگر یہ واقعی آپ کی تاریخِ پیدائش نہیں بلکہ صرف اندازے سے لکھی ہے، تو نتیجہ غلط نکلے گا۔\n\nاگر آج ہی آپ کی اصل تاریخِ پیدائش ہے تو "OK" دبائیں، ورنہ "Cancel" دبا کر تاریخ کا خانہ خالی چھوڑ دیں۔')) return;
+  }
   var mulank=null,bhagyank=null;
   if(dobVal){
     var dp=dobVal.split('-');
