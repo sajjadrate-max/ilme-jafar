@@ -1,0 +1,9 @@
+{
+  "name": "ilme-jafar",
+  "private": true,
+  "type": "module",
+  "description": "Static site plus Vercel API functions (api/).",
+  "dependencies": {
+    "@vercel/blob": "^2.8.2"
+  }
+}
